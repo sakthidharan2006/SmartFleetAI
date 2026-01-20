@@ -15,12 +15,13 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-interface SidebarProps {
-  activeItem: string;
-  onItemClick: (item: string) => void;
-}
+export type NavItem = {
+  id: string;
+  label: string;
+  icon: React.ElementType;
+};
 
-const navItems = [
+export const navItems: NavItem[] = [
   { id: "dashboard", label: "Dashboard", icon: Home },
   { id: "fleet", label: "Fleet Overview", icon: Truck },
   { id: "tracking", label: "Live Tracking", icon: MapPin },
@@ -34,7 +35,13 @@ const navItems = [
   { id: "reports", label: "Reports", icon: BarChart3 },
 ];
 
-export function Sidebar({ activeItem, onItemClick }: SidebarProps) {
+interface SidebarProps {
+  activeItem: string;
+  onItemClick: (item: string) => void;
+  alertCount?: number;
+}
+
+export function Sidebar({ activeItem, onItemClick, alertCount = 3 }: SidebarProps) {
   return (
     <aside className="fixed left-0 top-0 h-screen w-64 bg-sidebar border-r border-sidebar-border flex flex-col z-50">
       {/* Logo */}
@@ -64,6 +71,11 @@ export function Sidebar({ activeItem, onItemClick }: SidebarProps) {
             >
               <item.icon className="w-5 h-5" />
               <span className="font-medium">{item.label}</span>
+              {item.id === "alerts" && alertCount > 0 && (
+                <span className="ml-auto bg-danger text-danger-foreground text-xs font-bold px-2 py-0.5 rounded-full">
+                  {alertCount}
+                </span>
+              )}
             </button>
           ))}
         </div>
@@ -71,14 +83,22 @@ export function Sidebar({ activeItem, onItemClick }: SidebarProps) {
 
       {/* Bottom Actions */}
       <div className="p-4 border-t border-sidebar-border space-y-1">
-        <button className="nav-link w-full">
+        <button 
+          onClick={() => onItemClick("notifications")}
+          className={cn("nav-link w-full", activeItem === "notifications" && "nav-link-active")}
+        >
           <Bell className="w-5 h-5" />
           <span className="font-medium">Notifications</span>
-          <span className="ml-auto bg-danger text-danger-foreground text-xs font-bold px-2 py-0.5 rounded-full">
-            3
-          </span>
+          {alertCount > 0 && (
+            <span className="ml-auto bg-danger text-danger-foreground text-xs font-bold px-2 py-0.5 rounded-full">
+              {alertCount}
+            </span>
+          )}
         </button>
-        <button className="nav-link w-full">
+        <button 
+          onClick={() => onItemClick("settings")}
+          className={cn("nav-link w-full", activeItem === "settings" && "nav-link-active")}
+        >
           <Settings className="w-5 h-5" />
           <span className="font-medium">Settings</span>
         </button>

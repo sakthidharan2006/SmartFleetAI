@@ -1,0 +1,88 @@
+import { 
+  Truck, 
+  Gauge, 
+  Fuel, 
+  AlertTriangle, 
+  MapPin, 
+  Settings, 
+  Users, 
+  BarChart3,
+  Bell,
+  Video,
+  Wrench,
+  Route,
+  Home
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+
+interface SidebarProps {
+  activeItem: string;
+  onItemClick: (item: string) => void;
+}
+
+const navItems = [
+  { id: "dashboard", label: "Dashboard", icon: Home },
+  { id: "fleet", label: "Fleet Overview", icon: Truck },
+  { id: "tracking", label: "Live Tracking", icon: MapPin },
+  { id: "routes", label: "Routes & Trips", icon: Route },
+  { id: "diagnostics", label: "Diagnostics", icon: Gauge },
+  { id: "fuel", label: "Fuel Monitor", icon: Fuel },
+  { id: "maintenance", label: "Maintenance", icon: Wrench },
+  { id: "cctv", label: "CCTV Feeds", icon: Video },
+  { id: "alerts", label: "Alerts", icon: AlertTriangle },
+  { id: "drivers", label: "Drivers", icon: Users },
+  { id: "reports", label: "Reports", icon: BarChart3 },
+];
+
+export function Sidebar({ activeItem, onItemClick }: SidebarProps) {
+  return (
+    <aside className="fixed left-0 top-0 h-screen w-64 bg-sidebar border-r border-sidebar-border flex flex-col z-50">
+      {/* Logo */}
+      <div className="p-6 border-b border-sidebar-border">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center glow-primary">
+            <Truck className="w-5 h-5 text-primary-foreground" />
+          </div>
+          <div>
+            <h1 className="font-bold text-lg text-foreground tracking-tight">TruckPulse</h1>
+            <p className="text-xs text-muted-foreground font-medium">Pro Fleet Manager</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Navigation */}
+      <nav className="flex-1 p-4 overflow-y-auto scrollbar-thin">
+        <div className="space-y-1">
+          {navItems.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => onItemClick(item.id)}
+              className={cn(
+                "nav-link w-full",
+                activeItem === item.id && "nav-link-active"
+              )}
+            >
+              <item.icon className="w-5 h-5" />
+              <span className="font-medium">{item.label}</span>
+            </button>
+          ))}
+        </div>
+      </nav>
+
+      {/* Bottom Actions */}
+      <div className="p-4 border-t border-sidebar-border space-y-1">
+        <button className="nav-link w-full">
+          <Bell className="w-5 h-5" />
+          <span className="font-medium">Notifications</span>
+          <span className="ml-auto bg-danger text-danger-foreground text-xs font-bold px-2 py-0.5 rounded-full">
+            3
+          </span>
+        </button>
+        <button className="nav-link w-full">
+          <Settings className="w-5 h-5" />
+          <span className="font-medium">Settings</span>
+        </button>
+      </div>
+    </aside>
+  );
+}

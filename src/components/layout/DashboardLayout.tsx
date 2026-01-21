@@ -1,6 +1,8 @@
 import { ReactNode } from "react";
-import { Sidebar } from "./Sidebar";
-import { Header } from "./Header";
+import { MobileSidebar } from "./MobileSidebar";
+import { ResponsiveHeader } from "./ResponsiveHeader";
+import { SidebarProvider, useSidebar } from "@/hooks/useSidebar";
+import { cn } from "@/lib/utils";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -8,16 +10,33 @@ interface DashboardLayoutProps {
   onNavigate: (item: string) => void;
 }
 
-export function DashboardLayout({ children, activeItem, onNavigate }: DashboardLayoutProps) {
+function DashboardLayoutContent({ children, activeItem, onNavigate }: DashboardLayoutProps) {
+  const { isCollapsed, isMobile } = useSidebar();
+
   return (
     <div className="min-h-screen bg-background">
-      <Sidebar activeItem={activeItem} onItemClick={onNavigate} />
-      <div className="ml-64">
-        <Header />
-        <main className="p-6">
+      <MobileSidebar 
+        activeItem={activeItem} 
+        onItemClick={onNavigate} 
+        alertCount={3}
+      />
+      <div className={cn(
+        "flex flex-col min-h-screen transition-all duration-300",
+        isMobile ? "ml-0" : (isCollapsed ? "ml-20" : "ml-64")
+      )}>
+        <ResponsiveHeader />
+        <main className="flex-1 p-4 md:p-6 overflow-x-hidden">
           {children}
         </main>
       </div>
     </div>
+  );
+}
+
+export function DashboardLayout(props: DashboardLayoutProps) {
+  return (
+    <SidebarProvider>
+      <DashboardLayoutContent {...props} />
+    </SidebarProvider>
   );
 }

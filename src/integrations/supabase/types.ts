@@ -14,16 +14,226 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      alerts: {
+        Row: {
+          created_at: string
+          id: string
+          is_read: boolean
+          message: string
+          title: string
+          type: string
+          vehicle_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message: string
+          title: string
+          type: string
+          vehicle_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message?: string
+          title?: string
+          type?: string
+          vehicle_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alerts_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          phone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          phone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          phone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      trips: {
+        Row: {
+          created_at: string
+          destination: string
+          distance_miles: number | null
+          driver_id: string | null
+          end_time: string | null
+          id: string
+          origin: string
+          start_time: string | null
+          status: string
+          vehicle_id: string
+        }
+        Insert: {
+          created_at?: string
+          destination: string
+          distance_miles?: number | null
+          driver_id?: string | null
+          end_time?: string | null
+          id?: string
+          origin: string
+          start_time?: string | null
+          status?: string
+          vehicle_id: string
+        }
+        Update: {
+          created_at?: string
+          destination?: string
+          distance_miles?: number | null
+          driver_id?: string | null
+          end_time?: string | null
+          id?: string
+          origin?: string
+          start_time?: string | null
+          status?: string
+          vehicle_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trips_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      vehicles: {
+        Row: {
+          created_at: string
+          driver_id: string | null
+          engine_temp: number
+          fuel_capacity: number
+          fuel_level: number
+          heading: number
+          id: string
+          last_update: string
+          latitude: number
+          longitude: number
+          mileage: number
+          name: string
+          plate: string
+          speed: number
+          status: string
+          tire_fl: number
+          tire_fr: number
+          tire_rl: number
+          tire_rr: number
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          driver_id?: string | null
+          engine_temp?: number
+          fuel_capacity?: number
+          fuel_level?: number
+          heading?: number
+          id?: string
+          last_update?: string
+          latitude?: number
+          longitude?: number
+          mileage?: number
+          name: string
+          plate: string
+          speed?: number
+          status?: string
+          tire_fl?: number
+          tire_fr?: number
+          tire_rl?: number
+          tire_rr?: number
+          type?: string
+        }
+        Update: {
+          created_at?: string
+          driver_id?: string | null
+          engine_temp?: number
+          fuel_capacity?: number
+          fuel_level?: number
+          heading?: number
+          id?: string
+          last_update?: string
+          latitude?: number
+          longitude?: number
+          mileage?: number
+          name?: string
+          plate?: string
+          speed?: number
+          status?: string
+          tire_fl?: number
+          tire_fr?: number
+          tire_rl?: number
+          tire_rr?: number
+          type?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "owner" | "driver"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +360,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["owner", "driver"],
+    },
   },
 } as const

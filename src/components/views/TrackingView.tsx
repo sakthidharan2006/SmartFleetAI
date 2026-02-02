@@ -1,16 +1,27 @@
 import { FleetMapPlaceholder } from "@/components/dashboard/FleetMapPlaceholder";
-import { mockVehicles } from "@/data/mockData";
-import { MapPin, Navigation, Layers, Maximize2 } from "lucide-react";
+import { MapPin, Navigation, Layers, Maximize2, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useSimulation } from "@/contexts/SimulationContext";
 
 export function TrackingView() {
+  const { vehicleCards, isSimulating } = useSimulation();
+  const activeVehicles = vehicleCards.filter(v => v.status === "active");
+
   return (
     <div className="space-y-6 animate-fade-in-up">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Live Tracking</h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-bold text-foreground">Live Tracking</h1>
+            {isSimulating && (
+              <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-success/10 border border-success/30">
+                <Zap className="w-3 h-3 text-success animate-pulse" />
+                <span className="text-xs font-medium text-success">Live</span>
+              </div>
+            )}
+          </div>
           <p className="text-muted-foreground">Real-time GPS tracking of all fleet vehicles</p>
         </div>
         <div className="flex items-center gap-2">
@@ -32,9 +43,12 @@ export function TrackingView() {
 
       {/* Vehicle List */}
       <div className="glass-card p-4">
-        <h3 className="font-semibold mb-4">Active Vehicles</h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-semibold">Active Vehicles</h3>
+          <span className="text-sm text-muted-foreground">{activeVehicles.length} vehicles moving</span>
+        </div>
         <div className="space-y-2">
-          {mockVehicles.filter(v => v.status === "active").map((vehicle) => (
+          {activeVehicles.map((vehicle) => (
             <div 
               key={vehicle.id}
               className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 hover:bg-secondary/50 cursor-pointer transition-colors"
@@ -57,6 +71,9 @@ export function TrackingView() {
               </div>
             </div>
           ))}
+          {activeVehicles.length === 0 && (
+            <p className="text-center text-muted-foreground py-8">No active vehicles at the moment</p>
+          )}
         </div>
       </div>
     </div>

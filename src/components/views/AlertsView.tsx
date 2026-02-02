@@ -1,42 +1,46 @@
 import { AlertsPanel, Alert } from "@/components/dashboard/AlertsPanel";
-import { mockAlerts } from "@/data/mockData";
-import { Bell, Filter, CheckCheck, Settings, AlertTriangle, AlertCircle, Info } from "lucide-react";
+import { Bell, Filter, CheckCheck, Settings, AlertTriangle, AlertCircle, Info, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { cn } from "@/lib/utils";
+import { useSimulation } from "@/contexts/SimulationContext";
 
-const allAlerts: Alert[] = [
-  ...mockAlerts,
+// Default alerts when simulation hasn't generated any yet
+const defaultAlerts: Alert[] = [
   {
-    id: "a7",
+    id: "a1",
     type: "critical",
-    category: "engine",
-    title: "Engine Overheating",
-    description: "Engine temperature exceeded 230°F, immediate attention required",
-    vehicle: "International LT (TRK-5612)",
-    time: "Yesterday",
-  },
-  {
-    id: "a8",
-    type: "warning",
     category: "tire",
-    title: "Tire Wear Alert",
-    description: "Front left tire tread depth below 4/32 inch",
-    vehicle: "Mack Anthem (TRK-9087)",
-    time: "2 days ago",
+    title: "Low Tire Pressure - Front Left",
+    description: "Tire pressure dropped to 28 PSI, recommended 35 PSI",
+    vehicle: "Volvo VNL 860 (TRK-7834)",
+    time: "2m ago",
   },
   {
-    id: "a9",
+    id: "a2",
+    type: "warning",
+    category: "fuel",
+    title: "Low Fuel Alert",
+    description: "Fuel level at 18%, refueling recommended",
+    vehicle: "Delta Runner (TRK-004)",
+    time: "5m ago",
+  },
+  {
+    id: "a3",
     type: "info",
     category: "maintenance",
-    title: "Service Completed",
-    description: "Annual inspection completed successfully",
-    vehicle: "Kenworth T680 (TRK-4521)",
-    time: "3 days ago",
+    title: "Scheduled Maintenance Due",
+    description: "Oil change due in 500 miles",
+    vehicle: "Echo Transport (TRK-005)",
+    time: "1h ago",
   },
 ];
 
 export function AlertsView() {
+  const { alertPanelData, isSimulating, unreadAlertCount } = useSimulation();
+  
+  // Use simulation alerts if available, otherwise show defaults
+  const allAlerts = alertPanelData.length > 0 ? alertPanelData : defaultAlerts;
+  
   const criticalCount = allAlerts.filter(a => a.type === "critical").length;
   const warningCount = allAlerts.filter(a => a.type === "warning").length;
   const infoCount = allAlerts.filter(a => a.type === "info").length;
@@ -46,7 +50,20 @@ export function AlertsView() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Alerts</h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-bold text-foreground">Alerts</h1>
+            {isSimulating && (
+              <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-success/10 border border-success/30">
+                <Zap className="w-3 h-3 text-success animate-pulse" />
+                <span className="text-xs font-medium text-success">Live</span>
+              </div>
+            )}
+            {unreadAlertCount > 0 && (
+              <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-primary text-primary-foreground">
+                {unreadAlertCount} new
+              </span>
+            )}
+          </div>
           <p className="text-muted-foreground">Manage and respond to fleet alerts</p>
         </div>
         <div className="flex items-center gap-3">

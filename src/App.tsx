@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
+import { SimulationProvider } from "@/contexts/SimulationContext";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
@@ -36,7 +37,9 @@ function AppRoutes() {
         path="/"
         element={
           <ProtectedRoute>
-            <Index />
+            <SimulationProvider>
+              <Index />
+            </SimulationProvider>
           </ProtectedRoute>
         }
       />

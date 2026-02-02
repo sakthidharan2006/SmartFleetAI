@@ -1,21 +1,38 @@
 import { VehicleCard } from "@/components/dashboard/VehicleCard";
-import { mockVehicles } from "@/data/mockData";
-import { Truck, Filter, Download, Plus } from "lucide-react";
+import { Truck, Filter, Download, Plus, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useSimulation } from "@/contexts/SimulationContext";
+import { useState } from "react";
 
 export function FleetView() {
-  const activeCount = mockVehicles.filter(v => v.status === "active").length;
-  const idleCount = mockVehicles.filter(v => v.status === "idle").length;
-  const maintenanceCount = mockVehicles.filter(v => v.status === "maintenance").length;
-  const offlineCount = mockVehicles.filter(v => v.status === "offline").length;
+  const { vehicleCards, isSimulating } = useSimulation();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredVehicles = vehicleCards.filter(v => 
+    v.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    v.plate.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const activeCount = vehicleCards.filter(v => v.status === "active").length;
+  const idleCount = vehicleCards.filter(v => v.status === "idle").length;
+  const maintenanceCount = vehicleCards.filter(v => v.status === "maintenance").length;
+  const offlineCount = vehicleCards.filter(v => v.status === "offline").length;
 
   return (
     <div className="space-y-6 animate-fade-in-up">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Fleet Overview</h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-bold text-foreground">Fleet Overview</h1>
+            {isSimulating && (
+              <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-success/10 border border-success/30">
+                <Zap className="w-3 h-3 text-success animate-pulse" />
+                <span className="text-xs font-medium text-success">Live</span>
+              </div>
+            )}
+          </div>
           <p className="text-muted-foreground">Manage and monitor all vehicles in your fleet</p>
         </div>
         <div className="flex items-center gap-3">
@@ -72,7 +89,12 @@ export function FleetView() {
 
       {/* Filters */}
       <div className="flex items-center gap-4">
-        <Input placeholder="Search vehicles..." className="max-w-xs" />
+        <Input 
+          placeholder="Search vehicles..." 
+          className="max-w-xs" 
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
         <Button variant="secondary" size="sm">
           <Filter className="w-4 h-4 mr-2" />
           Filter
@@ -81,7 +103,7 @@ export function FleetView() {
 
       {/* Vehicle Grid */}
       <div className="data-grid">
-        {mockVehicles.map((vehicle, index) => (
+        {filteredVehicles.map((vehicle, index) => (
           <VehicleCard key={vehicle.id} vehicle={vehicle} index={index} />
         ))}
       </div>

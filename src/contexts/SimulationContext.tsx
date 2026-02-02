@@ -1,4 +1,4 @@
-import { createContext, useContext, ReactNode } from 'react';
+import { createContext, useContext, ReactNode, useMemo } from 'react';
 import { 
   useRealtimeSimulation, 
   SimulatedVehicle, 
@@ -6,6 +6,8 @@ import {
 } from '@/hooks/useRealtimeSimulation';
 import { Vehicle } from '@/components/dashboard/VehicleCard';
 import { Alert } from '@/components/dashboard/AlertsPanel';
+import { useAuth } from '@/hooks/useAuth';
+import { supabase } from '@/integrations/supabase/client';
 
 interface SimulationContextType {
   vehicles: SimulatedVehicle[];
@@ -29,6 +31,8 @@ interface SimulationContextType {
     avgFuelEfficiency: number;
     activeAlerts: number;
   };
+  userRole: 'owner' | 'driver' | null;
+  isDriver: boolean;
 }
 
 const SimulationContext = createContext<SimulationContextType | undefined>(undefined);
@@ -119,29 +123,56 @@ interface SimulationProviderProps {
 
 export function SimulationProvider({ children, enabled = true }: SimulationProviderProps) {
   const simulation = useRealtimeSimulation(enabled);
+  const { user, role } = useAuth();
+
+  const isDriver = role === 'driver';
+  const userRole = role;
+
+  // For drivers, filter to show only their assigned vehicle (simulating first vehicle as assigned)
+  // In production, this would use the actual driver_id from the database
+  const filteredVehicles = useMemo(() => {
+    if (isDriver && user) {
+      // Simulate: driver sees only the first vehicle (in real app, filter by driver_id)
+      return simulation.vehicles.slice(0, 1);
+    }
+    return simulation.vehicles;
+  }, [simulation.vehicles, isDriver, user]);
+
+  const filteredAlerts = useMemo(() => {
+    if (isDriver && user) {
+      // Driver only sees alerts for their assigned vehicle
+      const driverVehicleIds = filteredVehicles.map(v => v.id);
+      return simulation.alerts.filter(a => driverVehicleIds.includes(a.vehicleId));
+    }
+    return simulation.alerts;
+  }, [simulation.alerts, filteredVehicles, isDriver, user]);
 
   // Transform data for components
-  const vehicleCards = simulation.vehicles.map(transformToVehicleCard);
-  const alertPanelData = simulation.alerts.map(transformToAlertPanel);
+  const vehicleCards = filteredVehicles.map(transformToVehicleCard);
+  const alertPanelData = filteredAlerts.map(transformToAlertPanel);
 
-  // Calculate fleet stats
+  // Calculate fleet stats based on filtered data
   const fleetStats = {
-    totalVehicles: simulation.vehicles.length,
-    activeVehicles: simulation.vehicles.filter(v => v.status === 'active').length,
-    idleVehicles: simulation.vehicles.filter(v => v.status === 'idle').length,
-    maintenanceVehicles: simulation.vehicles.filter(v => v.status === 'maintenance').length,
-    offlineVehicles: simulation.vehicles.filter(v => v.status === 'offline').length,
-    totalMileageToday: Math.round(simulation.vehicles.reduce((acc, v) => acc + (v.speed > 0 ? v.speed * 0.5 : 0), 0) * 10),
+    totalVehicles: filteredVehicles.length,
+    activeVehicles: filteredVehicles.filter(v => v.status === 'active').length,
+    idleVehicles: filteredVehicles.filter(v => v.status === 'idle').length,
+    maintenanceVehicles: filteredVehicles.filter(v => v.status === 'maintenance').length,
+    offlineVehicles: filteredVehicles.filter(v => v.status === 'offline').length,
+    totalMileageToday: Math.round(filteredVehicles.reduce((acc, v) => acc + (v.speed > 0 ? v.speed * 0.5 : 0), 0) * 10),
     avgFuelEfficiency: 7.2,
-    activeAlerts: simulation.alerts.filter(a => !a.isRead).length,
+    activeAlerts: filteredAlerts.filter(a => !a.isRead).length,
   };
 
   return (
     <SimulationContext.Provider value={{
       ...simulation,
+      vehicles: filteredVehicles,
+      alerts: filteredAlerts,
       vehicleCards,
       alertPanelData,
       fleetStats,
+      userRole,
+      isDriver,
     }}>
       {children}
     </SimulationContext.Provider>

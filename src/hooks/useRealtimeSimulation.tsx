@@ -22,6 +22,7 @@ export interface SimulatedVehicle {
   };
   mileage: number;
   lastUpdate: Date;
+  driverId?: string;
 }
 
 export interface SimulatedAlert {
@@ -35,22 +36,32 @@ export interface SimulatedAlert {
   isRead: boolean;
 }
 
+// Indian truck brands with realistic Indian locations
 const INITIAL_VEHICLES: SimulatedVehicle[] = [
-  { id: '1', name: 'Alpha Hauler', plate: 'TRK-001', type: 'Semi Truck', status: 'active', latitude: 40.7128, longitude: -74.0060, speed: 62, heading: 45, fuelLevel: 78, fuelCapacity: 300, engineTemp: 195, tirePressure: { frontLeft: 105, frontRight: 103, rearLeft: 98, rearRight: 101 }, mileage: 145280, lastUpdate: new Date() },
-  { id: '2', name: 'Beta Express', plate: 'TRK-002', type: 'Semi Truck', status: 'active', latitude: 34.0522, longitude: -118.2437, speed: 55, heading: 180, fuelLevel: 45, fuelCapacity: 300, engineTemp: 198, tirePressure: { frontLeft: 102, frontRight: 100, rearLeft: 95, rearRight: 97 }, mileage: 198450, lastUpdate: new Date() },
-  { id: '3', name: 'Gamma Freight', plate: 'TRK-003', type: 'Semi Truck', status: 'idle', latitude: 41.8781, longitude: -87.6298, speed: 0, heading: 90, fuelLevel: 92, fuelCapacity: 300, engineTemp: 165, tirePressure: { frontLeft: 100, frontRight: 100, rearLeft: 100, rearRight: 100 }, mileage: 87650, lastUpdate: new Date() },
-  { id: '4', name: 'Delta Runner', plate: 'TRK-004', type: 'Box Truck', status: 'active', latitude: 29.7604, longitude: -95.3698, speed: 48, heading: 270, fuelLevel: 33, fuelCapacity: 200, engineTemp: 201, tirePressure: { frontLeft: 98, frontRight: 85, rearLeft: 97, rearRight: 96 }, mileage: 234890, lastUpdate: new Date() },
-  { id: '5', name: 'Echo Transport', plate: 'TRK-005', type: 'Semi Truck', status: 'maintenance', latitude: 33.4484, longitude: -112.0740, speed: 0, heading: 0, fuelLevel: 65, fuelCapacity: 300, engineTemp: 0, tirePressure: { frontLeft: 100, frontRight: 100, rearLeft: 100, rearRight: 100 }, mileage: 312450, lastUpdate: new Date() },
-  { id: '6', name: 'Foxtrot Cargo', plate: 'TRK-006', type: 'Semi Truck', status: 'active', latitude: 39.7392, longitude: -104.9903, speed: 71, heading: 135, fuelLevel: 88, fuelCapacity: 300, engineTemp: 192, tirePressure: { frontLeft: 104, frontRight: 103, rearLeft: 101, rearRight: 102 }, mileage: 156780, lastUpdate: new Date() },
+  { id: '1', name: 'Tata Prima 4928.S', plate: 'MH-12-AB-1234', type: 'Heavy Truck', status: 'active', latitude: 18.5204, longitude: 73.8567, speed: 62, heading: 45, fuelLevel: 78, fuelCapacity: 400, engineTemp: 195, tirePressure: { frontLeft: 105, frontRight: 103, rearLeft: 98, rearRight: 101 }, mileage: 145280, lastUpdate: new Date() },
+  { id: '2', name: 'Ashok Leyland 4923', plate: 'GJ-05-CD-5678', type: 'Heavy Truck', status: 'active', latitude: 23.0225, longitude: 72.5714, speed: 55, heading: 180, fuelLevel: 45, fuelCapacity: 400, engineTemp: 198, tirePressure: { frontLeft: 102, frontRight: 100, rearLeft: 95, rearRight: 97 }, mileage: 198450, lastUpdate: new Date() },
+  { id: '3', name: 'Mahindra Blazo X 46', plate: 'RJ-14-EF-9012', type: 'Heavy Truck', status: 'idle', latitude: 26.9124, longitude: 75.7873, speed: 0, heading: 90, fuelLevel: 92, fuelCapacity: 400, engineTemp: 165, tirePressure: { frontLeft: 100, frontRight: 100, rearLeft: 100, rearRight: 100 }, mileage: 87650, lastUpdate: new Date() },
+  { id: '4', name: 'BharatBenz 4228R', plate: 'KA-01-GH-3456', type: 'Heavy Truck', status: 'active', latitude: 12.9716, longitude: 77.5946, speed: 48, heading: 270, fuelLevel: 33, fuelCapacity: 350, engineTemp: 201, tirePressure: { frontLeft: 98, frontRight: 85, rearLeft: 97, rearRight: 96 }, mileage: 234890, lastUpdate: new Date() },
+  { id: '5', name: 'Eicher Pro 6049', plate: 'TN-09-IJ-7890', type: 'Medium Truck', status: 'maintenance', latitude: 13.0827, longitude: 80.2707, speed: 0, heading: 0, fuelLevel: 65, fuelCapacity: 300, engineTemp: 0, tirePressure: { frontLeft: 100, frontRight: 100, rearLeft: 100, rearRight: 100 }, mileage: 312450, lastUpdate: new Date() },
+  { id: '6', name: 'Tata Signa 4825.TK', plate: 'DL-01-KL-2345', type: 'Heavy Truck', status: 'active', latitude: 28.4595, longitude: 77.0266, speed: 71, heading: 135, fuelLevel: 88, fuelCapacity: 400, engineTemp: 192, tirePressure: { frontLeft: 104, frontRight: 103, rearLeft: 101, rearRight: 102 }, mileage: 156780, lastUpdate: new Date() },
 ];
 
 const ALERT_TEMPLATES = [
   { type: 'critical' as const, title: 'Low Tire Pressure', message: 'Front right tire pressure critically low at {value} PSI' },
-  { type: 'critical' as const, title: 'Engine Overheat', message: 'Engine temperature exceeds safe limit at {value}°F' },
+  { type: 'critical' as const, title: 'Engine Overheat', message: 'Engine temperature exceeds safe limit at {value}°C' },
   { type: 'warning' as const, title: 'Low Fuel', message: 'Fuel level at {value}% - refuel recommended' },
   { type: 'warning' as const, title: 'Harsh Braking', message: 'Detected harsh braking event at {location}' },
-  { type: 'info' as const, title: 'Route Deviation', message: 'Vehicle deviated from planned route by {value} miles' },
-  { type: 'info' as const, title: 'Scheduled Maintenance', message: 'Oil change due in {value} miles' },
+  { type: 'info' as const, title: 'Route Deviation', message: 'Vehicle deviated from planned route by {value} km' },
+  { type: 'info' as const, title: 'Scheduled Maintenance', message: 'Oil change due in {value} km' },
+];
+
+const INDIAN_LOCATIONS = [
+  'NH-48 near Pune',
+  'NH-44 Bengaluru Bypass',
+  'Mumbai-Ahmedabad Expressway',
+  'Delhi-Jaipur Highway',
+  'Chennai-Hyderabad Corridor',
+  'Kolkata-Delhi NH',
 ];
 
 export function useRealtimeSimulation(enabled: boolean = true) {
@@ -62,12 +73,10 @@ export function useRealtimeSimulation(enabled: boolean = true) {
 
   const generateAlert = useCallback((vehicle: SimulatedVehicle) => {
     const template = ALERT_TEMPLATES[Math.floor(Math.random() * ALERT_TEMPLATES.length)];
-    const locations = ['I-95 Exit 42', 'Highway 101 Mile 156', 'Route 66 Junction', 'I-10 Rest Stop'];
     
     let message = template.message
       .replace('{value}', String(Math.floor(Math.random() * 50) + 20))
-      .replace('{location}', locations[Math.floor(Math.random() * locations.length)]);
-
+      .replace('{location}', INDIAN_LOCATIONS[Math.floor(Math.random() * INDIAN_LOCATIONS.length)]);
     alertCountRef.current += 1;
     
     return {

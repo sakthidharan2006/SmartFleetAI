@@ -150,9 +150,7 @@ export default function Auth() {
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
       {/* Logo */}
       <div className="flex items-center gap-3 mb-8">
-        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center glow-primary">
-          <Truck className="w-6 h-6 text-primary-foreground" />
-        </div>
+          <img src="/webwheels-logo.png" alt="WebWheels" className="w-12 h-12 rounded-xl" />
         <div>
           <h1 className="font-bold text-2xl text-foreground tracking-tight">WebWheels</h1>
           <p className="text-sm text-muted-foreground font-medium">Web-enabled Tracking</p>

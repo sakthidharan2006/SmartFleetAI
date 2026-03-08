@@ -153,6 +153,14 @@ export function useRealtimeSimulation(enabled: boolean = true) {
           mileage: vehicle.mileage + (isMoving ? Math.random() * 0.5 : 0),
           status: newStatus,
           lastUpdate: new Date(),
+          // BS6 metrics simulation
+          adBlueLevel: Math.max(0, vehicle.adBlueLevel - (isMoving ? Math.random() * 0.05 : 0)),
+          dpfSootLoad: Math.min(100, Math.max(0, vehicle.dpfSootLoad + (isMoving ? (Math.random() - 0.3) * 0.5 : -0.2))),
+          dpfStatus: vehicle.dpfSootLoad > 85 ? 'blocked' : vehicle.dpfSootLoad > 60 ? 'warning' : vehicle.dpfSootLoad > 40 ? 'regenerating' : 'clean' as const,
+          scrEfficiency: Math.max(70, Math.min(100, vehicle.scrEfficiency + (Math.random() - 0.5) * 0.5)),
+          noxLevel: Math.max(80, Math.min(600, vehicle.noxLevel + (Math.random() - 0.5) * 10)),
+          egrStatus: vehicle.egrStatus,
+          exhaustTemp: isMoving ? Math.max(250, Math.min(600, vehicle.exhaustTemp + (Math.random() - 0.5) * 15)) : Math.max(50, vehicle.exhaustTemp - 2),
         };
       })
     );

@@ -1,5 +1,6 @@
 import { TireDiagram } from "@/components/dashboard/TireDiagram";
 import { EngineHealth } from "@/components/dashboard/EngineHealth";
+import { BS6CompliancePanel } from "@/components/dashboard/BS6CompliancePanel";
 import { Gauge, AlertTriangle, CheckCircle, Activity, Scan } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";

@@ -56,7 +56,7 @@ function transformToVehicleCard(vehicle: SimulatedVehicle): Vehicle {
     id: vehicle.id,
     name: vehicle.name,
     plate: vehicle.plate,
-    driver: 'Assigned Driver', // Would come from database in real implementation
+    driver: 'Assigned Driver',
     status: vehicle.status,
     location: getLocationName(vehicle.latitude, vehicle.longitude),
     speed: vehicle.speed,
@@ -71,6 +71,7 @@ function transformToVehicleCard(vehicle: SimulatedVehicle): Vehicle {
     lastUpdate: lastUpdateStr,
     mileage: Math.round(vehicle.mileage),
     alerts: alertCount,
+    adBlueLevel: vehicle.adBlueLevel,
   };
 }
 

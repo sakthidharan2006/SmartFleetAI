@@ -13,6 +13,7 @@ import { DriversView } from "@/components/views/DriversView";
 import { ReportsView } from "@/components/views/ReportsView";
 import { NotificationsView } from "@/components/views/NotificationsView";
 import { SettingsView } from "@/components/views/SettingsView";
+import { LoadHistoryView } from "@/components/views/LoadHistoryView";
 import { useSimulation } from "@/contexts/SimulationContext";
 import { useAlertNotifications } from "@/hooks/useAlertNotifications";
 
@@ -39,6 +40,8 @@ const Index = () => {
         return <DiagnosticsView />;
       case "fuel":
         return <FuelView />;
+      case "loadhistory":
+        return <LoadHistoryView />;
       case "maintenance":
         return <MaintenanceView />;
       case "cctv":

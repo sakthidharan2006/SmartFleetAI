@@ -28,7 +28,7 @@ const DEMO_ACCOUNTS = [
   },
   {
     label: 'Driver 1 — Tata Prima',
-    sublabel: 'Assigned: MH-04-AB-1234',
+    sublabel: 'Assigned: MH-12-AB-1234',
     email: 'driver1@truckpulse.demo',
     password: 'demo123456',
     name: 'Suresh Kumar',
@@ -38,13 +38,23 @@ const DEMO_ACCOUNTS = [
   },
   {
     label: 'Driver 2 — Ashok Leyland',
-    sublabel: 'Assigned: GJ-01-CD-5678',
+    sublabel: 'Assigned: GJ-05-CD-5678',
     email: 'driver2@truckpulse.demo',
     password: 'demo123456',
     name: 'Amit Patel',
     role: 'driver' as const,
     icon: Truck,
     color: 'from-emerald-500 to-teal-600',
+  },
+  {
+    label: 'Driver 3 — Mahindra Blazo',
+    sublabel: 'Assigned: RJ-14-EF-9012',
+    email: 'driver3@truckpulse.demo',
+    password: 'demo123456',
+    name: 'Vikram Singh',
+    role: 'driver' as const,
+    icon: Truck,
+    color: 'from-violet-500 to-purple-600',
   },
 ];
 

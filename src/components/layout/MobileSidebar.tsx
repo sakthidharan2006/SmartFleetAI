@@ -209,9 +209,7 @@ export function MobileSidebar({ activeItem, onItemClick, alertCount = 3 }: Mobil
       {/* Logo */}
       <div className="p-6 border-b border-sidebar-border">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center glow-primary shrink-0">
-            <Truck className="w-5 h-5 text-primary-foreground" />
-          </div>
+          <img src="/webwheels-logo.png" alt="WebWheels" className="w-10 h-10 rounded-xl shrink-0" />
           {!isCollapsed && (
             <div>
               <h1 className="font-bold text-lg text-foreground tracking-tight">WebWheels</h1>

@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Truck, User, Shield, AlertCircle, Loader2, Zap } from 'lucide-react';
+import { Truck, User, Shield, AlertCircle, Loader2, Zap, Crown } from 'lucide-react';
 import { toast } from 'sonner';
 import { z } from 'zod';
 

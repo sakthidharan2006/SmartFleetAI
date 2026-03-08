@@ -16,10 +16,12 @@ import { SettingsView } from "@/components/views/SettingsView";
 import { LoadHistoryView } from "@/components/views/LoadHistoryView";
 import { useSimulation } from "@/contexts/SimulationContext";
 import { useAlertNotifications } from "@/hooks/useAlertNotifications";
+import { useLoadSlipNotifications } from "@/hooks/useLoadSlipNotifications";
 
 function AlertNotificationBridge() {
   const { alerts } = useSimulation();
   useAlertNotifications(alerts, true);
+  useLoadSlipNotifications();
   return null;
 }
 

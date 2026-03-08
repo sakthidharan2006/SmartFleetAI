@@ -12,6 +12,7 @@ import {
   Wrench,
   Route,
   Home,
+  Package,
   X,
   Menu,
   LogOut

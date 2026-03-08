@@ -31,7 +31,7 @@ interface SimulationContextType {
     avgFuelEfficiency: number;
     activeAlerts: number;
   };
-  userRole: 'owner' | 'driver' | null;
+  userRole: 'owner' | 'driver' | 'admin' | null;
   isDriver: boolean;
 }
 

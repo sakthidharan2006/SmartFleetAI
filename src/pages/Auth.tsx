@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Truck, User, Shield, AlertCircle, Loader2, Zap } from 'lucide-react';
+import { Truck, User, Shield, AlertCircle, Loader2, Zap, Crown } from 'lucide-react';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -16,6 +16,7 @@ const passwordSchema = z.string().min(6, 'Password must be at least 6 characters
 const nameSchema = z.string().min(2, 'Name must be at least 2 characters');
 
 const DEMO_ACCOUNTS = [
+  { label: 'Admin', sublabel: 'Super access — edit all data', email: 'admin@webwheels.demo', password: 'demo123456', name: 'Admin User', role: 'admin' as const, icon: Crown, color: 'from-red-500 to-rose-600' },
   { label: 'Fleet Owner', sublabel: 'Full fleet access', email: 'owner@truckpulse.demo', password: 'demo123456', name: 'Rajesh Sharma', role: 'owner' as const, icon: Shield, color: 'from-amber-500 to-orange-600' },
   { label: 'Driver 1 — Tata Prima', sublabel: 'MH-12-AB-1234', email: 'driver1@truckpulse.demo', password: 'demo123456', name: 'Suresh Kumar', role: 'driver' as const, icon: Truck, color: 'from-blue-500 to-cyan-600' },
   { label: 'Driver 2 — Ashok Leyland', sublabel: 'GJ-05-CD-5678', email: 'driver2@truckpulse.demo', password: 'demo123456', name: 'Amit Patel', role: 'driver' as const, icon: Truck, color: 'from-emerald-500 to-teal-600' },

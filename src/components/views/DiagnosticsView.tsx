@@ -1,5 +1,6 @@
 import { TireDiagram } from "@/components/dashboard/TireDiagram";
 import { EngineHealth } from "@/components/dashboard/EngineHealth";
+import { BS6CompliancePanel } from "@/components/dashboard/BS6CompliancePanel";
 import { Gauge, AlertTriangle, CheckCircle, Activity, Scan } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
@@ -7,9 +8,10 @@ import { cn } from "@/lib/utils";
 import { useSimulation } from "@/contexts/SimulationContext";
 
 export function DiagnosticsView() {
-  const { vehicleCards, isDriver } = useSimulation();
+  const { vehicleCards, isDriver, vehicles } = useSimulation();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const selectedVehicle = vehicleCards[selectedIndex] || vehicleCards[0];
+  const selectedSimVehicle = vehicles[selectedIndex] || vehicles[0];
 
   if (!selectedVehicle) {
     return <div className="text-muted-foreground p-8 text-center">No vehicles available.</div>;
@@ -80,6 +82,24 @@ export function DiagnosticsView() {
           overallHealth={selectedVehicle.alerts > 0 ? 74 : 92}
         />
       </div>
+
+      {/* BS6 Emission Compliance */}
+      {selectedSimVehicle && (
+        <BS6CompliancePanel
+          metrics={{
+            adBlueLevel: selectedSimVehicle.adBlueLevel,
+            adBlueCapacity: selectedSimVehicle.adBlueCapacity,
+            dpfStatus: selectedSimVehicle.dpfStatus,
+            dpfSootLoad: selectedSimVehicle.dpfSootLoad,
+            scrEfficiency: selectedSimVehicle.scrEfficiency,
+            noxLevel: selectedSimVehicle.noxLevel,
+            egrStatus: selectedSimVehicle.egrStatus,
+            exhaustTemp: selectedSimVehicle.exhaustTemp,
+            emissionCompliance: selectedSimVehicle.noxLevel <= 460 && selectedSimVehicle.adBlueLevel > 5 && selectedSimVehicle.dpfStatus !== 'blocked',
+          }}
+          vehicleName={`${selectedVehicle.name} (${selectedVehicle.plate})`}
+        />
+      )}
 
       {/* Diagnostic Codes */}
       <div className="glass-card p-6">

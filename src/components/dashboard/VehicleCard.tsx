@@ -7,7 +7,8 @@ import {
   MapPin,
   MoreVertical,
   AlertTriangle,
-  CheckCircle
+  CheckCircle,
+  Droplets
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,7 @@ export interface Vehicle {
   lastUpdate: string;
   mileage: number;
   alerts: number;
+  adBlueLevel?: number;
 }
 
 interface VehicleCardProps {
@@ -172,6 +174,34 @@ export function VehicleCard({ vehicle, index }: VehicleCardProps) {
           </p>
         </div>
       </div>
+
+      {/* AdBlue Level (BS6) */}
+      {vehicle.adBlueLevel !== undefined && (
+        <div className="px-4 py-3 border-t border-border/50 bg-info/5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Droplets className={cn(
+                "w-4 h-4",
+                vehicle.adBlueLevel < 5 ? "text-destructive" : vehicle.adBlueLevel < 15 ? "text-warning" : "text-info"
+              )} />
+              <span className="text-xs font-medium text-muted-foreground">AdBlue (DEF)</span>
+            </div>
+            <span className={cn(
+              "text-sm font-bold font-mono",
+              vehicle.adBlueLevel < 5 ? "text-destructive" : vehicle.adBlueLevel < 15 ? "text-warning" : "text-foreground"
+            )}>
+              {Math.round(vehicle.adBlueLevel)}%
+            </span>
+          </div>
+          <Progress
+            value={vehicle.adBlueLevel}
+            className={cn(
+              "h-1.5 mt-1.5",
+              vehicle.adBlueLevel < 5 ? "[&>div]:bg-destructive" : vehicle.adBlueLevel < 15 ? "[&>div]:bg-warning" : "[&>div]:bg-info"
+            )}
+          />
+        </div>
+      )}
 
       {/* Footer */}
       <div className="px-4 py-3 bg-secondary/20 border-t border-border/50 flex items-center justify-between">

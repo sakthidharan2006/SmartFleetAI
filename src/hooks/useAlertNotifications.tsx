@@ -1,7 +1,7 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { toast } from 'sonner';
 import { SimulatedAlert } from '@/hooks/useRealtimeSimulation';
-import { AlertTriangle, Flame, Fuel, CircleAlert, Bell } from 'lucide-react';
+import { AlertTriangle, Flame, Fuel, CircleAlert, Bell, Droplets, Wind, Gauge } from 'lucide-react';
 
 // Web Audio API beep generator — no external files needed
 function createBeepSound(frequency: number, duration: number, volume: number = 0.3): () => void {
@@ -38,6 +38,11 @@ const ALERT_ICONS: Record<string, React.ReactNode> = {
   'Low Fuel': <Fuel className="w-4 h-4 text-warning" />,
   'Low Tire Pressure': <AlertTriangle className="w-4 h-4 text-destructive" />,
   'Harsh Braking': <CircleAlert className="w-4 h-4 text-warning" />,
+  'Low AdBlue Level': <Droplets className="w-4 h-4 text-destructive" />,
+  'DPF Regeneration Needed': <Wind className="w-4 h-4 text-warning" />,
+  'High NOx Emission': <Gauge className="w-4 h-4 text-warning" />,
+  'EGR System Fault': <AlertTriangle className="w-4 h-4 text-destructive" />,
+  'SCR Efficiency Drop': <Gauge className="w-4 h-4 text-info" />,
 };
 
 export function useAlertNotifications(alerts: SimulatedAlert[], enabled: boolean = true) {

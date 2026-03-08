@@ -23,6 +23,15 @@ export interface SimulatedVehicle {
   mileage: number;
   lastUpdate: Date;
   driverId?: string;
+  // BS6 Emission metrics
+  adBlueLevel: number;       // percentage 0-100
+  adBlueCapacity: number;    // liters
+  dpfStatus: 'clean' | 'regenerating' | 'warning' | 'blocked';
+  dpfSootLoad: number;       // percentage 0-100
+  scrEfficiency: number;     // percentage 0-100
+  noxLevel: number;          // mg/km
+  egrStatus: 'active' | 'inactive' | 'fault';
+  exhaustTemp: number;       // °C
 }
 
 export interface SimulatedAlert {
@@ -38,12 +47,12 @@ export interface SimulatedAlert {
 
 // Indian truck brands with realistic Indian locations
 const INITIAL_VEHICLES: SimulatedVehicle[] = [
-  { id: '1', name: 'Tata Prima 4928.S', plate: 'MH-12-AB-1234', type: 'Heavy Truck', status: 'active', latitude: 18.5204, longitude: 73.8567, speed: 62, heading: 45, fuelLevel: 78, fuelCapacity: 400, engineTemp: 195, tirePressure: { frontLeft: 105, frontRight: 103, rearLeft: 98, rearRight: 101 }, mileage: 145280, lastUpdate: new Date() },
-  { id: '2', name: 'Ashok Leyland 4923', plate: 'GJ-05-CD-5678', type: 'Heavy Truck', status: 'active', latitude: 23.0225, longitude: 72.5714, speed: 55, heading: 180, fuelLevel: 45, fuelCapacity: 400, engineTemp: 198, tirePressure: { frontLeft: 102, frontRight: 100, rearLeft: 95, rearRight: 97 }, mileage: 198450, lastUpdate: new Date() },
-  { id: '3', name: 'Mahindra Blazo X 46', plate: 'RJ-14-EF-9012', type: 'Heavy Truck', status: 'idle', latitude: 26.9124, longitude: 75.7873, speed: 0, heading: 90, fuelLevel: 92, fuelCapacity: 400, engineTemp: 165, tirePressure: { frontLeft: 100, frontRight: 100, rearLeft: 100, rearRight: 100 }, mileage: 87650, lastUpdate: new Date() },
-  { id: '4', name: 'BharatBenz 4228R', plate: 'KA-01-GH-3456', type: 'Heavy Truck', status: 'active', latitude: 12.9716, longitude: 77.5946, speed: 48, heading: 270, fuelLevel: 33, fuelCapacity: 350, engineTemp: 201, tirePressure: { frontLeft: 98, frontRight: 85, rearLeft: 97, rearRight: 96 }, mileage: 234890, lastUpdate: new Date() },
-  { id: '5', name: 'Eicher Pro 6049', plate: 'TN-09-IJ-7890', type: 'Medium Truck', status: 'maintenance', latitude: 13.0827, longitude: 80.2707, speed: 0, heading: 0, fuelLevel: 65, fuelCapacity: 300, engineTemp: 0, tirePressure: { frontLeft: 100, frontRight: 100, rearLeft: 100, rearRight: 100 }, mileage: 312450, lastUpdate: new Date() },
-  { id: '6', name: 'Tata Signa 4825.TK', plate: 'DL-01-KL-2345', type: 'Heavy Truck', status: 'active', latitude: 28.4595, longitude: 77.0266, speed: 71, heading: 135, fuelLevel: 88, fuelCapacity: 400, engineTemp: 192, tirePressure: { frontLeft: 104, frontRight: 103, rearLeft: 101, rearRight: 102 }, mileage: 156780, lastUpdate: new Date() },
+  { id: '1', name: 'Tata Prima 4928.S', plate: 'MH-12-AB-1234', type: 'Heavy Truck', status: 'active', latitude: 18.5204, longitude: 73.8567, speed: 62, heading: 45, fuelLevel: 78, fuelCapacity: 400, engineTemp: 195, tirePressure: { frontLeft: 105, frontRight: 103, rearLeft: 98, rearRight: 101 }, mileage: 145280, lastUpdate: new Date(), adBlueLevel: 72, adBlueCapacity: 32, dpfStatus: 'clean', dpfSootLoad: 25, scrEfficiency: 97, noxLevel: 180, egrStatus: 'active', exhaustTemp: 340 },
+  { id: '2', name: 'Ashok Leyland 4923', plate: 'GJ-05-CD-5678', type: 'Heavy Truck', status: 'active', latitude: 23.0225, longitude: 72.5714, speed: 55, heading: 180, fuelLevel: 45, fuelCapacity: 400, engineTemp: 198, tirePressure: { frontLeft: 102, frontRight: 100, rearLeft: 95, rearRight: 97 }, mileage: 198450, lastUpdate: new Date(), adBlueLevel: 35, adBlueCapacity: 32, dpfStatus: 'regenerating', dpfSootLoad: 65, scrEfficiency: 94, noxLevel: 280, egrStatus: 'active', exhaustTemp: 420 },
+  { id: '3', name: 'Mahindra Blazo X 46', plate: 'RJ-14-EF-9012', type: 'Heavy Truck', status: 'idle', latitude: 26.9124, longitude: 75.7873, speed: 0, heading: 90, fuelLevel: 92, fuelCapacity: 400, engineTemp: 165, tirePressure: { frontLeft: 100, frontRight: 100, rearLeft: 100, rearRight: 100 }, mileage: 87650, lastUpdate: new Date(), adBlueLevel: 88, adBlueCapacity: 32, dpfStatus: 'clean', dpfSootLoad: 12, scrEfficiency: 98, noxLevel: 120, egrStatus: 'inactive', exhaustTemp: 180 },
+  { id: '4', name: 'BharatBenz 4228R', plate: 'KA-01-GH-3456', type: 'Heavy Truck', status: 'active', latitude: 12.9716, longitude: 77.5946, speed: 48, heading: 270, fuelLevel: 33, fuelCapacity: 350, engineTemp: 201, tirePressure: { frontLeft: 98, frontRight: 85, rearLeft: 97, rearRight: 96 }, mileage: 234890, lastUpdate: new Date(), adBlueLevel: 8, adBlueCapacity: 32, dpfStatus: 'warning', dpfSootLoad: 78, scrEfficiency: 82, noxLevel: 410, egrStatus: 'fault', exhaustTemp: 520 },
+  { id: '5', name: 'Eicher Pro 6049', plate: 'TN-09-IJ-7890', type: 'Medium Truck', status: 'maintenance', latitude: 13.0827, longitude: 80.2707, speed: 0, heading: 0, fuelLevel: 65, fuelCapacity: 300, engineTemp: 0, tirePressure: { frontLeft: 100, frontRight: 100, rearLeft: 100, rearRight: 100 }, mileage: 312450, lastUpdate: new Date(), adBlueLevel: 55, adBlueCapacity: 25, dpfStatus: 'blocked', dpfSootLoad: 92, scrEfficiency: 75, noxLevel: 520, egrStatus: 'fault', exhaustTemp: 0 },
+  { id: '6', name: 'Tata Signa 4825.TK', plate: 'DL-01-KL-2345', type: 'Heavy Truck', status: 'active', latitude: 28.4595, longitude: 77.0266, speed: 71, heading: 135, fuelLevel: 88, fuelCapacity: 400, engineTemp: 192, tirePressure: { frontLeft: 104, frontRight: 103, rearLeft: 101, rearRight: 102 }, mileage: 156780, lastUpdate: new Date(), adBlueLevel: 62, adBlueCapacity: 32, dpfStatus: 'clean', dpfSootLoad: 30, scrEfficiency: 96, noxLevel: 200, egrStatus: 'active', exhaustTemp: 360 },
 ];
 
 const ALERT_TEMPLATES = [
@@ -53,6 +62,11 @@ const ALERT_TEMPLATES = [
   { type: 'warning' as const, title: 'Harsh Braking', message: 'Detected harsh braking event at {location}' },
   { type: 'info' as const, title: 'Route Deviation', message: 'Vehicle deviated from planned route by {value} km' },
   { type: 'info' as const, title: 'Scheduled Maintenance', message: 'Oil change due in {value} km' },
+  { type: 'critical' as const, title: 'Low AdBlue Level', message: 'AdBlue (DEF) level critically low at {value}% — vehicle may enter limp mode' },
+  { type: 'warning' as const, title: 'DPF Regeneration Needed', message: 'DPF soot load at {value}% — regeneration recommended' },
+  { type: 'warning' as const, title: 'High NOx Emission', message: 'NOx level at {value} mg/km — exceeds BS6 limit of 460 mg/km' },
+  { type: 'critical' as const, title: 'EGR System Fault', message: 'EGR valve malfunction detected — emission compliance at risk' },
+  { type: 'info' as const, title: 'SCR Efficiency Drop', message: 'SCR efficiency dropped to {value}% — check AdBlue quality' },
 ];
 
 const INDIAN_LOCATIONS = [
@@ -144,6 +158,14 @@ export function useRealtimeSimulation(enabled: boolean = true) {
           mileage: vehicle.mileage + (isMoving ? Math.random() * 0.5 : 0),
           status: newStatus,
           lastUpdate: new Date(),
+          // BS6 metrics simulation
+          adBlueLevel: Math.max(0, vehicle.adBlueLevel - (isMoving ? Math.random() * 0.05 : 0)),
+          dpfSootLoad: Math.min(100, Math.max(0, vehicle.dpfSootLoad + (isMoving ? (Math.random() - 0.3) * 0.5 : -0.2))),
+          dpfStatus: vehicle.dpfSootLoad > 85 ? 'blocked' : vehicle.dpfSootLoad > 60 ? 'warning' : vehicle.dpfSootLoad > 40 ? 'regenerating' : 'clean' as const,
+          scrEfficiency: Math.max(70, Math.min(100, vehicle.scrEfficiency + (Math.random() - 0.5) * 0.5)),
+          noxLevel: Math.max(80, Math.min(600, vehicle.noxLevel + (Math.random() - 0.5) * 10)),
+          egrStatus: vehicle.egrStatus,
+          exhaustTemp: isMoving ? Math.max(250, Math.min(600, vehicle.exhaustTemp + (Math.random() - 0.5) * 15)) : Math.max(50, vehicle.exhaustTemp - 2),
         };
       })
     );

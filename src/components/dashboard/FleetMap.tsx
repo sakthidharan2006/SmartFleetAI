@@ -121,7 +121,6 @@ function MapWithLeafletWrapper({ vehicles }: { vehicles: VehicleMarker[] }) {
   return <MapWithLeaflet vehicles={vehicles} L={loaded.L} ReactLeaflet={loaded.RL} />;
 }
 
-// Inner component that uses Leaflet after it's loaded
 function MapWithLeaflet({ 
   vehicles, 
   L, 
@@ -132,8 +131,8 @@ function MapWithLeaflet({
   ReactLeaflet: any;
 }) {
   const { MapContainer, TileLayer, Marker, Popup, useMap } = ReactLeaflet;
+  const [satellite, setSatellite] = useState(false);
   
-  // Center on India
   const center: [number, number] = [22.5, 78.5];
   const zoom = vehicles.length === 1 ? 8 : 5;
 
@@ -144,19 +143,13 @@ function MapWithLeaflet({
     offline: "#6b7280",
   };
 
-  function createTruckIcon(status: VehicleMarker["status"], heading: number) {
-    const color = statusColorHex[status];
+  function createTruckIcon(vehicle: VehicleMarker) {
+    const color = statusColorHex[vehicle.status];
+    const shortName = vehicle.name.split(' ').slice(0, 2).join(' ');
     return L.divIcon({
       className: "custom-truck-marker",
       html: `
-        <div style="
-          width: 40px;
-          height: 40px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transform: rotate(${heading}deg);
-        ">
+        <div style="display:flex;flex-direction:column;align-items:center;pointer-events:auto;">
           <div style="
             width: 32px;
             height: 32px;
@@ -167,40 +160,78 @@ function MapWithLeaflet({
             justify-content: center;
             box-shadow: 0 0 20px ${color}80;
             border: 3px solid #0f172a;
+            transform: rotate(${vehicle.heading}deg);
           ">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
               <path d="M5 18H3c-.6 0-1-.4-1-1V7c0-.6.4-1 1-1h10c.6 0 1 .4 1 1v11"/>
               <path d="M14 9h4l4 4v4c0 .6-.4 1-1 1h-2"/>
               <circle cx="7" cy="18" r="2"/>
               <circle cx="17" cy="18" r="2"/>
             </svg>
           </div>
+          <div style="
+            margin-top: 4px;
+            background: rgba(15,23,42,0.85);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 6px;
+            padding: 2px 6px;
+            white-space: nowrap;
+            font-size: 10px;
+            font-weight: 600;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.02em;
+          ">${shortName}</div>
         </div>
       `,
-      iconSize: [40, 40],
-      iconAnchor: [20, 20],
+      iconSize: [80, 56],
+      iconAnchor: [40, 20],
     });
   }
 
   return (
     <>
+      {/* Satellite toggle */}
+      <div className="absolute top-16 right-4 z-[1000]">
+        <button
+          onClick={() => setSatellite(s => !s)}
+          className={cn(
+            "h-9 px-3 rounded-lg text-xs font-medium border transition-colors flex items-center gap-1.5",
+            satellite
+              ? "bg-primary text-primary-foreground border-primary"
+              : "bg-card/90 backdrop-blur-sm text-foreground border-border hover:bg-secondary"
+          )}
+        >
+          <Layers className="w-3.5 h-3.5" />
+          {satellite ? "Satellite" : "Map"}
+        </button>
+      </div>
+
       <MapContainer
         center={vehicles.length === 1 ? [vehicles[0].position[0], vehicles[0].position[1]] : center}
         zoom={zoom}
         className="h-full w-full"
-        style={{ background: "hsl(222 47% 6%)" }}
+        style={{ background: satellite ? "#1a2e1a" : "hsl(222 47% 6%)" }}
         zoomControl={false}
       >
-        <TileLayer
-          attribution='&copy; <a href="https://carto.com/">CARTO</a>'
-          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-        />
+        {satellite ? (
+          <TileLayer
+            attribution='&copy; Esri'
+            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+          />
+        ) : (
+          <TileLayer
+            attribution='&copy; <a href="https://carto.com/">CARTO</a>'
+            url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+          />
+        )}
         
         {vehicles.map((vehicle) => (
           <Marker
             key={vehicle.id}
             position={vehicle.position}
-            icon={createTruckIcon(vehicle.status, vehicle.heading)}
+            icon={createTruckIcon(vehicle)}
           >
             <Popup className="custom-popup">
               <div className="p-2 min-w-[180px]">
@@ -245,6 +276,10 @@ function MapWithLeaflet({
         }
         .leaflet-container {
           font-family: 'Inter', sans-serif;
+        }
+        .custom-truck-marker {
+          background: transparent !important;
+          border: none !important;
         }
       `}</style>
     </>

@@ -36,6 +36,7 @@ export const allNavItems: NavItem[] = [
   { id: "routes", label: "Routes & Trips", icon: Route },
   { id: "diagnostics", label: "Diagnostics", icon: Gauge },
   { id: "fuel", label: "Fuel Monitor", icon: Fuel },
+  { id: "loadhistory", label: "Load History", icon: Package },
   { id: "maintenance", label: "Maintenance", icon: Wrench },
   { id: "cctv", label: "CCTV Feeds", icon: Video },
   { id: "alerts", label: "Alerts", icon: AlertTriangle },
@@ -44,7 +45,7 @@ export const allNavItems: NavItem[] = [
 ];
 
 // Driver-accessible views
-const DRIVER_NAV_IDS = ['dashboard', 'tracking', 'routes', 'diagnostics', 'fuel', 'cctv', 'alerts', 'drivers'];
+const DRIVER_NAV_IDS = ['dashboard', 'tracking', 'routes', 'diagnostics', 'fuel', 'loadhistory', 'cctv', 'alerts', 'drivers'];
 
 interface MobileSidebarProps {
   activeItem: string;

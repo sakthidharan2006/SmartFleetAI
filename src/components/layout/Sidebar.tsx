@@ -53,8 +53,8 @@ export function Sidebar({ activeItem, onItemClick, alertCount = 3 }: SidebarProp
             <Truck className="w-5 h-5 text-primary-foreground" />
           </div>
           <div>
-            <h1 className="font-bold text-lg text-foreground tracking-tight">TruckPulse</h1>
-            <p className="text-xs text-muted-foreground font-medium">Pro Fleet Manager</p>
+            <h1 className="font-bold text-lg text-foreground tracking-tight">FleetEye</h1>
+            <p className="text-xs text-muted-foreground font-medium">Eagle-eyed Monitoring</p>
           </div>
         </div>
       </div>

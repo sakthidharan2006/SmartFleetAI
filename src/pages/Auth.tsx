@@ -154,8 +154,8 @@ export default function Auth() {
           <Truck className="w-6 h-6 text-primary-foreground" />
         </div>
         <div>
-          <h1 className="font-bold text-2xl text-foreground tracking-tight">TruckPulse</h1>
-          <p className="text-sm text-muted-foreground font-medium">Pro Fleet Manager</p>
+          <h1 className="font-bold text-2xl text-foreground tracking-tight">FleetEye</h1>
+          <p className="text-sm text-muted-foreground font-medium">Eagle-eyed Monitoring</p>
         </div>
       </div>
 
@@ -198,7 +198,7 @@ export default function Auth() {
       {/* Standard Auth */}
       <Card className="w-full max-w-md glass-card-elevated">
         <CardHeader className="text-center pb-2">
-          <CardTitle className="text-xl">Welcome to TruckPulse</CardTitle>
+          <CardTitle className="text-xl">Welcome to FleetEye</CardTitle>
           <CardDescription>
             Sign in to manage your fleet or create an account
           </CardDescription>

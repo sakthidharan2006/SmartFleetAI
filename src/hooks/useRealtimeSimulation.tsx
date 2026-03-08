@@ -23,6 +23,15 @@ export interface SimulatedVehicle {
   mileage: number;
   lastUpdate: Date;
   driverId?: string;
+  // BS6 Emission metrics
+  adBlueLevel: number;       // percentage 0-100
+  adBlueCapacity: number;    // liters
+  dpfStatus: 'clean' | 'regenerating' | 'warning' | 'blocked';
+  dpfSootLoad: number;       // percentage 0-100
+  scrEfficiency: number;     // percentage 0-100
+  noxLevel: number;          // mg/km
+  egrStatus: 'active' | 'inactive' | 'fault';
+  exhaustTemp: number;       // °C
 }
 
 export interface SimulatedAlert {

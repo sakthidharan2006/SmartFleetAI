@@ -8,9 +8,10 @@ import { cn } from "@/lib/utils";
 import { useSimulation } from "@/contexts/SimulationContext";
 
 export function DiagnosticsView() {
-  const { vehicleCards, isDriver } = useSimulation();
+  const { vehicleCards, isDriver, vehicles } = useSimulation();
   const [selectedIndex, setSelectedIndex] = useState(0);
   const selectedVehicle = vehicleCards[selectedIndex] || vehicleCards[0];
+  const selectedSimVehicle = vehicles[selectedIndex] || vehicles[0];
 
   if (!selectedVehicle) {
     return <div className="text-muted-foreground p-8 text-center">No vehicles available.</div>;

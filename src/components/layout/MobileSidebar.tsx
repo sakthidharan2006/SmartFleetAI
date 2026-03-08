@@ -28,7 +28,7 @@ export type NavItem = {
   icon: React.ElementType;
 };
 
-export const navItems: NavItem[] = [
+export const allNavItems: NavItem[] = [
   { id: "dashboard", label: "Dashboard", icon: Home },
   { id: "fleet", label: "Fleet Overview", icon: Truck },
   { id: "tracking", label: "Live Tracking", icon: MapPin },
@@ -41,6 +41,9 @@ export const navItems: NavItem[] = [
   { id: "drivers", label: "Drivers", icon: Users },
   { id: "reports", label: "Reports", icon: BarChart3 },
 ];
+
+// Driver-accessible views
+const DRIVER_NAV_IDS = ['dashboard', 'tracking', 'routes', 'diagnostics', 'fuel', 'cctv', 'alerts', 'drivers'];
 
 interface MobileSidebarProps {
   activeItem: string;

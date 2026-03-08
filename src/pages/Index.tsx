@@ -13,6 +13,14 @@ import { DriversView } from "@/components/views/DriversView";
 import { ReportsView } from "@/components/views/ReportsView";
 import { NotificationsView } from "@/components/views/NotificationsView";
 import { SettingsView } from "@/components/views/SettingsView";
+import { useSimulation } from "@/contexts/SimulationContext";
+import { useAlertNotifications } from "@/hooks/useAlertNotifications";
+
+function AlertNotificationBridge() {
+  const { alerts } = useSimulation();
+  useAlertNotifications(alerts, true);
+  return null;
+}
 
 const Index = () => {
   const [activeView, setActiveView] = useState("dashboard");
@@ -51,9 +59,12 @@ const Index = () => {
   };
 
   return (
-    <DashboardLayout activeItem={activeView} onNavigate={setActiveView}>
-      {renderView()}
-    </DashboardLayout>
+    <>
+      <AlertNotificationBridge />
+      <DashboardLayout activeItem={activeView} onNavigate={setActiveView}>
+        {renderView()}
+      </DashboardLayout>
+    </>
   );
 };
 

@@ -32,6 +32,7 @@ const DEMO_ACCOUNTS = [
     role: 'owner' as const,
     icon: Shield,
     color: 'from-amber-500 to-orange-600',
+    image: null as string | null,
   },
   {
     label: 'Driver 1 — Tata Prima',
@@ -42,6 +43,7 @@ const DEMO_ACCOUNTS = [
     role: 'driver' as const,
     icon: Truck,
     color: 'from-blue-500 to-cyan-600',
+    image: tataPrimaImg,
   },
   {
     label: 'Driver 2 — Ashok Leyland',
@@ -52,6 +54,7 @@ const DEMO_ACCOUNTS = [
     role: 'driver' as const,
     icon: Truck,
     color: 'from-emerald-500 to-teal-600',
+    image: ashokLeylandImg,
   },
   {
     label: 'Driver 3 — Mahindra Blazo',
@@ -62,6 +65,7 @@ const DEMO_ACCOUNTS = [
     role: 'driver' as const,
     icon: Truck,
     color: 'from-violet-500 to-purple-600',
+    image: mahindraBlazoImg,
   },
   {
     label: 'Driver 4 — BharatBenz',
@@ -72,6 +76,7 @@ const DEMO_ACCOUNTS = [
     role: 'driver' as const,
     icon: Truck,
     color: 'from-rose-500 to-pink-600',
+    image: bharatbenzImg,
   },
   {
     label: 'Driver 5 — Eicher Pro',
@@ -82,6 +87,7 @@ const DEMO_ACCOUNTS = [
     role: 'driver' as const,
     icon: Truck,
     color: 'from-orange-500 to-amber-600',
+    image: eicherProImg,
   },
   {
     label: 'Driver 6 — Tata Signa',
@@ -92,9 +98,9 @@ const DEMO_ACCOUNTS = [
     role: 'driver' as const,
     icon: Truck,
     color: 'from-sky-500 to-indigo-600',
+    image: tataSignaImg,
   },
 ];
-
 export default function Auth() {
   const navigate = useNavigate();
   const { user, loading, signIn, signUp } = useAuth();

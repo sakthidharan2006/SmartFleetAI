@@ -83,6 +83,24 @@ export function DiagnosticsView() {
         />
       </div>
 
+      {/* BS6 Emission Compliance */}
+      {selectedSimVehicle && (
+        <BS6CompliancePanel
+          metrics={{
+            adBlueLevel: selectedSimVehicle.adBlueLevel,
+            adBlueCapacity: selectedSimVehicle.adBlueCapacity,
+            dpfStatus: selectedSimVehicle.dpfStatus,
+            dpfSootLoad: selectedSimVehicle.dpfSootLoad,
+            scrEfficiency: selectedSimVehicle.scrEfficiency,
+            noxLevel: selectedSimVehicle.noxLevel,
+            egrStatus: selectedSimVehicle.egrStatus,
+            exhaustTemp: selectedSimVehicle.exhaustTemp,
+            emissionCompliance: selectedSimVehicle.noxLevel <= 460 && selectedSimVehicle.adBlueLevel > 5 && selectedSimVehicle.dpfStatus !== 'blocked',
+          }}
+          vehicleName={`${selectedVehicle.name} (${selectedVehicle.plate})`}
+        />
+      )}
+
       {/* Diagnostic Codes */}
       <div className="glass-card p-6">
         <h3 className="font-semibold mb-4 flex items-center gap-2">

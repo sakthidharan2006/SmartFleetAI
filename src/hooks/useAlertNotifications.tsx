@@ -1,7 +1,7 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { toast } from 'sonner';
 import { SimulatedAlert } from '@/hooks/useRealtimeSimulation';
-import { AlertTriangle, Flame, Fuel, CircleAlert, Bell } from 'lucide-react';
+import { AlertTriangle, Flame, Fuel, CircleAlert, Bell, Droplets, Wind, Gauge } from 'lucide-react';
 
 // Web Audio API beep generator — no external files needed
 function createBeepSound(frequency: number, duration: number, volume: number = 0.3): () => void {

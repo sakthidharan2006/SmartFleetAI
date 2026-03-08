@@ -1,13 +1,19 @@
 import { TireDiagram } from "@/components/dashboard/TireDiagram";
 import { EngineHealth } from "@/components/dashboard/EngineHealth";
-import { mockVehicles } from "@/data/mockData";
 import { Gauge, AlertTriangle, CheckCircle, Activity, Scan } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useSimulation } from "@/contexts/SimulationContext";
 
 export function DiagnosticsView() {
-  const [selectedVehicle, setSelectedVehicle] = useState(mockVehicles[3]);
+  const { vehicleCards, isDriver } = useSimulation();
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const selectedVehicle = vehicleCards[selectedIndex] || vehicleCards[0];
+
+  if (!selectedVehicle) {
+    return <div className="text-muted-foreground p-8 text-center">No vehicles available.</div>;
+  }
 
   return (
     <div className="space-y-6 animate-fade-in-up">
@@ -15,7 +21,9 @@ export function DiagnosticsView() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Diagnostics</h1>
-          <p className="text-muted-foreground">Real-time vehicle health monitoring and OBD-II data</p>
+          <p className="text-muted-foreground">
+            {isDriver ? 'Your vehicle health monitoring' : 'Real-time vehicle health monitoring and OBD-II data'}
+          </p>
         </div>
         <Button size="sm">
           <Scan className="w-4 h-4 mr-2" />
@@ -24,34 +32,36 @@ export function DiagnosticsView() {
       </div>
 
       {/* Vehicle Selector */}
-      <div className="glass-card p-4">
-        <h3 className="text-sm font-medium text-muted-foreground mb-3">Select Vehicle</h3>
-        <div className="flex gap-2 overflow-x-auto pb-2">
-          {mockVehicles.map((vehicle) => (
-            <button
-              key={vehicle.id}
-              onClick={() => setSelectedVehicle(vehicle)}
-              className={cn(
-                "flex items-center gap-3 px-4 py-3 rounded-xl border transition-all whitespace-nowrap",
-                selectedVehicle.id === vehicle.id 
-                  ? "bg-primary/10 border-primary/50" 
-                  : "bg-secondary/30 border-border hover:border-primary/30"
-              )}
-            >
-              <div className={cn(
-                "w-3 h-3 rounded-full",
-                vehicle.status === "active" ? "bg-success" :
-                vehicle.status === "idle" ? "bg-warning" :
-                vehicle.status === "maintenance" ? "bg-info" : "bg-muted-foreground"
-              )} />
-              <div className="text-left">
-                <p className="font-medium text-sm">{vehicle.name}</p>
-                <p className="text-xs text-muted-foreground">{vehicle.plate}</p>
-              </div>
-            </button>
-          ))}
+      {!isDriver && (
+        <div className="glass-card p-4">
+          <h3 className="text-sm font-medium text-muted-foreground mb-3">Select Vehicle</h3>
+          <div className="flex gap-2 overflow-x-auto pb-2">
+            {vehicleCards.map((vehicle, index) => (
+              <button
+                key={vehicle.id}
+                onClick={() => setSelectedIndex(index)}
+                className={cn(
+                  "flex items-center gap-3 px-4 py-3 rounded-xl border transition-all whitespace-nowrap",
+                  selectedIndex === index
+                    ? "bg-primary/10 border-primary/50" 
+                    : "bg-secondary/30 border-border hover:border-primary/30"
+                )}
+              >
+                <div className={cn(
+                  "w-3 h-3 rounded-full",
+                  vehicle.status === "active" ? "bg-success" :
+                  vehicle.status === "idle" ? "bg-warning" :
+                  vehicle.status === "maintenance" ? "bg-info" : "bg-muted-foreground"
+                )} />
+                <div className="text-left">
+                  <p className="font-medium text-sm">{vehicle.name}</p>
+                  <p className="text-xs text-muted-foreground">{vehicle.plate}</p>
+                </div>
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Diagnostics Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -66,7 +76,7 @@ export function DiagnosticsView() {
             batteryVoltage: 13.8,
             coolantLevel: 78,
           }}
-          lastDiagnostic="Today, 8:00 AM"
+          lastDiagnostic="Live simulation"
           overallHealth={selectedVehicle.alerts > 0 ? 74 : 92}
         />
       </div>

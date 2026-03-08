@@ -29,6 +29,7 @@ export const navItems: NavItem[] = [
   { id: "routes", label: "Routes & Trips", icon: Route },
   { id: "diagnostics", label: "Diagnostics", icon: Gauge },
   { id: "fuel", label: "Fuel Monitor", icon: Fuel },
+  { id: "loadhistory", label: "Load History", icon: Package },
   { id: "maintenance", label: "Maintenance", icon: Wrench },
   { id: "cctv", label: "CCTV Feeds", icon: Video },
   { id: "alerts", label: "Alerts", icon: AlertTriangle },

@@ -38,6 +38,11 @@ const ALERT_ICONS: Record<string, React.ReactNode> = {
   'Low Fuel': <Fuel className="w-4 h-4 text-warning" />,
   'Low Tire Pressure': <AlertTriangle className="w-4 h-4 text-destructive" />,
   'Harsh Braking': <CircleAlert className="w-4 h-4 text-warning" />,
+  'Low AdBlue Level': <Droplets className="w-4 h-4 text-destructive" />,
+  'DPF Regeneration Needed': <Wind className="w-4 h-4 text-warning" />,
+  'High NOx Emission': <Gauge className="w-4 h-4 text-warning" />,
+  'EGR System Fault': <AlertTriangle className="w-4 h-4 text-destructive" />,
+  'SCR Efficiency Drop': <Gauge className="w-4 h-4 text-info" />,
 };
 
 export function useAlertNotifications(alerts: SimulatedAlert[], enabled: boolean = true) {

@@ -1,96 +1,85 @@
-import { Route, Clock, MapPin, Fuel, ChevronRight, Calendar, Play, CheckCircle } from "lucide-react";
+import { Route, Clock, MapPin, ChevronRight, Calendar, Play, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-
-const trips = [
-  {
-    id: 1,
-    from: "Denver, CO",
-    to: "Kansas City, MO",
-    vehicle: "Volvo VNL 860 (TRK-7834)",
-    driver: "David Chen",
-    status: "in-progress",
-    progress: 65,
-    distance: "604 mi",
-    eta: "4h 32m",
-    startTime: "06:30 AM",
-  },
-  {
-    id: 2,
-    from: "Omaha, NE",
-    to: "Chicago, IL",
-    vehicle: "Freightliner Cascadia (TRK-2847)",
-    driver: "Mike Johnson",
-    status: "in-progress",
-    progress: 42,
-    distance: "469 mi",
-    eta: "6h 15m",
-    startTime: "08:15 AM",
-  },
-  {
-    id: 3,
-    from: "Salt Lake City, UT",
-    to: "Phoenix, AZ",
-    vehicle: "Peterbilt 579 (TRK-1923)",
-    driver: "Sarah Williams",
-    status: "scheduled",
-    progress: 0,
-    distance: "660 mi",
-    eta: "—",
-    startTime: "Tomorrow 05:00 AM",
-  },
-  {
-    id: 4,
-    from: "Los Angeles, CA",
-    to: "Las Vegas, NV",
-    vehicle: "Kenworth T680 (TRK-4521)",
-    driver: "James Rodriguez",
-    status: "completed",
-    progress: 100,
-    distance: "270 mi",
-    eta: "Completed",
-    startTime: "Yesterday",
-  },
-];
+import { useSimulation } from "@/contexts/SimulationContext";
 
 export function RoutesView() {
+  const { vehicleCards, isDriver } = useSimulation();
+
+  // Generate trips from simulation vehicles
+  const indianRoutes = [
+    { from: 'Mumbai', to: 'Pune', distance: '150 km', eta: '2h 45m' },
+    { from: 'Ahmedabad', to: 'Surat', distance: '265 km', eta: '4h 10m' },
+    { from: 'Jaipur', to: 'Delhi', distance: '281 km', eta: '4h 30m' },
+    { from: 'Bengaluru', to: 'Chennai', distance: '346 km', eta: '5h 20m' },
+    { from: 'Chennai', to: 'Hyderabad', distance: '630 km', eta: '9h 15m' },
+    { from: 'Delhi', to: 'Gurugram', distance: '32 km', eta: '45m' },
+  ];
+
+  const trips = vehicleCards.map((v, i) => {
+    const route = indianRoutes[i % indianRoutes.length];
+    const isActive = v.status === 'active';
+    const isMaintenance = v.status === 'maintenance';
+    return {
+      id: v.id,
+      from: route.from,
+      to: route.to,
+      vehicle: `${v.name} (${v.plate})`,
+      driver: 'Assigned Driver',
+      status: isActive ? 'in-progress' : isMaintenance ? 'scheduled' : 'completed',
+      progress: isActive ? Math.min(95, Math.max(10, v.speed + 20)) : isMaintenance ? 0 : 100,
+      distance: route.distance,
+      eta: isActive ? route.eta : isMaintenance ? '—' : 'Completed',
+      startTime: isActive ? 'Today 06:30 AM' : isMaintenance ? 'Tomorrow 05:00 AM' : 'Yesterday',
+    };
+  });
+
+  const activeTrips = trips.filter(t => t.status === 'in-progress').length;
+  const completedTrips = trips.filter(t => t.status === 'completed').length;
+
   return (
     <div className="space-y-6 animate-fade-in-up">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Routes & Trips</h1>
-          <p className="text-muted-foreground">Manage and track all scheduled and active trips</p>
+          <h1 className="text-2xl font-bold text-foreground">
+            {isDriver ? 'My Trips' : 'Routes & Trips'}
+          </h1>
+          <p className="text-muted-foreground">
+            {isDriver ? 'Your scheduled and active trips' : 'Manage and track all scheduled and active trips'}
+          </p>
         </div>
-        <div className="flex items-center gap-3">
-          <Button variant="secondary" size="sm">
-            <Calendar className="w-4 h-4 mr-2" />
-            Schedule
-          </Button>
-          <Button size="sm">
-            <Route className="w-4 h-4 mr-2" />
-            New Trip
-          </Button>
-        </div>
+        {!isDriver && (
+          <div className="flex items-center gap-3">
+            <Button variant="secondary" size="sm">
+              <Calendar className="w-4 h-4 mr-2" />
+              Schedule
+            </Button>
+            <Button size="sm">
+              <Route className="w-4 h-4 mr-2" />
+              New Trip
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="glass-card p-4">
           <p className="text-sm text-muted-foreground mb-1">Active Trips</p>
-          <p className="text-3xl font-bold text-primary">8</p>
+          <p className="text-3xl font-bold text-primary">{activeTrips}</p>
         </div>
         <div className="glass-card p-4">
           <p className="text-sm text-muted-foreground mb-1">Scheduled Today</p>
-          <p className="text-3xl font-bold">12</p>
+          <p className="text-3xl font-bold">{trips.length}</p>
         </div>
         <div className="glass-card p-4">
           <p className="text-sm text-muted-foreground mb-1">Completed Today</p>
-          <p className="text-3xl font-bold text-success">5</p>
+          <p className="text-3xl font-bold text-success">{completedTrips}</p>
         </div>
         <div className="glass-card p-4">
           <p className="text-sm text-muted-foreground mb-1">Total Distance</p>
-          <p className="text-3xl font-bold">2,456 mi</p>
+          <p className="text-3xl font-bold">1,840 km</p>
         </div>
       </div>
 
@@ -118,7 +107,7 @@ export function RoutesView() {
                     <ChevronRight className="w-5 h-5 text-muted-foreground" />
                     <span>{trip.to}</span>
                   </div>
-                  <p className="text-sm text-muted-foreground">{trip.vehicle} • {trip.driver}</p>
+                  <p className="text-sm text-muted-foreground">{trip.vehicle}</p>
                 </div>
               </div>
               <div className="text-right">

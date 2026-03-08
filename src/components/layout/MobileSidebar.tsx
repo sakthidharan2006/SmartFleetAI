@@ -28,7 +28,7 @@ export type NavItem = {
   icon: React.ElementType;
 };
 
-export const navItems: NavItem[] = [
+export const allNavItems: NavItem[] = [
   { id: "dashboard", label: "Dashboard", icon: Home },
   { id: "fleet", label: "Fleet Overview", icon: Truck },
   { id: "tracking", label: "Live Tracking", icon: MapPin },
@@ -42,6 +42,9 @@ export const navItems: NavItem[] = [
   { id: "reports", label: "Reports", icon: BarChart3 },
 ];
 
+// Driver-accessible views
+const DRIVER_NAV_IDS = ['dashboard', 'tracking', 'routes', 'diagnostics', 'fuel', 'cctv', 'alerts', 'drivers'];
+
 interface MobileSidebarProps {
   activeItem: string;
   onItemClick: (item: string) => void;
@@ -51,6 +54,10 @@ interface MobileSidebarProps {
 export function MobileSidebar({ activeItem, onItemClick, alertCount = 3 }: MobileSidebarProps) {
   const { isOpen, close, toggle, isMobile, isCollapsed } = useSidebar();
   const { profile, role, signOut } = useAuth();
+
+  const navItems = role === 'driver' 
+    ? allNavItems.filter(item => DRIVER_NAV_IDS.includes(item.id))
+    : allNavItems;
 
   const handleItemClick = (item: string) => {
     onItemClick(item);

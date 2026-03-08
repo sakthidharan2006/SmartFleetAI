@@ -62,6 +62,11 @@ const ALERT_TEMPLATES = [
   { type: 'warning' as const, title: 'Harsh Braking', message: 'Detected harsh braking event at {location}' },
   { type: 'info' as const, title: 'Route Deviation', message: 'Vehicle deviated from planned route by {value} km' },
   { type: 'info' as const, title: 'Scheduled Maintenance', message: 'Oil change due in {value} km' },
+  { type: 'critical' as const, title: 'Low AdBlue Level', message: 'AdBlue (DEF) level critically low at {value}% — vehicle may enter limp mode' },
+  { type: 'warning' as const, title: 'DPF Regeneration Needed', message: 'DPF soot load at {value}% — regeneration recommended' },
+  { type: 'warning' as const, title: 'High NOx Emission', message: 'NOx level at {value} mg/km — exceeds BS6 limit of 460 mg/km' },
+  { type: 'critical' as const, title: 'EGR System Fault', message: 'EGR valve malfunction detected — emission compliance at risk' },
+  { type: 'info' as const, title: 'SCR Efficiency Drop', message: 'SCR efficiency dropped to {value}% — check AdBlue quality' },
 ];
 
 const INDIAN_LOCATIONS = [

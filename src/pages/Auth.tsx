@@ -11,6 +11,13 @@ import { Truck, User, Shield, AlertCircle, Loader2, Zap } from 'lucide-react';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
+import tataPrimaImg from '@/assets/trucks/tata-prima.png';
+import ashokLeylandImg from '@/assets/trucks/ashok-leyland.png';
+import mahindraBlazoImg from '@/assets/trucks/mahindra-blazo.png';
+import bharatbenzImg from '@/assets/trucks/bharatbenz.png';
+import eicherProImg from '@/assets/trucks/eicher-pro.png';
+import tataSignaImg from '@/assets/trucks/tata-signa.png';
+
 const emailSchema = z.string().email('Please enter a valid email address');
 const passwordSchema = z.string().min(6, 'Password must be at least 6 characters');
 const nameSchema = z.string().min(2, 'Name must be at least 2 characters');

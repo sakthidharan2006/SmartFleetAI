@@ -11,96 +11,20 @@ import { Truck, User, Shield, AlertCircle, Loader2, Zap } from 'lucide-react';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-import tataPrimaImg from '@/assets/trucks/tata-prima.png';
-import ashokLeylandImg from '@/assets/trucks/ashok-leyland.png';
-import mahindraBlazoImg from '@/assets/trucks/mahindra-blazo.png';
-import bharatbenzImg from '@/assets/trucks/bharatbenz.png';
-import eicherProImg from '@/assets/trucks/eicher-pro.png';
-import tataSignaImg from '@/assets/trucks/tata-signa.png';
-
 const emailSchema = z.string().email('Please enter a valid email address');
 const passwordSchema = z.string().min(6, 'Password must be at least 6 characters');
 const nameSchema = z.string().min(2, 'Name must be at least 2 characters');
 
 const DEMO_ACCOUNTS = [
-  {
-    label: 'Fleet Owner',
-    sublabel: 'Full fleet access',
-    email: 'owner@truckpulse.demo',
-    password: 'demo123456',
-    name: 'Rajesh Sharma',
-    role: 'owner' as const,
-    icon: Shield,
-    color: 'from-amber-500 to-orange-600',
-    image: null as string | null,
-  },
-  {
-    label: 'Driver 1 — Tata Prima',
-    sublabel: 'Assigned: MH-12-AB-1234',
-    email: 'driver1@truckpulse.demo',
-    password: 'demo123456',
-    name: 'Suresh Kumar',
-    role: 'driver' as const,
-    icon: Truck,
-    color: 'from-blue-500 to-cyan-600',
-    image: tataPrimaImg,
-  },
-  {
-    label: 'Driver 2 — Ashok Leyland',
-    sublabel: 'Assigned: GJ-05-CD-5678',
-    email: 'driver2@truckpulse.demo',
-    password: 'demo123456',
-    name: 'Amit Patel',
-    role: 'driver' as const,
-    icon: Truck,
-    color: 'from-emerald-500 to-teal-600',
-    image: ashokLeylandImg,
-  },
-  {
-    label: 'Driver 3 — Mahindra Blazo',
-    sublabel: 'Assigned: RJ-14-EF-9012',
-    email: 'driver3@truckpulse.demo',
-    password: 'demo123456',
-    name: 'Vikram Singh',
-    role: 'driver' as const,
-    icon: Truck,
-    color: 'from-violet-500 to-purple-600',
-    image: mahindraBlazoImg,
-  },
-  {
-    label: 'Driver 4 — BharatBenz',
-    sublabel: 'Assigned: KA-01-GH-3456',
-    email: 'driver4@truckpulse.demo',
-    password: 'demo123456',
-    name: 'Venkatesh Rao',
-    role: 'driver' as const,
-    icon: Truck,
-    color: 'from-rose-500 to-pink-600',
-    image: bharatbenzImg,
-  },
-  {
-    label: 'Driver 5 — Eicher Pro',
-    sublabel: 'Assigned: TN-09-IJ-7890',
-    email: 'driver5@truckpulse.demo',
-    password: 'demo123456',
-    name: 'Murugan Selvam',
-    role: 'driver' as const,
-    icon: Truck,
-    color: 'from-orange-500 to-amber-600',
-    image: eicherProImg,
-  },
-  {
-    label: 'Driver 6 — Tata Signa',
-    sublabel: 'Assigned: DL-01-KL-2345',
-    email: 'driver6@truckpulse.demo',
-    password: 'demo123456',
-    name: 'Harpreet Singh',
-    role: 'driver' as const,
-    icon: Truck,
-    color: 'from-sky-500 to-indigo-600',
-    image: tataSignaImg,
-  },
+  { label: 'Fleet Owner', sublabel: 'Full fleet access', email: 'owner@truckpulse.demo', password: 'demo123456', name: 'Rajesh Sharma', role: 'owner' as const, icon: Shield, color: 'from-amber-500 to-orange-600' },
+  { label: 'Driver 1 — Tata Prima', sublabel: 'MH-12-AB-1234', email: 'driver1@truckpulse.demo', password: 'demo123456', name: 'Suresh Kumar', role: 'driver' as const, icon: Truck, color: 'from-blue-500 to-cyan-600' },
+  { label: 'Driver 2 — Ashok Leyland', sublabel: 'GJ-05-CD-5678', email: 'driver2@truckpulse.demo', password: 'demo123456', name: 'Amit Patel', role: 'driver' as const, icon: Truck, color: 'from-emerald-500 to-teal-600' },
+  { label: 'Driver 3 — Mahindra Blazo', sublabel: 'RJ-14-EF-9012', email: 'driver3@truckpulse.demo', password: 'demo123456', name: 'Vikram Singh', role: 'driver' as const, icon: Truck, color: 'from-violet-500 to-purple-600' },
+  { label: 'Driver 4 — BharatBenz', sublabel: 'KA-01-GH-3456', email: 'driver4@truckpulse.demo', password: 'demo123456', name: 'Venkatesh Rao', role: 'driver' as const, icon: Truck, color: 'from-rose-500 to-pink-600' },
+  { label: 'Driver 5 — Eicher Pro', sublabel: 'TN-09-IJ-7890', email: 'driver5@truckpulse.demo', password: 'demo123456', name: 'Murugan Selvam', role: 'driver' as const, icon: Truck, color: 'from-orange-500 to-amber-600' },
+  { label: 'Driver 6 — Tata Signa', sublabel: 'DL-01-KL-2345', email: 'driver6@truckpulse.demo', password: 'demo123456', name: 'Harpreet Singh', role: 'driver' as const, icon: Truck, color: 'from-sky-500 to-indigo-600' },
 ];
+
 export default function Auth() {
   const navigate = useNavigate();
   const { user, loading, signIn, signUp } = useAuth();
@@ -109,19 +33,16 @@ export default function Auth() {
   const [quickLoginId, setQuickLoginId] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState<'login' | 'signup'>('login');
   
-  // Login form
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   
-  // Signup form
   const [signupName, setSignupName] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
   const [signupRole, setSignupRole] = useState<'owner' | 'driver'>('driver');
   const [signupError, setSignupError] = useState('');
 
-  // Redirect if already logged in
   useEffect(() => {
     if (user && !loading) {
       navigate('/');
@@ -132,18 +53,15 @@ export default function Auth() {
     const account = DEMO_ACCOUNTS[index];
     setQuickLoginId(index);
 
-    // Try sign in first
     const { error: signInError } = await signIn(account.email, account.password);
     
     if (signInError) {
-      // Account doesn't exist, create it
       const { error: signUpError } = await signUp(account.email, account.password, account.name, account.role);
       if (signUpError) {
         toast.error('Quick login failed: ' + signUpError.message);
         setQuickLoginId(null);
         return;
       }
-      // Auto sign-in after signup (auto-confirm is enabled)
       const { error: retryError } = await signIn(account.email, account.password);
       if (retryError) {
         toast.error('Created account but sign-in failed. Try again.');
@@ -260,13 +178,9 @@ export default function Auth() {
               disabled={quickLoginId !== null}
               className="w-full flex items-center gap-3 p-3 rounded-lg border border-border hover:border-primary/50 hover:bg-primary/5 transition-all disabled:opacity-50"
             >
-              {account.image ? (
-                <img src={account.image} alt={account.label} className="w-11 h-11 rounded-lg object-contain shrink-0 bg-secondary/50" />
-              ) : (
-                <div className={`w-11 h-11 rounded-lg bg-gradient-to-br ${account.color} flex items-center justify-center shrink-0`}>
-                  <account.icon className="w-5 h-5 text-white" />
-                </div>
-              )}
+              <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${account.color} flex items-center justify-center shrink-0`}>
+                <account.icon className="w-4 h-4 text-white" />
+              </div>
               <div className="text-left flex-1 min-w-0">
                 <p className="font-medium text-sm text-foreground">{account.label}</p>
                 <p className="text-xs text-muted-foreground truncate">{account.sublabel}</p>
@@ -300,43 +214,20 @@ export default function Auth() {
               <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="login-email">Email</Label>
-                  <Input
-                    id="login-email"
-                    type="email"
-                    placeholder="you@company.com"
-                    value={loginEmail}
-                    onChange={(e) => setLoginEmail(e.target.value)}
-                    disabled={isLoading}
-                  />
+                  <Input id="login-email" type="email" placeholder="you@company.com" value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} disabled={isLoading} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="login-password">Password</Label>
-                  <Input
-                    id="login-password"
-                    type="password"
-                    placeholder="••••••••"
-                    value={loginPassword}
-                    onChange={(e) => setLoginPassword(e.target.value)}
-                    disabled={isLoading}
-                  />
+                  <Input id="login-password" type="password" placeholder="••••••••" value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} disabled={isLoading} />
                 </div>
-
                 {loginError && (
                   <div className="flex items-center gap-2 text-sm text-danger">
                     <AlertCircle className="w-4 h-4" />
                     {loginError}
                   </div>
                 )}
-
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Signing in...
-                    </>
-                  ) : (
-                    'Sign In'
-                  )}
+                  {isLoading ? (<><Loader2 className="w-4 h-4 mr-2 animate-spin" />Signing in...</>) : 'Sign In'}
                 </Button>
               </form>
             </TabsContent>
@@ -345,94 +236,41 @@ export default function Auth() {
               <form onSubmit={handleSignup} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="signup-name">Full Name</Label>
-                  <Input
-                    id="signup-name"
-                    type="text"
-                    placeholder="John Anderson"
-                    value={signupName}
-                    onChange={(e) => setSignupName(e.target.value)}
-                    disabled={isLoading}
-                  />
+                  <Input id="signup-name" type="text" placeholder="John Anderson" value={signupName} onChange={(e) => setSignupName(e.target.value)} disabled={isLoading} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-email">Email</Label>
-                  <Input
-                    id="signup-email"
-                    type="email"
-                    placeholder="you@company.com"
-                    value={signupEmail}
-                    onChange={(e) => setSignupEmail(e.target.value)}
-                    disabled={isLoading}
-                  />
+                  <Input id="signup-email" type="email" placeholder="you@company.com" value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)} disabled={isLoading} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-password">Password</Label>
-                  <Input
-                    id="signup-password"
-                    type="password"
-                    placeholder="••••••••"
-                    value={signupPassword}
-                    onChange={(e) => setSignupPassword(e.target.value)}
-                    disabled={isLoading}
-                  />
+                  <Input id="signup-password" type="password" placeholder="••••••••" value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} disabled={isLoading} />
                 </div>
-
                 <div className="space-y-3">
                   <Label>Account Type</Label>
-                  <RadioGroup 
-                    value={signupRole} 
-                    onValueChange={(v) => setSignupRole(v as 'owner' | 'driver')}
-                    className="grid grid-cols-2 gap-4"
-                  >
-                    <Label
-                      htmlFor="role-owner"
-                      className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 cursor-pointer transition-all ${
-                        signupRole === 'owner' 
-                          ? 'border-primary bg-primary/10' 
-                          : 'border-border hover:border-muted-foreground'
-                      }`}
-                    >
+                  <RadioGroup value={signupRole} onValueChange={(v) => setSignupRole(v as 'owner' | 'driver')} className="grid grid-cols-2 gap-4">
+                    <Label htmlFor="role-owner" className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 cursor-pointer transition-all ${signupRole === 'owner' ? 'border-primary bg-primary/10' : 'border-border hover:border-muted-foreground'}`}>
                       <RadioGroupItem value="owner" id="role-owner" className="sr-only" />
                       <Shield className="w-6 h-6 text-primary" />
                       <span className="font-medium">Fleet Owner</span>
-                      <span className="text-xs text-muted-foreground text-center">
-                        Full access to all vehicles & analytics
-                      </span>
+                      <span className="text-xs text-muted-foreground text-center">Full access to all vehicles & analytics</span>
                     </Label>
-                    <Label
-                      htmlFor="role-driver"
-                      className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 cursor-pointer transition-all ${
-                        signupRole === 'driver' 
-                          ? 'border-primary bg-primary/10' 
-                          : 'border-border hover:border-muted-foreground'
-                      }`}
-                    >
+                    <Label htmlFor="role-driver" className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 cursor-pointer transition-all ${signupRole === 'driver' ? 'border-primary bg-primary/10' : 'border-border hover:border-muted-foreground'}`}>
                       <RadioGroupItem value="driver" id="role-driver" className="sr-only" />
                       <User className="w-6 h-6 text-primary" />
                       <span className="font-medium">Driver</span>
-                      <span className="text-xs text-muted-foreground text-center">
-                        View assigned vehicles & trips
-                      </span>
+                      <span className="text-xs text-muted-foreground text-center">View assigned vehicles & trips</span>
                     </Label>
                   </RadioGroup>
                 </div>
-
                 {signupError && (
                   <div className="flex items-center gap-2 text-sm text-danger">
                     <AlertCircle className="w-4 h-4" />
                     {signupError}
                   </div>
                 )}
-
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Creating account...
-                    </>
-                  ) : (
-                    'Create Account'
-                  )}
+                  {isLoading ? (<><Loader2 className="w-4 h-4 mr-2 animate-spin" />Creating account...</>) : 'Create Account'}
                 </Button>
               </form>
             </TabsContent>

@@ -55,6 +55,11 @@ export function MobileSidebar({ activeItem, onItemClick, alertCount = 3 }: Mobil
   const { isOpen, close, toggle, isMobile, isCollapsed } = useSidebar();
   const { profile, role, signOut } = useAuth();
 
+  const navItems = role === 'driver' 
+    ? allNavItems.filter(item => DRIVER_NAV_IDS.includes(item.id))
+    : allNavItems;
+  const { profile, role, signOut } = useAuth();
+
   const handleItemClick = (item: string) => {
     onItemClick(item);
     if (isMobile) {

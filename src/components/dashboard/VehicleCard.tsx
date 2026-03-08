@@ -32,6 +32,7 @@ export interface Vehicle {
   lastUpdate: string;
   mileage: number;
   alerts: number;
+  adBlueLevel?: number;
 }
 
 interface VehicleCardProps {

@@ -56,6 +56,36 @@ const DEMO_ACCOUNTS = [
     icon: Truck,
     color: 'from-violet-500 to-purple-600',
   },
+  {
+    label: 'Driver 4 — BharatBenz',
+    sublabel: 'Assigned: KA-01-GH-3456',
+    email: 'driver4@truckpulse.demo',
+    password: 'demo123456',
+    name: 'Venkatesh Rao',
+    role: 'driver' as const,
+    icon: Truck,
+    color: 'from-rose-500 to-pink-600',
+  },
+  {
+    label: 'Driver 5 — Eicher Pro',
+    sublabel: 'Assigned: TN-09-IJ-7890',
+    email: 'driver5@truckpulse.demo',
+    password: 'demo123456',
+    name: 'Murugan Selvam',
+    role: 'driver' as const,
+    icon: Truck,
+    color: 'from-orange-500 to-amber-600',
+  },
+  {
+    label: 'Driver 6 — Tata Signa',
+    sublabel: 'Assigned: DL-01-KL-2345',
+    email: 'driver6@truckpulse.demo',
+    password: 'demo123456',
+    name: 'Harpreet Singh',
+    role: 'driver' as const,
+    icon: Truck,
+    color: 'from-sky-500 to-indigo-600',
+  },
 ];
 
 export default function Auth() {

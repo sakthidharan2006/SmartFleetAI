@@ -4,23 +4,24 @@ import { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { useSimulation } from "@/contexts/SimulationContext";
 
-// Free stock truck/driving footage URLs for simulated feeds
+// Forward-facing dashcam POV footage (road ahead, driver perspective)
 const dashcamVideos = [
-  "https://videos.pexels.com/video-files/2053100/2053100-sd_640_360_30fps.mp4",
-  "https://videos.pexels.com/video-files/856116/856116-sd_640_360_25fps.mp4",
-  "https://videos.pexels.com/video-files/3129671/3129671-sd_640_360_30fps.mp4",
-  "https://videos.pexels.com/video-files/1721294/1721294-sd_640_360_25fps.mp4",
-  "https://videos.pexels.com/video-files/2547131/2547131-sd_640_360_24fps.mp4",
-  "https://videos.pexels.com/video-files/1580507/1580507-sd_640_360_30fps.mp4",
+  "https://videos.pexels.com/video-files/2053100/2053100-sd_640_360_30fps.mp4",  // highway driving forward
+  "https://videos.pexels.com/video-files/856116/856116-sd_640_360_25fps.mp4",    // road ahead view
+  "https://videos.pexels.com/video-files/3129671/3129671-sd_640_360_30fps.mp4",  // driving through city
+  "https://videos.pexels.com/video-files/1721294/1721294-sd_640_360_25fps.mp4",  // road forward
+  "https://videos.pexels.com/video-files/2547131/2547131-sd_640_360_24fps.mp4",  // highway forward
+  "https://videos.pexels.com/video-files/1580507/1580507-sd_640_360_30fps.mp4",  // driving forward POV
 ];
 
+// Rear-view camera footage (traffic behind, rear mirror perspective)
 const rearCamVideos = [
-  "https://videos.pexels.com/video-files/1904488/1904488-sd_640_360_24fps.mp4",
-  "https://videos.pexels.com/video-files/3048163/3048163-sd_640_360_30fps.mp4",
-  "https://videos.pexels.com/video-files/2278095/2278095-sd_640_360_30fps.mp4",
-  "https://videos.pexels.com/video-files/3214448/3214448-sd_640_360_25fps.mp4",
-  "https://videos.pexels.com/video-files/854669/854669-sd_640_360_25fps.mp4",
-  "https://videos.pexels.com/video-files/2614018/2614018-sd_640_360_24fps.mp4",
+  "https://videos.pexels.com/video-files/1904488/1904488-sd_640_360_24fps.mp4",  // vehicles behind
+  "https://videos.pexels.com/video-files/3048163/3048163-sd_640_360_30fps.mp4",  // road behind view
+  "https://videos.pexels.com/video-files/2278095/2278095-sd_640_360_30fps.mp4",  // rear traffic
+  "https://videos.pexels.com/video-files/854669/854669-sd_640_360_25fps.mp4",    // looking back
+  "https://videos.pexels.com/video-files/3214448/3214448-sd_640_360_25fps.mp4",  // rear perspective
+  "https://videos.pexels.com/video-files/2614018/2614018-sd_640_360_24fps.mp4",  // behind vehicle
 ];
 
 export function CCTVView() {

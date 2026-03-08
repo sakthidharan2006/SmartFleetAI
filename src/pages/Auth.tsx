@@ -11,6 +11,13 @@ import { Truck, User, Shield, AlertCircle, Loader2, Zap } from 'lucide-react';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
+import tataPrimaImg from '@/assets/trucks/tata-prima.png';
+import ashokLeylandImg from '@/assets/trucks/ashok-leyland.png';
+import mahindraBlazoImg from '@/assets/trucks/mahindra-blazo.png';
+import bharatbenzImg from '@/assets/trucks/bharatbenz.png';
+import eicherProImg from '@/assets/trucks/eicher-pro.png';
+import tataSignaImg from '@/assets/trucks/tata-signa.png';
+
 const emailSchema = z.string().email('Please enter a valid email address');
 const passwordSchema = z.string().min(6, 'Password must be at least 6 characters');
 const nameSchema = z.string().min(2, 'Name must be at least 2 characters');
@@ -25,6 +32,7 @@ const DEMO_ACCOUNTS = [
     role: 'owner' as const,
     icon: Shield,
     color: 'from-amber-500 to-orange-600',
+    image: null as string | null,
   },
   {
     label: 'Driver 1 — Tata Prima',
@@ -35,6 +43,7 @@ const DEMO_ACCOUNTS = [
     role: 'driver' as const,
     icon: Truck,
     color: 'from-blue-500 to-cyan-600',
+    image: tataPrimaImg,
   },
   {
     label: 'Driver 2 — Ashok Leyland',
@@ -45,6 +54,7 @@ const DEMO_ACCOUNTS = [
     role: 'driver' as const,
     icon: Truck,
     color: 'from-emerald-500 to-teal-600',
+    image: ashokLeylandImg,
   },
   {
     label: 'Driver 3 — Mahindra Blazo',
@@ -55,6 +65,7 @@ const DEMO_ACCOUNTS = [
     role: 'driver' as const,
     icon: Truck,
     color: 'from-violet-500 to-purple-600',
+    image: mahindraBlazoImg,
   },
   {
     label: 'Driver 4 — BharatBenz',
@@ -65,6 +76,7 @@ const DEMO_ACCOUNTS = [
     role: 'driver' as const,
     icon: Truck,
     color: 'from-rose-500 to-pink-600',
+    image: bharatbenzImg,
   },
   {
     label: 'Driver 5 — Eicher Pro',
@@ -75,6 +87,7 @@ const DEMO_ACCOUNTS = [
     role: 'driver' as const,
     icon: Truck,
     color: 'from-orange-500 to-amber-600',
+    image: eicherProImg,
   },
   {
     label: 'Driver 6 — Tata Signa',
@@ -85,9 +98,9 @@ const DEMO_ACCOUNTS = [
     role: 'driver' as const,
     icon: Truck,
     color: 'from-sky-500 to-indigo-600',
+    image: tataSignaImg,
   },
 ];
-
 export default function Auth() {
   const navigate = useNavigate();
   const { user, loading, signIn, signUp } = useAuth();
@@ -247,9 +260,13 @@ export default function Auth() {
               disabled={quickLoginId !== null}
               className="w-full flex items-center gap-3 p-3 rounded-lg border border-border hover:border-primary/50 hover:bg-primary/5 transition-all disabled:opacity-50"
             >
-              <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${account.color} flex items-center justify-center shrink-0`}>
-                <account.icon className="w-4 h-4 text-white" />
-              </div>
+              {account.image ? (
+                <img src={account.image} alt={account.label} className="w-11 h-11 rounded-lg object-contain shrink-0 bg-secondary/50" />
+              ) : (
+                <div className={`w-11 h-11 rounded-lg bg-gradient-to-br ${account.color} flex items-center justify-center shrink-0`}>
+                  <account.icon className="w-5 h-5 text-white" />
+                </div>
+              )}
               <div className="text-left flex-1 min-w-0">
                 <p className="font-medium text-sm text-foreground">{account.label}</p>
                 <p className="text-xs text-muted-foreground truncate">{account.sublabel}</p>

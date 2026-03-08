@@ -52,6 +52,60 @@ export type Database = {
           },
         ]
       }
+      load_slips: {
+        Row: {
+          amount: number | null
+          bill_image_url: string | null
+          created_at: string
+          destination: string
+          driver_id: string
+          id: string
+          load_description: string
+          notes: string | null
+          origin: string
+          slip_number: string | null
+          status: string
+          updated_at: string
+          vehicle_id: string
+          vehicle_name: string
+          weight_kg: number | null
+        }
+        Insert: {
+          amount?: number | null
+          bill_image_url?: string | null
+          created_at?: string
+          destination: string
+          driver_id: string
+          id?: string
+          load_description: string
+          notes?: string | null
+          origin: string
+          slip_number?: string | null
+          status?: string
+          updated_at?: string
+          vehicle_id: string
+          vehicle_name: string
+          weight_kg?: number | null
+        }
+        Update: {
+          amount?: number | null
+          bill_image_url?: string | null
+          created_at?: string
+          destination?: string
+          driver_id?: string
+          id?: string
+          load_description?: string
+          notes?: string | null
+          origin?: string
+          slip_number?: string | null
+          status?: string
+          updated_at?: string
+          vehicle_id?: string
+          vehicle_name?: string
+          weight_kg?: number | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null

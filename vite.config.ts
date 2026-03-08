@@ -22,9 +22,9 @@ export default defineConfig(({ mode }) => ({
       "react/jsx-runtime": path.resolve(__dirname, "node_modules/react/jsx-runtime"),
       "react/jsx-dev-runtime": path.resolve(__dirname, "node_modules/react/jsx-dev-runtime"),
     },
-    dedupe: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime"],
+    dedupe: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime", "@tanstack/react-query", "framer-motion", "react-leaflet", "@react-leaflet/core"],
   },
   optimizeDeps: {
-    include: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime"],
+    include: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime", "@tanstack/react-query", "framer-motion", "react-leaflet", "@react-leaflet/core", "leaflet"],
   },
 }));

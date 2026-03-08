@@ -216,8 +216,8 @@ export function MobileSidebar({ activeItem, onItemClick, alertCount = 3 }: Mobil
           </div>
           {!isCollapsed && (
             <div>
-              <h1 className="font-bold text-lg text-foreground tracking-tight">FleetEye</h1>
-              <p className="text-xs text-muted-foreground font-medium">Eagle-eyed Monitoring</p>
+              <h1 className="font-bold text-lg text-foreground tracking-tight">WebWheels</h1>
+              <p className="text-xs text-muted-foreground font-medium">Web-enabled Tracking</p>
             </div>
           )}
         </div>

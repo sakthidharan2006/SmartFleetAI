@@ -154,8 +154,8 @@ export default function Auth() {
           <Truck className="w-6 h-6 text-primary-foreground" />
         </div>
         <div>
-          <h1 className="font-bold text-2xl text-foreground tracking-tight">TruckPulse</h1>
-          <p className="text-sm text-muted-foreground font-medium">Pro Fleet Manager</p>
+          <h1 className="font-bold text-2xl text-foreground tracking-tight">FleetEye</h1>
+          <p className="text-sm text-muted-foreground font-medium">Eagle-eyed Monitoring</p>
         </div>
       </div>
 

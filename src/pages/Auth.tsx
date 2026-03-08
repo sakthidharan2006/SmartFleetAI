@@ -198,7 +198,7 @@ export default function Auth() {
       {/* Standard Auth */}
       <Card className="w-full max-w-md glass-card-elevated">
         <CardHeader className="text-center pb-2">
-          <CardTitle className="text-xl">Welcome to TruckPulse</CardTitle>
+          <CardTitle className="text-xl">Welcome to FleetEye</CardTitle>
           <CardDescription>
             Sign in to manage your fleet or create an account
           </CardDescription>

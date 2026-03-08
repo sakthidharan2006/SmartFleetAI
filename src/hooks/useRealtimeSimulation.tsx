@@ -80,7 +80,19 @@ const INDIAN_LOCATIONS = [
 
 export function useRealtimeSimulation(enabled: boolean = true) {
   const [vehicles, setVehicles] = useState<SimulatedVehicle[]>(INITIAL_VEHICLES);
-  const [alerts, setAlerts] = useState<SimulatedAlert[]>([]);
+  const [alerts, setAlerts] = useState<SimulatedAlert[]>(() => {
+    // Seed initial alerts so the view is never empty
+    const now = new Date();
+    return [
+      { id: 'seed-1', vehicleId: '4', vehicleName: 'BharatBenz 4228R', type: 'critical', title: 'Low Tire Pressure', message: 'Front right tire pressure critically low at 85 PSI', timestamp: new Date(now.getTime() - 120000), isRead: false },
+      { id: 'seed-2', vehicleId: '4', vehicleName: 'BharatBenz 4228R', type: 'critical', title: 'Low AdBlue Level', message: 'AdBlue (DEF) level critically low at 8% — vehicle may enter limp mode', timestamp: new Date(now.getTime() - 300000), isRead: false },
+      { id: 'seed-3', vehicleId: '2', vehicleName: 'Ashok Leyland 4923', type: 'warning', title: 'Low Fuel', message: 'Fuel level at 45% - refuel recommended', timestamp: new Date(now.getTime() - 600000), isRead: false },
+      { id: 'seed-4', vehicleId: '5', vehicleName: 'Eicher Pro 6049', type: 'warning', title: 'DPF Regeneration Needed', message: 'DPF soot load at 92% — regeneration recommended', timestamp: new Date(now.getTime() - 900000), isRead: false },
+      { id: 'seed-5', vehicleId: '4', vehicleName: 'BharatBenz 4228R', type: 'warning', title: 'High NOx Emission', message: 'NOx level at 410 mg/km — exceeds BS6 limit of 460 mg/km', timestamp: new Date(now.getTime() - 1200000), isRead: true },
+      { id: 'seed-6', vehicleId: '1', vehicleName: 'Tata Prima 4928.S', type: 'info', title: 'Route Deviation', message: 'Vehicle deviated from planned route by 3 km', timestamp: new Date(now.getTime() - 1800000), isRead: true },
+      { id: 'seed-7', vehicleId: '6', vehicleName: 'Tata Signa 4825.TK', type: 'info', title: 'Scheduled Maintenance', message: 'Oil change due in 500 km', timestamp: new Date(now.getTime() - 3600000), isRead: true },
+    ];
+  });
   const [isSimulating, setIsSimulating] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const alertCountRef = useRef(0);

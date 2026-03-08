@@ -11,7 +11,8 @@ import {
   Video,
   Wrench,
   Route,
-  Home
+  Home,
+  Package
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 

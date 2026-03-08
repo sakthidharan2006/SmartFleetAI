@@ -12,6 +12,8 @@ interface VehicleMarker {
   status: "active" | "idle" | "maintenance" | "offline";
   speed: number;
   heading: number;
+  fuelLevel?: number;
+  engineTemp?: number;
 }
 
 interface FleetMapProps {
@@ -27,16 +29,23 @@ const statusColors = {
 
 export function FleetMap({ vehicles }: FleetMapProps) {
   const [MapComponent, setMapComponent] = useState<React.ComponentType<any> | null>(null);
+  const vehiclesRef = useRef(vehicles);
+  vehiclesRef.current = vehicles;
 
   useEffect(() => {
-    // Dynamically import leaflet components only on client side
     import("react-leaflet").then((mod) => {
       import("leaflet").then((L) => {
         import("leaflet/dist/leaflet.css");
-        // Set up a custom component after imports
-        setMapComponent(() => () => <MapWithLeaflet vehicles={vehicles} L={L.default} ReactLeaflet={mod} />);
+        setMapComponent(() => () => <MapWithLeaflet vehicles={vehiclesRef.current} L={L.default} ReactLeaflet={mod} />);
       });
     }).catch(console.error);
+  }, []);
+
+  // Re-render when vehicles update
+  useEffect(() => {
+    if (MapComponent) {
+      setMapComponent(() => () => <MapWithLeaflet vehicles={vehicles} L={undefined as any} ReactLeaflet={undefined as any} />);
+    }
   }, [vehicles]);
 
   return (
@@ -72,25 +81,44 @@ export function FleetMap({ vehicles }: FleetMapProps) {
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-muted-foreground" />
-            <span className="text-xs font-medium">{vehicles.filter(v => v.status === "offline").length} Offline</span>
+            <span className="text-xs font-medium">{vehicles.filter(v => v.status === "offline" || v.status === "maintenance").length} Other</span>
           </div>
         </div>
       </div>
 
-      {MapComponent ? (
-        <MapComponent />
-      ) : (
-        <div className="h-full w-full bg-secondary/20 flex items-center justify-center">
-          <div className="text-center">
-            <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4 animate-pulse">
-              <MapPin className="w-8 h-8 text-primary" />
-            </div>
-            <p className="text-muted-foreground">Loading map...</p>
-          </div>
-        </div>
-      )}
+      <MapWithLeafletWrapper vehicles={vehicles} />
     </motion.div>
   );
+}
+
+// Wrapper that handles dynamic imports
+function MapWithLeafletWrapper({ vehicles }: { vehicles: VehicleMarker[] }) {
+  const [loaded, setLoaded] = useState<{ L: any; RL: any } | null>(null);
+
+  useEffect(() => {
+    Promise.all([
+      import("react-leaflet"),
+      import("leaflet"),
+      import("leaflet/dist/leaflet.css"),
+    ]).then(([RL, L]) => {
+      setLoaded({ L: L.default, RL });
+    }).catch(console.error);
+  }, []);
+
+  if (!loaded) {
+    return (
+      <div className="h-full w-full bg-secondary/20 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-4 animate-pulse">
+            <MapPin className="w-8 h-8 text-primary" />
+          </div>
+          <p className="text-muted-foreground">Loading map...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return <MapWithLeaflet vehicles={vehicles} L={loaded.L} ReactLeaflet={loaded.RL} />;
 }
 
 // Inner component that uses Leaflet after it's loaded
@@ -103,10 +131,13 @@ function MapWithLeaflet({
   L: any; 
   ReactLeaflet: any;
 }) {
-  const { MapContainer, TileLayer, Marker, Popup } = ReactLeaflet;
-  const center: [number, number] = [39.8283, -98.5795];
+  const { MapContainer, TileLayer, Marker, Popup, useMap } = ReactLeaflet;
+  
+  // Center on India
+  const center: [number, number] = [22.5, 78.5];
+  const zoom = vehicles.length === 1 ? 8 : 5;
 
-  const statusColorHex = {
+  const statusColorHex: Record<string, string> = {
     active: "#22c55e",
     idle: "#eab308",
     maintenance: "#0ea5e9",
@@ -154,8 +185,8 @@ function MapWithLeaflet({
   return (
     <>
       <MapContainer
-        center={center}
-        zoom={4}
+        center={vehicles.length === 1 ? [vehicles[0].position[0], vehicles[0].position[1]] : center}
+        zoom={zoom}
         className="h-full w-full"
         style={{ background: "hsl(222 47% 6%)" }}
         zoomControl={false}
@@ -172,7 +203,7 @@ function MapWithLeaflet({
             icon={createTruckIcon(vehicle.status, vehicle.heading)}
           >
             <Popup className="custom-popup">
-              <div className="p-2 min-w-[160px]">
+              <div className="p-2 min-w-[180px]">
                 <h4 className="font-semibold text-sm">{vehicle.name}</h4>
                 <p className="text-xs text-gray-400 font-mono">{vehicle.plate}</p>
                 <div className="mt-2 space-y-1">
@@ -186,8 +217,14 @@ function MapWithLeaflet({
                   </div>
                   <div className="flex justify-between text-xs">
                     <span className="text-gray-400">Speed</span>
-                    <span className="font-medium">{vehicle.speed} mph</span>
+                    <span className="font-medium">{vehicle.speed} km/h</span>
                   </div>
+                  {vehicle.fuelLevel !== undefined && (
+                    <div className="flex justify-between text-xs">
+                      <span className="text-gray-400">Fuel</span>
+                      <span className="font-medium">{Math.round(vehicle.fuelLevel)}%</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </Popup>

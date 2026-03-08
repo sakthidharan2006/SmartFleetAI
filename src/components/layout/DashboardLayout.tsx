@@ -24,7 +24,7 @@ function DashboardLayoutContent({ children, activeItem, onNavigate }: DashboardL
         "flex flex-col min-h-screen transition-all duration-300",
         isMobile ? "ml-0" : (isCollapsed ? "ml-20" : "ml-64")
       )}>
-        <ResponsiveHeader />
+        <ResponsiveHeader onNavigate={onNavigate} />
         <main className="flex-1 p-4 md:p-6 overflow-x-hidden">
           {children}
         </main>

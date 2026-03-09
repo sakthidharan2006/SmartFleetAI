@@ -129,11 +129,24 @@ export function SimulationProvider({ children, enabled = true }: SimulationProvi
   const isDriver = role === 'driver';
   const userRole = role;
 
-  // For drivers, filter to show only their assigned vehicle (simulating first vehicle as assigned)
-  // In production, this would use the actual driver_id from the database
+  // Map driver emails to their vehicle index (matches DEMO_ACCOUNTS order in Auth.tsx)
+  const DRIVER_VEHICLE_MAP: Record<string, string> = {
+    'driver1@truckpulse.demo': '1', // Tata Prima 4928.S
+    'driver2@truckpulse.demo': '2', // Ashok Leyland 4923
+    'driver3@truckpulse.demo': '3', // Mahindra Blazo X 46
+    'driver4@truckpulse.demo': '4', // BharatBenz 4228R
+    'driver5@truckpulse.demo': '5', // Eicher Pro 6049
+    'driver6@truckpulse.demo': '6', // Tata Signa 4825.TK
+  };
+
   const filteredVehicles = useMemo(() => {
     if (isDriver && user) {
-      // Simulate: driver sees only the first vehicle (in real app, filter by driver_id)
+      const assignedVehicleId = DRIVER_VEHICLE_MAP[user.email || ''];
+      if (assignedVehicleId) {
+        const match = simulation.vehicles.filter(v => v.id === assignedVehicleId);
+        if (match.length > 0) return match;
+      }
+      // Fallback to first vehicle
       return simulation.vehicles.slice(0, 1);
     }
     return simulation.vehicles;

@@ -38,6 +38,7 @@ export const allNavItems: NavItem[] = [
   { id: "diagnostics", label: "Diagnostics", icon: Gauge },
   { id: "fuel", label: "Fuel Monitor", icon: Fuel },
   { id: "loadhistory", label: "Load History", icon: Package },
+  { id: "tollmanagement", label: "Toll Management", icon: Landmark },
   { id: "maintenance", label: "Maintenance", icon: Wrench },
   { id: "cctv", label: "CCTV Feeds", icon: Video },
   { id: "alerts", label: "Alerts", icon: AlertTriangle },

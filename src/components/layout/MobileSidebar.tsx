@@ -13,6 +13,7 @@ import {
   Route,
   Home,
   Package,
+  Landmark,
   X,
   Menu,
   LogOut

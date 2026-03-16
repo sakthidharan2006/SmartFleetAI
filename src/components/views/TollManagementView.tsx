@@ -20,7 +20,7 @@ import {
   Clock
 } from "lucide-react";
 import { useSimulation } from "@/contexts/SimulationContext";
-import { useTollDetection, TollCrossing, TollNotification, FastTagAccount } from "@/hooks/useTollDetection";
+import { useTollDetection, TollCrossing, TollNotification, FastTagAccount, TollGate } from "@/hooks/useTollDetection";
 
 export function TollManagementView() {
   const { vehicles } = useSimulation();

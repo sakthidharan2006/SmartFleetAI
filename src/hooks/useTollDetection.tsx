@@ -45,12 +45,13 @@ export interface TollNotification {
   timestamp: Date;
 }
 
-interface TollGate {
+export interface TollGate {
   id: string;
   name: string;
   highway: string;
   latitude: number;
   longitude: number;
+  state: string;
   rate_heavy_truck: number;
   rate_medium_truck: number;
   rate_light_truck: number;

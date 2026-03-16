@@ -52,6 +52,93 @@ export type Database = {
           },
         ]
       }
+      fasttag_accounts: {
+        Row: {
+          balance: number
+          created_at: string
+          id: string
+          is_active: boolean
+          issuer_bank: string
+          tag_number: string
+          updated_at: string
+          vehicle_id: string
+          vehicle_name: string
+        }
+        Insert: {
+          balance?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          issuer_bank?: string
+          tag_number: string
+          updated_at?: string
+          vehicle_id: string
+          vehicle_name: string
+        }
+        Update: {
+          balance?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          issuer_bank?: string
+          tag_number?: string
+          updated_at?: string
+          vehicle_id?: string
+          vehicle_name?: string
+        }
+        Relationships: []
+      }
+      fasttag_transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string
+          fasttag_account_id: string
+          id: string
+          new_balance: number
+          previous_balance: number
+          toll_transaction_id: string | null
+          transaction_type: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          description: string
+          fasttag_account_id: string
+          id?: string
+          new_balance: number
+          previous_balance: number
+          toll_transaction_id?: string | null
+          transaction_type?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string
+          fasttag_account_id?: string
+          id?: string
+          new_balance?: number
+          previous_balance?: number
+          toll_transaction_id?: string | null
+          transaction_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fasttag_transactions_fasttag_account_id_fkey"
+            columns: ["fasttag_account_id"]
+            isOneToOne: false
+            referencedRelation: "fasttag_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fasttag_transactions_toll_transaction_id_fkey"
+            columns: ["toll_transaction_id"]
+            isOneToOne: false
+            referencedRelation: "toll_transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       load_slips: {
         Row: {
           amount: number | null
@@ -138,6 +225,236 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      section_crossings: {
+        Row: {
+          crossed_at: string
+          id: string
+          sensor_data: Json | null
+          speed_at_crossing: number | null
+          toll_section_id: string
+          toll_transaction_id: string
+          vehicle_id: string
+        }
+        Insert: {
+          crossed_at?: string
+          id?: string
+          sensor_data?: Json | null
+          speed_at_crossing?: number | null
+          toll_section_id: string
+          toll_transaction_id: string
+          vehicle_id: string
+        }
+        Update: {
+          crossed_at?: string
+          id?: string
+          sensor_data?: Json | null
+          speed_at_crossing?: number | null
+          toll_section_id?: string
+          toll_transaction_id?: string
+          vehicle_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "section_crossings_toll_section_id_fkey"
+            columns: ["toll_section_id"]
+            isOneToOne: false
+            referencedRelation: "toll_sections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "section_crossings_toll_transaction_id_fkey"
+            columns: ["toll_transaction_id"]
+            isOneToOne: false
+            referencedRelation: "toll_transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      toll_gates: {
+        Row: {
+          created_at: string
+          highway: string
+          id: string
+          is_active: boolean
+          latitude: number
+          longitude: number
+          name: string
+          rate_container: number
+          rate_heavy_truck: number
+          rate_light_truck: number
+          rate_medium_truck: number
+          state: string
+        }
+        Insert: {
+          created_at?: string
+          highway: string
+          id?: string
+          is_active?: boolean
+          latitude: number
+          longitude: number
+          name: string
+          rate_container?: number
+          rate_heavy_truck?: number
+          rate_light_truck?: number
+          rate_medium_truck?: number
+          state: string
+        }
+        Update: {
+          created_at?: string
+          highway?: string
+          id?: string
+          is_active?: boolean
+          latitude?: number
+          longitude?: number
+          name?: string
+          rate_container?: number
+          rate_heavy_truck?: number
+          rate_light_truck?: number
+          rate_medium_truck?: number
+          state?: string
+        }
+        Relationships: []
+      }
+      toll_notifications: {
+        Row: {
+          amount: number | null
+          created_at: string
+          id: string
+          is_read: boolean
+          message: string
+          notification_type: string
+          remaining_balance: number | null
+          title: string
+          toll_gate_name: string
+          user_id: string
+          vehicle_id: string
+          vehicle_name: string
+        }
+        Insert: {
+          amount?: number | null
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message: string
+          notification_type?: string
+          remaining_balance?: number | null
+          title: string
+          toll_gate_name: string
+          user_id: string
+          vehicle_id: string
+          vehicle_name: string
+        }
+        Update: {
+          amount?: number | null
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message?: string
+          notification_type?: string
+          remaining_balance?: number | null
+          title?: string
+          toll_gate_name?: string
+          user_id?: string
+          vehicle_id?: string
+          vehicle_name?: string
+        }
+        Relationships: []
+      }
+      toll_sections: {
+        Row: {
+          created_at: string
+          id: string
+          latitude: number
+          longitude: number
+          name: string
+          section_order: number
+          toll_gate_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          latitude: number
+          longitude: number
+          name: string
+          section_order?: number
+          toll_gate_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          latitude?: number
+          longitude?: number
+          name?: string
+          section_order?: number
+          toll_gate_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "toll_sections_toll_gate_id_fkey"
+            columns: ["toll_gate_id"]
+            isOneToOne: false
+            referencedRelation: "toll_gates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      toll_transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          fasttag_account_id: string
+          id: string
+          new_balance: number
+          previous_balance: number
+          status: string
+          toll_gate_id: string
+          vehicle_id: string
+          vehicle_name: string
+          vehicle_type: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          fasttag_account_id: string
+          id?: string
+          new_balance: number
+          previous_balance: number
+          status?: string
+          toll_gate_id: string
+          vehicle_id: string
+          vehicle_name: string
+          vehicle_type?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          fasttag_account_id?: string
+          id?: string
+          new_balance?: number
+          previous_balance?: number
+          status?: string
+          toll_gate_id?: string
+          vehicle_id?: string
+          vehicle_name?: string
+          vehicle_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "toll_transactions_fasttag_account_id_fkey"
+            columns: ["fasttag_account_id"]
+            isOneToOne: false
+            referencedRelation: "fasttag_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "toll_transactions_toll_gate_id_fkey"
+            columns: ["toll_gate_id"]
+            isOneToOne: false
+            referencedRelation: "toll_gates"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       trips: {
         Row: {

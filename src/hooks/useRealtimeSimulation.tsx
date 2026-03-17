@@ -78,6 +78,16 @@ const INDIAN_LOCATIONS = [
   'Kolkata-Delhi NH',
 ];
 
+// Toll gate coordinates for simulation — vehicles will be snapped near these
+// to trigger toll crossings periodically
+const TOLL_GATE_COORDS = [
+  { lat: 18.4529, lng: 73.723, name: 'Khed Shivapur' },     // NH-48 Pune
+  { lat: 23.4425, lng: 72.4026, name: 'Shahjahanpur' },     // NH-8 Gujarat
+  { lat: 26.7606, lng: 75.8648, name: 'Bagru' },            // NH-48 Jaipur
+  { lat: 13.3379, lng: 77.1173, name: 'Tumkur' },           // NH-44 Karnataka
+  { lat: 28.4089, lng: 76.9621, name: 'Manesar' },          // NH-48 Gurgaon
+];
+
 export function useRealtimeSimulation(enabled: boolean = true) {
   const [vehicles, setVehicles] = useState<SimulatedVehicle[]>(INITIAL_VEHICLES);
   const [alerts, setAlerts] = useState<SimulatedAlert[]>(() => {
@@ -96,6 +106,7 @@ export function useRealtimeSimulation(enabled: boolean = true) {
   const [isSimulating, setIsSimulating] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const alertCountRef = useRef(0);
+  const tollSimTickRef = useRef(0);
 
   const generateAlert = useCallback((vehicle: SimulatedVehicle) => {
     const template = ALERT_TEMPLATES[Math.floor(Math.random() * ALERT_TEMPLATES.length)];
@@ -188,7 +199,26 @@ export function useRealtimeSimulation(enabled: boolean = true) {
       if (activeVehicles.length > 0) {
         const randomVehicle = activeVehicles[Math.floor(Math.random() * activeVehicles.length)];
         const newAlert = generateAlert(randomVehicle);
-        setAlerts(prev => [newAlert, ...prev].slice(0, 50)); // Keep last 50 alerts
+        setAlerts(prev => [newAlert, ...prev].slice(0, 50));
+      }
+    }
+
+    // Toll gate proximity simulation: every ~10 ticks (~30s), snap a random active vehicle near a toll gate
+    tollSimTickRef.current += 1;
+    if (tollSimTickRef.current % 10 === 0) {
+      const activeVehicles = vehicles.filter(v => v.status === 'active' && v.speed > 0);
+      if (activeVehicles.length > 0) {
+        const randomVehicle = activeVehicles[Math.floor(Math.random() * activeVehicles.length)];
+        const tollGate = TOLL_GATE_COORDS[Math.floor(Math.random() * TOLL_GATE_COORDS.length)];
+        // Move vehicle within ~50m of the toll gate
+        const offsetLat = (Math.random() - 0.5) * 0.0005;
+        const offsetLng = (Math.random() - 0.5) * 0.0005;
+        setVehicles(prev => prev.map(v =>
+          v.id === randomVehicle.id
+            ? { ...v, latitude: tollGate.lat + offsetLat, longitude: tollGate.lng + offsetLng, lastUpdate: new Date() }
+            : v
+        ));
+        console.log(`[Toll Sim] Moved ${randomVehicle.name} near ${tollGate.name} toll gate`);
       }
     }
   }, [vehicles, generateAlert]);

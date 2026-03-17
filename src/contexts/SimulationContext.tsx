@@ -7,7 +7,7 @@ import {
 import { Vehicle } from '@/components/dashboard/VehicleCard';
 import { Alert } from '@/components/dashboard/AlertsPanel';
 import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/integrations/supabase/client';
+import { useTollDetection, TollCrossing, TollNotification, FastTagAccount, TollGate } from '@/hooks/useTollDetection';
 
 interface SimulationContextType {
   vehicles: SimulatedVehicle[];
@@ -18,7 +18,6 @@ interface SimulationContextType {
   stopSimulation: () => void;
   markAlertAsRead: (alertId: string) => void;
   dismissAlert: (alertId: string) => void;
-  // Transformed data for compatibility with existing components
   vehicleCards: Vehicle[];
   alertPanelData: Alert[];
   fleetStats: {
@@ -33,6 +32,14 @@ interface SimulationContextType {
   };
   userRole: 'owner' | 'driver' | 'admin' | null;
   isDriver: boolean;
+  // Toll detection data (global)
+  tollCrossings: TollCrossing[];
+  fastTagAccounts: FastTagAccount[];
+  tollNotifications: TollNotification[];
+  tollGates: TollGate[];
+  unreadTollNotifications: number;
+  markTollNotificationRead: (id: string) => void;
+  rechargeFastTag: (vehicleId: string, amount: number) => Promise<void>;
 }
 
 const SimulationContext = createContext<SimulationContextType | undefined>(undefined);
@@ -44,7 +51,6 @@ function transformToVehicleCard(vehicle: SimulatedVehicle): Vehicle {
     ? `${timeSinceUpdate}s ago` 
     : `${Math.round(timeSinceUpdate / 60)}m ago`;
 
-  // Determine alerts based on vehicle conditions
   let alertCount = 0;
   if (vehicle.fuelLevel < 25) alertCount++;
   if (vehicle.engineTemp > 210) alertCount++;
@@ -75,7 +81,6 @@ function transformToVehicleCard(vehicle: SimulatedVehicle): Vehicle {
   };
 }
 
-// Transform SimulatedAlert to AlertPanel format
 function transformToAlertPanel(alert: SimulatedAlert): Alert {
   const timeSinceAlert = Math.round((Date.now() - alert.timestamp.getTime()) / 1000);
   const timeStr = timeSinceAlert < 60 
@@ -84,7 +89,6 @@ function transformToAlertPanel(alert: SimulatedAlert): Alert {
       ? `${Math.round(timeSinceAlert / 60)}m ago`
       : `${Math.round(timeSinceAlert / 3600)}h ago`;
 
-  // Map alert type to category
   const categoryMap: Record<string, Alert['category']> = {
     'Low Tire Pressure': 'tire',
     'Engine Overheat': 'engine',
@@ -105,9 +109,7 @@ function transformToAlertPanel(alert: SimulatedAlert): Alert {
   };
 }
 
-// Get approximate location name from coordinates
 function getLocationName(lat: number, lng: number): string {
-  // Simple mapping based on regions
   if (lat > 42 && lng > -90) return 'Northeast Region';
   if (lat > 38 && lat < 42 && lng > -100) return 'Midwest Region';
   if (lat > 35 && lat < 40 && lng < -100) return 'Mountain West';
@@ -129,14 +131,13 @@ export function SimulationProvider({ children, enabled = true }: SimulationProvi
   const isDriver = role === 'driver';
   const userRole = role;
 
-  // Map driver emails to their vehicle index (matches DEMO_ACCOUNTS order in Auth.tsx)
   const DRIVER_VEHICLE_MAP: Record<string, string> = {
-    'driver1@truckpulse.demo': '1', // Tata Prima 4928.S
-    'driver2@truckpulse.demo': '2', // Ashok Leyland 4923
-    'driver3@truckpulse.demo': '3', // Mahindra Blazo X 46
-    'driver4@truckpulse.demo': '4', // BharatBenz 4228R
-    'driver5@truckpulse.demo': '5', // Eicher Pro 6049
-    'driver6@truckpulse.demo': '6', // Tata Signa 4825.TK
+    'driver1@truckpulse.demo': '1',
+    'driver2@truckpulse.demo': '2',
+    'driver3@truckpulse.demo': '3',
+    'driver4@truckpulse.demo': '4',
+    'driver5@truckpulse.demo': '5',
+    'driver6@truckpulse.demo': '6',
   };
 
   const filteredVehicles = useMemo(() => {
@@ -146,7 +147,6 @@ export function SimulationProvider({ children, enabled = true }: SimulationProvi
         const match = simulation.vehicles.filter(v => v.id === assignedVehicleId);
         if (match.length > 0) return match;
       }
-      // Fallback to first vehicle
       return simulation.vehicles.slice(0, 1);
     }
     return simulation.vehicles;
@@ -154,18 +154,43 @@ export function SimulationProvider({ children, enabled = true }: SimulationProvi
 
   const filteredAlerts = useMemo(() => {
     if (isDriver && user) {
-      // Driver only sees alerts for their assigned vehicle
       const driverVehicleIds = filteredVehicles.map(v => v.id);
       return simulation.alerts.filter(a => driverVehicleIds.includes(a.vehicleId));
     }
     return simulation.alerts;
   }, [simulation.alerts, filteredVehicles, isDriver, user]);
 
-  // Transform data for components
+  // Global toll detection — runs regardless of which view is active
+  const tollDetection = useTollDetection(simulation.vehicles, enabled);
+
+  // Filter toll data for drivers
+  const filteredTollCrossings = useMemo(() => {
+    if (isDriver && user) {
+      const ids = filteredVehicles.map(v => v.id);
+      return tollDetection.crossings.filter(c => ids.includes(c.vehicleId));
+    }
+    return tollDetection.crossings;
+  }, [tollDetection.crossings, filteredVehicles, isDriver, user]);
+
+  const filteredTollNotifications = useMemo(() => {
+    if (isDriver && user) {
+      const names = filteredVehicles.map(v => v.name);
+      return tollDetection.tollNotifications.filter(n => names.includes(n.vehicleName));
+    }
+    return tollDetection.tollNotifications;
+  }, [tollDetection.tollNotifications, filteredVehicles, isDriver, user]);
+
+  const filteredFastTagAccounts = useMemo(() => {
+    if (isDriver && user) {
+      const ids = filteredVehicles.map(v => v.id);
+      return tollDetection.fastTagAccounts.filter(ft => ids.includes(ft.vehicleId));
+    }
+    return tollDetection.fastTagAccounts;
+  }, [tollDetection.fastTagAccounts, filteredVehicles, isDriver, user]);
+
   const vehicleCards = filteredVehicles.map(transformToVehicleCard);
   const alertPanelData = filteredAlerts.map(transformToAlertPanel);
 
-  // Calculate fleet stats based on filtered data
   const fleetStats = {
     totalVehicles: filteredVehicles.length,
     activeVehicles: filteredVehicles.filter(v => v.status === 'active').length,
@@ -187,6 +212,14 @@ export function SimulationProvider({ children, enabled = true }: SimulationProvi
       fleetStats,
       userRole,
       isDriver,
+      // Toll data
+      tollCrossings: filteredTollCrossings,
+      fastTagAccounts: filteredFastTagAccounts,
+      tollNotifications: filteredTollNotifications,
+      tollGates: tollDetection.tollGates,
+      unreadTollNotifications: filteredTollNotifications.filter(n => !n.isRead).length,
+      markTollNotificationRead: tollDetection.markNotificationRead,
+      rechargeFastTag: tollDetection.rechargeFastTag,
     }}>
       {children}
     </SimulationContext.Provider>

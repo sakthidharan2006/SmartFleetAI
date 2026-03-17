@@ -106,6 +106,7 @@ export function useRealtimeSimulation(enabled: boolean = true) {
   const [isSimulating, setIsSimulating] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const alertCountRef = useRef(0);
+  const tollSimTickRef = useRef(0);
 
   const generateAlert = useCallback((vehicle: SimulatedVehicle) => {
     const template = ALERT_TEMPLATES[Math.floor(Math.random() * ALERT_TEMPLATES.length)];

@@ -33,6 +33,7 @@ export const navItems: NavItem[] = [
   { id: "fuel", label: "Fuel Monitor", icon: Fuel },
   { id: "loadhistory", label: "Load History", icon: Package },
   { id: "tollmanagement", label: "Toll Management", icon: Landmark },
+  { id: "compliance", label: "Compliance", icon: FileCheck },
   { id: "maintenance", label: "Maintenance", icon: Wrench },
   { id: "cctv", label: "CCTV Feeds", icon: Video },
   { id: "alerts", label: "Alerts", icon: AlertTriangle },

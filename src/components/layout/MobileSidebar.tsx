@@ -14,6 +14,7 @@ import {
   Home,
   Package,
   Landmark,
+  FileCheck,
   X,
   Menu,
   LogOut

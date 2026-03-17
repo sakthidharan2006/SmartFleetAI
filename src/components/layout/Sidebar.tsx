@@ -13,7 +13,8 @@ import {
   Route,
   Home,
   Package,
-  Landmark
+  Landmark,
+  FileCheck
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 

@@ -521,6 +521,57 @@ export type Database = {
         }
         Relationships: []
       }
+      vehicle_documents: {
+        Row: {
+          created_at: string
+          document_number: string | null
+          document_type: string
+          document_url: string | null
+          expiry_date: string
+          id: string
+          issue_date: string | null
+          issuing_authority: string | null
+          notes: string | null
+          renewal_cost: number | null
+          status: string
+          updated_at: string
+          vehicle_id: string
+          vehicle_name: string
+        }
+        Insert: {
+          created_at?: string
+          document_number?: string | null
+          document_type: string
+          document_url?: string | null
+          expiry_date: string
+          id?: string
+          issue_date?: string | null
+          issuing_authority?: string | null
+          notes?: string | null
+          renewal_cost?: number | null
+          status?: string
+          updated_at?: string
+          vehicle_id: string
+          vehicle_name: string
+        }
+        Update: {
+          created_at?: string
+          document_number?: string | null
+          document_type?: string
+          document_url?: string | null
+          expiry_date?: string
+          id?: string
+          issue_date?: string | null
+          issuing_authority?: string | null
+          notes?: string | null
+          renewal_cost?: number | null
+          status?: string
+          updated_at?: string
+          vehicle_id?: string
+          vehicle_name?: string
+        }
+        Relationships: []
+      }
       vehicles: {
         Row: {
           created_at: string

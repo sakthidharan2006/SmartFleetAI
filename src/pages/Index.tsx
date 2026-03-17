@@ -15,6 +15,7 @@ import { NotificationsView } from "@/components/views/NotificationsView";
 import { SettingsView } from "@/components/views/SettingsView";
 import { LoadHistoryView } from "@/components/views/LoadHistoryView";
 import { TollManagementView } from "@/components/views/TollManagementView";
+import { ComplianceView } from "@/components/views/ComplianceView";
 import { useSimulation } from "@/contexts/SimulationContext";
 import { useAlertNotifications } from "@/hooks/useAlertNotifications";
 import { useLoadSlipNotifications } from "@/hooks/useLoadSlipNotifications";
@@ -47,6 +48,8 @@ const Index = () => {
         return <LoadHistoryView />;
       case "tollmanagement":
         return <TollManagementView />;
+      case "compliance":
+        return <ComplianceView />;
       case "maintenance":
         return <MaintenanceView />;
       case "cctv":

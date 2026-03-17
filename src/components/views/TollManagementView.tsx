@@ -9,7 +9,6 @@ import {
   CreditCard, 
   MapPin, 
   IndianRupee, 
-  Truck, 
   Bell, 
   AlertTriangle, 
   CheckCircle, 
@@ -20,19 +19,19 @@ import {
   Clock
 } from "lucide-react";
 import { useSimulation } from "@/contexts/SimulationContext";
-import { useTollDetection, TollCrossing, TollNotification, FastTagAccount, TollGate } from "@/hooks/useTollDetection";
+import { TollCrossing, TollNotification, FastTagAccount } from "@/hooks/useTollDetection";
 
 export function TollManagementView() {
-  const { vehicles } = useSimulation();
   const { 
-    crossings, 
+    tollCrossings: crossings, 
     fastTagAccounts, 
     tollNotifications, 
     tollGates,
     unreadTollNotifications,
-    markNotificationRead,
-    rechargeFastTag 
-  } = useTollDetection(vehicles);
+    markTollNotificationRead: markNotificationRead,
+    rechargeFastTag,
+    isDriver,
+  } = useSimulation();
 
   const [rechargeVehicle, setRechargeVehicle] = useState<string>('');
   const [rechargeAmount, setRechargeAmount] = useState<string>('');
@@ -54,8 +53,12 @@ export function TollManagementView() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-foreground">Toll Gate Management</h2>
-        <p className="text-muted-foreground">Track toll crossings, FastTag balances & transactions</p>
+        <h2 className="text-2xl font-bold text-foreground">
+          {isDriver ? 'My Toll History' : 'Toll Gate Management'}
+        </h2>
+        <p className="text-muted-foreground">
+          {isDriver ? 'Your toll crossings & FastTag balance' : 'Track toll crossings, FastTag balances & transactions'}
+        </p>
       </div>
 
       {/* Stats Cards */}
@@ -178,49 +181,49 @@ export function TollManagementView() {
         {/* FastTag Accounts Tab */}
         <TabsContent value="fasttag" className="mt-4">
           <div className="space-y-4">
-            {/* Recharge Card */}
-            <Card className="bg-card border-border">
-              <CardHeader>
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <ArrowUpRight className="w-5 h-5 text-success" />
-                  Recharge FastTag
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-wrap gap-3 items-end">
-                  <div>
-                    <label className="text-xs text-muted-foreground mb-1 block">Vehicle</label>
-                    <select
-                      value={rechargeVehicle}
-                      onChange={e => setRechargeVehicle(e.target.value)}
-                      className="h-10 rounded-md border border-input bg-background px-3 text-sm text-foreground"
-                    >
-                      <option value="">Select vehicle</option>
-                      {fastTagAccounts.map(ft => (
-                        <option key={ft.vehicleId} value={ft.vehicleId}>
-                          {ft.vehicleName} (₹{ft.balance.toLocaleString()})
-                        </option>
-                      ))}
-                    </select>
+            {!isDriver && (
+              <Card className="bg-card border-border">
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <ArrowUpRight className="w-5 h-5 text-success" />
+                    Recharge FastTag
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-3 items-end">
+                    <div>
+                      <label className="text-xs text-muted-foreground mb-1 block">Vehicle</label>
+                      <select
+                        value={rechargeVehicle}
+                        onChange={e => setRechargeVehicle(e.target.value)}
+                        className="h-10 rounded-md border border-input bg-background px-3 text-sm text-foreground"
+                      >
+                        <option value="">Select vehicle</option>
+                        {fastTagAccounts.map(ft => (
+                          <option key={ft.vehicleId} value={ft.vehicleId}>
+                            {ft.vehicleName} (₹{ft.balance.toLocaleString()})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-xs text-muted-foreground mb-1 block">Amount (₹)</label>
+                      <Input
+                        type="number"
+                        placeholder="1000"
+                        value={rechargeAmount}
+                        onChange={e => setRechargeAmount(e.target.value)}
+                        className="w-32"
+                      />
+                    </div>
+                    <Button onClick={handleRecharge} disabled={!rechargeVehicle || !rechargeAmount}>
+                      <IndianRupee className="w-4 h-4 mr-1" /> Recharge
+                    </Button>
                   </div>
-                  <div>
-                    <label className="text-xs text-muted-foreground mb-1 block">Amount (₹)</label>
-                    <Input
-                      type="number"
-                      placeholder="1000"
-                      value={rechargeAmount}
-                      onChange={e => setRechargeAmount(e.target.value)}
-                      className="w-32"
-                    />
-                  </div>
-                  <Button onClick={handleRecharge} disabled={!rechargeVehicle || !rechargeAmount}>
-                    <IndianRupee className="w-4 h-4 mr-1" /> Recharge
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            )}
 
-            {/* FastTag Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {fastTagAccounts.map(ft => (
                 <FastTagCard key={ft.id} account={ft} />

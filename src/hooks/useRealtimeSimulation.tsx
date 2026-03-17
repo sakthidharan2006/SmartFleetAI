@@ -199,7 +199,26 @@ export function useRealtimeSimulation(enabled: boolean = true) {
       if (activeVehicles.length > 0) {
         const randomVehicle = activeVehicles[Math.floor(Math.random() * activeVehicles.length)];
         const newAlert = generateAlert(randomVehicle);
-        setAlerts(prev => [newAlert, ...prev].slice(0, 50)); // Keep last 50 alerts
+        setAlerts(prev => [newAlert, ...prev].slice(0, 50));
+      }
+    }
+
+    // Toll gate proximity simulation: every ~10 ticks (~30s), snap a random active vehicle near a toll gate
+    tollSimTickRef.current += 1;
+    if (tollSimTickRef.current % 10 === 0) {
+      const activeVehicles = vehicles.filter(v => v.status === 'active' && v.speed > 0);
+      if (activeVehicles.length > 0) {
+        const randomVehicle = activeVehicles[Math.floor(Math.random() * activeVehicles.length)];
+        const tollGate = TOLL_GATE_COORDS[Math.floor(Math.random() * TOLL_GATE_COORDS.length)];
+        // Move vehicle within ~50m of the toll gate
+        const offsetLat = (Math.random() - 0.5) * 0.0005;
+        const offsetLng = (Math.random() - 0.5) * 0.0005;
+        setVehicles(prev => prev.map(v =>
+          v.id === randomVehicle.id
+            ? { ...v, latitude: tollGate.lat + offsetLat, longitude: tollGate.lng + offsetLng, lastUpdate: new Date() }
+            : v
+        ));
+        console.log(`[Toll Sim] Moved ${randomVehicle.name} near ${tollGate.name} toll gate`);
       }
     }
   }, [vehicles, generateAlert]);

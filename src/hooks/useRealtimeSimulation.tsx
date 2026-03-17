@@ -78,6 +78,16 @@ const INDIAN_LOCATIONS = [
   'Kolkata-Delhi NH',
 ];
 
+// Toll gate coordinates for simulation — vehicles will be snapped near these
+// to trigger toll crossings periodically
+const TOLL_GATE_COORDS = [
+  { lat: 18.4529, lng: 73.723, name: 'Khed Shivapur' },     // NH-48 Pune
+  { lat: 23.4425, lng: 72.4026, name: 'Shahjahanpur' },     // NH-8 Gujarat
+  { lat: 26.7606, lng: 75.8648, name: 'Bagru' },            // NH-48 Jaipur
+  { lat: 13.3379, lng: 77.1173, name: 'Tumkur' },           // NH-44 Karnataka
+  { lat: 28.4089, lng: 76.9621, name: 'Manesar' },          // NH-48 Gurgaon
+];
+
 export function useRealtimeSimulation(enabled: boolean = true) {
   const [vehicles, setVehicles] = useState<SimulatedVehicle[]>(INITIAL_VEHICLES);
   const [alerts, setAlerts] = useState<SimulatedAlert[]>(() => {

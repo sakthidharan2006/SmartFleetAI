@@ -87,7 +87,17 @@ function computeStatus(expiryDate: string): string {
   return "valid";
 }
 
+const DRIVER_VEHICLE_MAP: Record<string, string> = {
+  'driver1@truckpulse.demo': '1',
+  'driver2@truckpulse.demo': '2',
+  'driver3@truckpulse.demo': '3',
+  'driver4@truckpulse.demo': '4',
+  'driver5@truckpulse.demo': '5',
+  'driver6@truckpulse.demo': '6',
+};
+
 export function ComplianceView() {
+  const { user, role } = useAuth();
   const [documents, setDocuments] = useState<VehicleDocument[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -95,18 +105,27 @@ export function ComplianceView() {
   const [filterStatus, setFilterStatus] = useState("all");
   const [selectedVehicle, setSelectedVehicle] = useState("all");
 
+  const isDriver = role === 'driver';
+  const assignedVehicleId = isDriver && user ? DRIVER_VEHICLE_MAP[user.email || ''] : null;
+
   const fetchDocuments = async () => {
     setLoading(true);
-    const { data, error } = await supabase
+    let query = supabase
       .from("vehicle_documents")
       .select("*")
       .order("expiry_date", { ascending: true });
+
+    // Drivers only see their assigned vehicle's documents
+    if (isDriver && assignedVehicleId) {
+      query = query.eq("vehicle_id", assignedVehicleId);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       toast.error("Failed to load documents");
       console.error(error);
     } else {
-      // Recompute status based on current date
       const updated = (data || []).map((doc) => ({
         ...doc,
         status: computeStatus(doc.expiry_date),

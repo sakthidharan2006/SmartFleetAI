@@ -16,7 +16,7 @@ const passwordSchema = z.string().min(6, 'Password must be at least 6 characters
 const nameSchema = z.string().min(2, 'Name must be at least 2 characters');
 
 const DEMO_ACCOUNTS = [
-  { label: 'Admin', sublabel: 'Super access — edit all data', email: 'admin@webwheels.demo', password: 'demo123456', name: 'Admin User', role: 'admin' as const, icon: Crown, color: 'from-red-500 to-rose-600' },
+  { label: 'Admin', sublabel: 'Super access — edit all data', email: 'admin@smartfleet.demo', password: 'demo123456', name: 'Admin User', role: 'admin' as const, icon: Crown, color: 'from-red-500 to-rose-600' },
   { label: 'Fleet Owner', sublabel: 'Full fleet access', email: 'owner@truckpulse.demo', password: 'demo123456', name: 'Rajesh Sharma', role: 'owner' as const, icon: Shield, color: 'from-amber-500 to-orange-600' },
   { label: 'Driver 1 — Tata Prima', sublabel: 'MH-12-AB-1234', email: 'driver1@truckpulse.demo', password: 'demo123456', name: 'Suresh Kumar', role: 'driver' as const, icon: Truck, color: 'from-blue-500 to-cyan-600' },
   { label: 'Driver 2 — Ashok Leyland', sublabel: 'GJ-05-CD-5678', email: 'driver2@truckpulse.demo', password: 'demo123456', name: 'Amit Patel', role: 'driver' as const, icon: Truck, color: 'from-emerald-500 to-teal-600' },
@@ -151,10 +151,10 @@ export default function Auth() {
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
       {/* Logo */}
       <div className="flex items-center gap-3 mb-8">
-          <img src="/webwheels-logo.png" alt="WebWheels" className="w-12 h-12 rounded-xl" />
+          <img src="/webwheels-logo.png" alt="SmartFleet AI" className="w-12 h-12 rounded-xl" />
         <div>
-          <h1 className="font-bold text-2xl text-foreground tracking-tight">WebWheels</h1>
-          <p className="text-sm text-muted-foreground font-medium">Web-enabled Tracking</p>
+          <h1 className="font-bold text-2xl text-foreground tracking-tight">SmartFleet AI</h1>
+          <p className="text-sm text-muted-foreground font-medium">Intelligent Infrastructure for Modern Logistics</p>
         </div>
       </div>
 
@@ -197,7 +197,7 @@ export default function Auth() {
       {/* Standard Auth */}
       <Card className="w-full max-w-md glass-card-elevated">
         <CardHeader className="text-center pb-2">
-          <CardTitle className="text-xl">Welcome to WebWheels</CardTitle>
+          <CardTitle className="text-xl">Welcome to SmartFleet AI</CardTitle>
           <CardDescription>
             Sign in to manage your fleet or create an account
           </CardDescription>

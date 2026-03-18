@@ -19,11 +19,13 @@ import { ComplianceView } from "@/components/views/ComplianceView";
 import { useSimulation } from "@/contexts/SimulationContext";
 import { useAlertNotifications } from "@/hooks/useAlertNotifications";
 import { useLoadSlipNotifications } from "@/hooks/useLoadSlipNotifications";
+import { useDocumentExpiryNotifications } from "@/hooks/useDocumentExpiryNotifications";
 
 function AlertNotificationBridge() {
   const { alerts } = useSimulation();
   useAlertNotifications(alerts, true);
   useLoadSlipNotifications();
+  useDocumentExpiryNotifications();
   return null;
 }
 

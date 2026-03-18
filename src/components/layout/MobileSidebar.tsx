@@ -49,7 +49,7 @@ export const allNavItems: NavItem[] = [
 ];
 
 // Driver-accessible views
-const DRIVER_NAV_IDS = ['dashboard', 'tracking', 'routes', 'diagnostics', 'fuel', 'loadhistory', 'cctv', 'alerts', 'drivers'];
+const DRIVER_NAV_IDS = ['dashboard', 'tracking', 'routes', 'diagnostics', 'fuel', 'loadhistory', 'tollmanagement', 'compliance', 'cctv', 'alerts', 'drivers'];
 
 interface MobileSidebarProps {
   activeItem: string;

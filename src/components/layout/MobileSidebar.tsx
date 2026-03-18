@@ -119,7 +119,7 @@ export function MobileSidebar({ activeItem, onItemClick, alertCount = 3 }: Mobil
                   <img src="/webwheels-logo.png" alt="SmartFleet AI" className="w-10 h-10 rounded-xl" />
                   <div>
                     <h1 className="font-bold text-lg text-foreground tracking-tight">SmartFleet AI</h1>
-                    <p className="text-xs text-muted-foreground font-medium">Intelligent Logistics</p>
+                    <p className="text-xs text-muted-foreground font-medium">Intelligent Tracking</p>
                   </div>
                 </div>
                 <Button variant="ghost" size="icon" onClick={close}>
@@ -217,7 +217,7 @@ export function MobileSidebar({ activeItem, onItemClick, alertCount = 3 }: Mobil
           {!isCollapsed && (
             <div>
               <h1 className="font-bold text-lg text-foreground tracking-tight">SmartFleet AI</h1>
-              <p className="text-xs text-muted-foreground font-medium">Intelligent Logistics</p>
+              <p className="text-xs text-muted-foreground font-medium">Intelligent Tracking</p>
             </div>
           )}
         </div>

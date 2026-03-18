@@ -213,11 +213,11 @@ export function MobileSidebar({ activeItem, onItemClick, alertCount = 3 }: Mobil
       {/* Logo */}
       <div className="p-6 border-b border-sidebar-border">
         <div className="flex items-center gap-3">
-          <img src="/webwheels-logo.png" alt="WebWheels" className="w-10 h-10 rounded-xl shrink-0" />
+          <img src="/webwheels-logo.png" alt="SmartFleet AI" className="w-10 h-10 rounded-xl shrink-0" />
           {!isCollapsed && (
             <div>
-              <h1 className="font-bold text-lg text-foreground tracking-tight">WebWheels</h1>
-              <p className="text-xs text-muted-foreground font-medium">Web-enabled Tracking</p>
+              <h1 className="font-bold text-lg text-foreground tracking-tight">SmartFleet AI</h1>
+              <p className="text-xs text-muted-foreground font-medium">Intelligent Logistics</p>
             </div>
           )}
         </div>

@@ -40,7 +40,11 @@ export function DriverPanel({ theftAlerts, onAcknowledge }: DriverPanelProps) {
   const totalPredicted = fuelComparisonData.reduce((s, d) => s + d.predicted, 0);
   const integrityScore = Math.round((1 - Math.abs(totalActual - totalPredicted) / totalPredicted) * 100);
 
-  const myAlerts = theftAlerts.filter(a => a.vehicleId === vehicle.id);
+  const myAlerts = theftAlerts.filter(a => a.vehicleId === vehicle?.id);
+
+  if (!vehicle || !simVehicle) {
+    return <div className="text-center text-muted-foreground py-12">No vehicle assigned</div>;
+  }
 
   return (
     <div className="space-y-6">

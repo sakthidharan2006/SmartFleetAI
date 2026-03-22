@@ -13,13 +13,15 @@ import { FleetMap } from "@/components/dashboard/FleetMap";
 import { TireDiagram } from "@/components/dashboard/TireDiagram";
 import { FuelMonitor } from "@/components/dashboard/FuelMonitor";
 import { EngineHealth } from "@/components/dashboard/EngineHealth";
+import { OwnerAnalytics } from "@/components/dashboard/OwnerAnalytics";
+import { DriverPanel } from "@/components/dashboard/DriverPanel";
 import { mockFuelHistory } from "@/data/mockData";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSimulation } from "@/contexts/SimulationContext";
 import { useState } from "react";
 
 export function DashboardView() {
-  const { vehicleCards, alertPanelData, fleetStats, isSimulating, vehicles, isDriver } = useSimulation();
+  const { vehicleCards, alertPanelData, fleetStats, isSimulating, vehicles, isDriver, userRole, theftAlerts, acknowledgeTheftAlert, resolveTheftAlert } = useSimulation();
   const [selectedVehicleIndex, setSelectedVehicleIndex] = useState(0);
   
   const selectedVehicle = vehicleCards[selectedVehicleIndex] || vehicleCards[0];
@@ -111,6 +113,17 @@ export function DashboardView() {
           <AlertsPanel alerts={alertPanelData.length > 0 ? alertPanelData : []} />
         </div>
       </div>
+
+      {/* Role-specific panels */}
+      {isDriver ? (
+        <DriverPanel theftAlerts={theftAlerts} onAcknowledge={acknowledgeTheftAlert} />
+      ) : (
+        <OwnerAnalytics
+          theftAlerts={theftAlerts}
+          onAcknowledge={acknowledgeTheftAlert}
+          onResolve={resolveTheftAlert}
+        />
+      )}
 
       {/* Vehicle Details Section */}
       <div className="animate-fade-in-up" style={{ animationDelay: '0.4s' }}>

@@ -166,8 +166,11 @@ export function SimulationProvider({ children, enabled = true }: SimulationProvi
     return simulation.alerts;
   }, [simulation.alerts, filteredVehicles, isDriver, user]);
 
-  // Global toll detection — runs regardless of which view is active
+  // Global toll detection
   const tollDetection = useTollDetection(simulation.vehicles, enabled);
+  
+  // Global theft simulation
+  const theftSim = useTheftSimulation(filteredVehicles, enabled);
 
   // Filter toll data for drivers
   const filteredTollCrossings = useMemo(() => {

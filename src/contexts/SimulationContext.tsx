@@ -8,6 +8,8 @@ import { Vehicle } from '@/components/dashboard/VehicleCard';
 import { Alert } from '@/components/dashboard/AlertsPanel';
 import { useAuth } from '@/hooks/useAuth';
 import { useTollDetection, TollCrossing, TollNotification, FastTagAccount, TollGate } from '@/hooks/useTollDetection';
+import { useTheftSimulation } from '@/hooks/useTheftSimulation';
+import { TheftAlert } from '@/components/dashboard/TheftAlertCard';
 
 interface SimulationContextType {
   vehicles: SimulatedVehicle[];
@@ -40,6 +42,10 @@ interface SimulationContextType {
   unreadTollNotifications: number;
   markTollNotificationRead: (id: string) => void;
   rechargeFastTag: (vehicleId: string, amount: number) => Promise<void>;
+  // Theft detection
+  theftAlerts: TheftAlert[];
+  acknowledgeTheftAlert: (id: string) => void;
+  resolveTheftAlert: (id: string, notes: string) => void;
 }
 
 const SimulationContext = createContext<SimulationContextType | undefined>(undefined);
@@ -160,8 +166,11 @@ export function SimulationProvider({ children, enabled = true }: SimulationProvi
     return simulation.alerts;
   }, [simulation.alerts, filteredVehicles, isDriver, user]);
 
-  // Global toll detection — runs regardless of which view is active
+  // Global toll detection
   const tollDetection = useTollDetection(simulation.vehicles, enabled);
+  
+  // Global theft simulation
+  const theftSim = useTheftSimulation(filteredVehicles, enabled);
 
   // Filter toll data for drivers
   const filteredTollCrossings = useMemo(() => {
@@ -220,6 +229,10 @@ export function SimulationProvider({ children, enabled = true }: SimulationProvi
       unreadTollNotifications: filteredTollNotifications.filter(n => !n.isRead).length,
       markTollNotificationRead: tollDetection.markNotificationRead,
       rechargeFastTag: tollDetection.rechargeFastTag,
+      // Theft data
+      theftAlerts: theftSim.theftAlerts,
+      acknowledgeTheftAlert: theftSim.acknowledgeAlert,
+      resolveTheftAlert: theftSim.resolveAlert,
     }}>
       {children}
     </SimulationContext.Provider>

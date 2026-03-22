@@ -229,6 +229,10 @@ export function SimulationProvider({ children, enabled = true }: SimulationProvi
       unreadTollNotifications: filteredTollNotifications.filter(n => !n.isRead).length,
       markTollNotificationRead: tollDetection.markNotificationRead,
       rechargeFastTag: tollDetection.rechargeFastTag,
+      // Theft data
+      theftAlerts: theftSim.theftAlerts,
+      acknowledgeTheftAlert: theftSim.acknowledgeAlert,
+      resolveTheftAlert: theftSim.resolveAlert,
     }}>
       {children}
     </SimulationContext.Provider>

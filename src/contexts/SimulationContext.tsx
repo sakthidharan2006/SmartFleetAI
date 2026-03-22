@@ -42,6 +42,10 @@ interface SimulationContextType {
   unreadTollNotifications: number;
   markTollNotificationRead: (id: string) => void;
   rechargeFastTag: (vehicleId: string, amount: number) => Promise<void>;
+  // Theft detection
+  theftAlerts: TheftAlert[];
+  acknowledgeTheftAlert: (id: string) => void;
+  resolveTheftAlert: (id: string, notes: string) => void;
 }
 
 const SimulationContext = createContext<SimulationContextType | undefined>(undefined);

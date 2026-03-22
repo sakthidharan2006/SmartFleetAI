@@ -22,10 +22,6 @@ export function DriverPanel({ theftAlerts, onAcknowledge }: DriverPanelProps) {
   const vehicle = vehicleCards[0];
   const simVehicle = vehicles[0];
 
-  if (!vehicle || !simVehicle) {
-    return <div className="text-center text-muted-foreground py-12">No vehicle assigned</div>;
-  }
-
   // Mock fuel consumption comparison data
   const fuelComparisonData = useMemo(() => {
     const hours = Array.from({ length: 12 }, (_, i) => {

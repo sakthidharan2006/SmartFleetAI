@@ -8,6 +8,8 @@ import { Vehicle } from '@/components/dashboard/VehicleCard';
 import { Alert } from '@/components/dashboard/AlertsPanel';
 import { useAuth } from '@/hooks/useAuth';
 import { useTollDetection, TollCrossing, TollNotification, FastTagAccount, TollGate } from '@/hooks/useTollDetection';
+import { useTheftSimulation } from '@/hooks/useTheftSimulation';
+import { TheftAlert } from '@/components/dashboard/TheftAlertCard';
 
 interface SimulationContextType {
   vehicles: SimulatedVehicle[];

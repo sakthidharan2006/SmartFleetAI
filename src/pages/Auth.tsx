@@ -149,14 +149,18 @@ export default function Auth() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
+      <div className="fixed top-4 right-4">
+        <ThemeToggle />
+      </div>
       {/* Logo */}
       <div className="flex items-center gap-3 mb-8">
           <img src="/webwheels-logo.png" alt="SmartFleet AI" className="w-12 h-12 rounded-xl" />
         <div>
-          <h1 className="font-bold text-2xl text-foreground tracking-tight">SmartFleet AI</h1>
+          <h1 className="font-display font-semibold text-2xl text-foreground tracking-tight">SmartFleet AI</h1>
           <p className="text-sm text-muted-foreground font-medium">Intelligent Infrastructure for Modern Logistics</p>
         </div>
       </div>
+
 
       {/* Quick Demo Login */}
       <Card className="w-full max-w-md glass-card-elevated mb-4">

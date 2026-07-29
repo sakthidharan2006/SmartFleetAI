@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { allNavItems } from "@/components/layout/MobileSidebar";
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -104,6 +105,8 @@ export function ResponsiveHeader({ onNavigate }: ResponsiveHeaderProps) {
             </span>
             <span className="text-muted-foreground font-medium">Live</span>
           </div>
+
+          <ThemeToggle />
 
           {/* Notifications */}
           <Button

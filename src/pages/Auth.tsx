@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';

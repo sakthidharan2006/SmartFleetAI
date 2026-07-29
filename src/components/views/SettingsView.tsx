@@ -21,7 +21,7 @@ export function SettingsView() {
     <div className="space-y-6 animate-fade-in-up">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Settings</h1>
+        <h1 className="text-2xl font-display font-semibold tracking-tight text-foreground">Settings</h1>
         <p className="text-muted-foreground">Manage your account and application preferences</p>
       </div>
 
@@ -45,7 +45,7 @@ export function SettingsView() {
         <div className="lg:col-span-3 space-y-6">
           {/* Account Settings */}
           <div className="glass-card p-6">
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <h3 className="text-base font-display font-semibold mb-4 flex items-center gap-2">
               <User className="w-5 h-5 text-primary" />
               Account Settings
             </h3>
@@ -74,7 +74,7 @@ export function SettingsView() {
 
           {/* Notification Settings */}
           <div className="glass-card p-6">
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <h3 className="text-base font-display font-semibold mb-4 flex items-center gap-2">
               <Bell className="w-5 h-5 text-primary" />
               Notification Preferences
             </h3>
@@ -123,7 +123,7 @@ export function SettingsView() {
 
           {/* Security Settings */}
           <div className="glass-card p-6">
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <h3 className="text-base font-display font-semibold mb-4 flex items-center gap-2">
               <Shield className="w-5 h-5 text-primary" />
               Security
             </h3>

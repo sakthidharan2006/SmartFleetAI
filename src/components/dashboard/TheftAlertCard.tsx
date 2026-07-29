@@ -91,7 +91,7 @@ export function TheftAlertCard({ alert, index, onAcknowledge, compact = false }:
             className="w-full h-full object-cover rounded-lg"
           />
           {!compact && (
-            <div className="absolute top-2 left-2 flex items-center gap-1.5 px-2 py-1 rounded bg-danger/90 text-white text-xs font-bold">
+            <div className="absolute top-2 left-2 flex items-center gap-1.5 px-2 py-1 rounded bg-danger/90 text-danger-foreground text-xs font-bold">
               <Camera className="w-3 h-3" />
               AI Dashcam
             </div>

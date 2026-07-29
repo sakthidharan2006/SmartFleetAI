@@ -53,7 +53,7 @@ export function TollManagementView() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-foreground">
+        <h2 className="text-2xl font-display font-semibold tracking-tight text-foreground">
           {isDriver ? 'My Toll History' : 'Toll Gate Management'}
         </h2>
         <p className="text-muted-foreground">
@@ -68,7 +68,7 @@ export function TollManagementView() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs text-muted-foreground font-medium">Total Toll Spent</p>
-                <p className="text-2xl font-bold text-foreground">₹{totalTollSpent.toLocaleString()}</p>
+                <p className="text-2xl font-display font-semibold tracking-tight text-foreground">₹{totalTollSpent.toLocaleString()}</p>
               </div>
               <div className="w-10 h-10 rounded-lg bg-danger/10 flex items-center justify-center">
                 <ArrowDownRight className="w-5 h-5 text-danger" />
@@ -82,7 +82,7 @@ export function TollManagementView() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs text-muted-foreground font-medium">Total Crossings</p>
-                <p className="text-2xl font-bold text-foreground">{totalCrossings}</p>
+                <p className="text-2xl font-display font-semibold tracking-tight text-foreground">{totalCrossings}</p>
               </div>
               <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
                 <MapPin className="w-5 h-5 text-primary" />
@@ -96,7 +96,7 @@ export function TollManagementView() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs text-muted-foreground font-medium">Failed Payments</p>
-                <p className="text-2xl font-bold text-foreground">{failedCrossings}</p>
+                <p className="text-2xl font-display font-semibold tracking-tight text-foreground">{failedCrossings}</p>
               </div>
               <div className="w-10 h-10 rounded-lg bg-warning/10 flex items-center justify-center">
                 <AlertTriangle className="w-5 h-5 text-warning" />
@@ -110,7 +110,7 @@ export function TollManagementView() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs text-muted-foreground font-medium">Total FastTag Balance</p>
-                <p className="text-2xl font-bold text-foreground">₹{totalFastTagBalance.toLocaleString()}</p>
+                <p className="text-2xl font-display font-semibold tracking-tight text-foreground">₹{totalFastTagBalance.toLocaleString()}</p>
               </div>
               <div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center">
                 <Wallet className="w-5 h-5 text-success" />

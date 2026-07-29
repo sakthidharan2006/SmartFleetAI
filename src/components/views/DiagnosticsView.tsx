@@ -22,7 +22,7 @@ export function DiagnosticsView() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Diagnostics</h1>
+          <h1 className="text-2xl font-display font-semibold tracking-tight text-foreground">Diagnostics</h1>
           <p className="text-muted-foreground">
             {isDriver ? 'Your vehicle health monitoring' : 'Real-time vehicle health monitoring and OBD-II data'}
           </p>

@@ -71,7 +71,7 @@ export function MaintenanceView() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Maintenance</h1>
+          <h1 className="text-2xl font-display font-semibold tracking-tight text-foreground">Maintenance</h1>
           <p className="text-muted-foreground">Schedule and track vehicle maintenance</p>
         </div>
         <div className="flex items-center gap-3">

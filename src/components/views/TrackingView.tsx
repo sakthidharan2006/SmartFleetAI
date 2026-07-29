@@ -27,7 +27,7 @@ export function TrackingView() {
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-foreground">
+            <h1 className="text-2xl font-display font-semibold tracking-tight text-foreground">
               {isDriver ? 'My Location' : 'Live Tracking'}
             </h1>
             {isSimulating && (

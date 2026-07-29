@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useTheme } from "@/hooks/useTheme";
 import { motion } from "framer-motion";
 import { Expand, Layers, Navigation, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";

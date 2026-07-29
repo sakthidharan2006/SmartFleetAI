@@ -132,6 +132,7 @@ function MapWithLeaflet({
 }) {
   const { MapContainer, TileLayer, Marker, Popup, useMap } = ReactLeaflet;
   const [satellite, setSatellite] = useState(false);
+  const { theme } = useTheme();
   
   const center: [number, number] = [22.5, 78.5];
   const zoom = vehicles.length === 1 ? 8 : 5;
@@ -229,7 +230,7 @@ function MapWithLeaflet({
         ) : (
           <TileLayer
             attribution='&copy; <a href="https://carto.com/">CARTO</a>'
-            url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+            url={`https://{s}.basemaps.cartocdn.com/${theme === "dark" ? "dark_all" : "light_all"}/{z}/{x}/{y}{r}.png`}
           />
         )}
         

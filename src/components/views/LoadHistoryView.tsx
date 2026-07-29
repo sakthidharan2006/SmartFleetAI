@@ -196,7 +196,7 @@ export function LoadHistoryView() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">
+          <h1 className="text-2xl font-display font-semibold tracking-tight text-foreground">
             {isDriver ? 'My Load History' : 'Load History — All Drivers'}
           </h1>
           <p className="text-muted-foreground">

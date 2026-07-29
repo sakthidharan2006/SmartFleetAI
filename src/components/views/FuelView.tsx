@@ -30,7 +30,7 @@ export function FuelView() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Fuel Monitor</h1>
+          <h1 className="text-2xl font-display font-semibold tracking-tight text-foreground">Fuel Monitor</h1>
           <p className="text-muted-foreground">
             {isDriver ? 'Your vehicle fuel status' : 'Track fuel consumption, efficiency, and costs'}
           </p>

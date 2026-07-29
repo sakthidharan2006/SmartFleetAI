@@ -42,7 +42,7 @@ export function RoutesView() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">
+          <h1 className="text-2xl font-display font-semibold tracking-tight text-foreground">
             {isDriver ? 'My Trips' : 'Routes & Trips'}
           </h1>
           <p className="text-muted-foreground">

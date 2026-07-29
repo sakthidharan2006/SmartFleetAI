@@ -190,7 +190,7 @@ export function ComplianceView() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
+          <h2 className="text-2xl font-display font-semibold tracking-tight text-foreground flex items-center gap-2">
             <Shield className="w-7 h-7 text-primary" />
             Documentation & Compliance
           </h2>

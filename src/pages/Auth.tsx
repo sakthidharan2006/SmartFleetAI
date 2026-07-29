@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
@@ -149,14 +150,18 @@ export default function Auth() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
+      <div className="fixed top-4 right-4">
+        <ThemeToggle />
+      </div>
       {/* Logo */}
       <div className="flex items-center gap-3 mb-8">
           <img src="/webwheels-logo.png" alt="SmartFleet AI" className="w-12 h-12 rounded-xl" />
         <div>
-          <h1 className="font-bold text-2xl text-foreground tracking-tight">SmartFleet AI</h1>
+          <h1 className="font-display font-semibold text-2xl text-foreground tracking-tight">SmartFleet AI</h1>
           <p className="text-sm text-muted-foreground font-medium">Intelligent Infrastructure for Modern Logistics</p>
         </div>
       </div>
+
 
       {/* Quick Demo Login */}
       <Card className="w-full max-w-md glass-card-elevated mb-4">
@@ -178,7 +183,7 @@ export default function Auth() {
               className="w-full flex items-center gap-3 p-3 rounded-lg border border-border hover:border-primary/50 hover:bg-primary/5 transition-all disabled:opacity-50"
             >
               <div className={`w-9 h-9 rounded-lg bg-gradient-to-br ${account.color} flex items-center justify-center shrink-0`}>
-                <account.icon className="w-4 h-4 text-white" />
+                <account.icon className="w-4 h-4 text-primary-foreground" />
               </div>
               <div className="text-left flex-1 min-w-0">
                 <p className="font-medium text-sm text-foreground">{account.label}</p>

@@ -69,7 +69,7 @@ export function AlertsView() {
       <div className="flex items-center justify-between">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-foreground">Alerts</h1>
+            <h1 className="text-2xl font-display font-semibold tracking-tight text-foreground">Alerts</h1>
             {isSimulating && (
               <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-success/10 border border-success/30">
                 <Zap className="w-3 h-3 text-success animate-pulse" />

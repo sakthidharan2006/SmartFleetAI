@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useTheme } from "@/hooks/useTheme";
 import { motion } from "framer-motion";
 import { Expand, Layers, Navigation, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -132,6 +133,7 @@ function MapWithLeaflet({
 }) {
   const { MapContainer, TileLayer, Marker, Popup, useMap } = ReactLeaflet;
   const [satellite, setSatellite] = useState(false);
+  const { theme } = useTheme();
   
   const center: [number, number] = [22.5, 78.5];
   const zoom = vehicles.length === 1 ? 8 : 5;
@@ -159,7 +161,7 @@ function MapWithLeaflet({
             align-items: center;
             justify-content: center;
             box-shadow: 0 0 20px ${color}80;
-            border: 3px solid #0f172a;
+            border: 3px solid hsl(var(--card));
             transform: rotate(${vehicle.heading}deg);
           ">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
@@ -212,7 +214,7 @@ function MapWithLeaflet({
         center={vehicles.length === 1 ? [vehicles[0].position[0], vehicles[0].position[1]] : center}
         zoom={zoom}
         className="h-full w-full"
-        style={{ background: satellite ? "#1a2e1a" : "hsl(222 47% 6%)" }}
+        style={{ background: satellite ? "#1a2e1a" : "hsl(var(--muted))" }}
         zoomControl={false}
       >
         {satellite ? (
@@ -229,7 +231,7 @@ function MapWithLeaflet({
         ) : (
           <TileLayer
             attribution='&copy; <a href="https://carto.com/">CARTO</a>'
-            url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+            url={`https://{s}.basemaps.cartocdn.com/${theme === "dark" ? "dark_all" : "light_all"}/{z}/{x}/{y}{r}.png`}
           />
         )}
         

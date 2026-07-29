@@ -118,8 +118,8 @@ export function MobileSidebar({ activeItem, onItemClick, alertCount = 3 }: Mobil
                 <div className="flex items-center gap-3">
                   <img src="/webwheels-logo.png" alt="SmartFleet AI" className="w-10 h-10 rounded-xl" />
                   <div>
-                    <h1 className="font-bold text-lg text-foreground tracking-tight">SmartFleet AI</h1>
-                    <p className="text-xs text-muted-foreground font-medium">Intelligent Tracking</p>
+                    <h1 className="font-display font-semibold text-lg text-sidebar-foreground tracking-tight">SmartFleet AI</h1>
+                    <p className="text-xs text-sidebar-foreground/60 font-medium">Intelligent Tracking</p>
                   </div>
                 </div>
                 <Button variant="ghost" size="icon" onClick={close}>
@@ -131,12 +131,12 @@ export function MobileSidebar({ activeItem, onItemClick, alertCount = 3 }: Mobil
               {profile && (
                 <div className="p-4 border-b border-sidebar-border">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
-                      <Users className="w-5 h-5 text-muted-foreground" />
+                    <div className="w-10 h-10 rounded-full bg-sidebar-accent flex items-center justify-center">
+                      <Users className="w-5 h-5 text-sidebar-foreground/70" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium truncate">{profile.full_name}</p>
-                      <p className="text-xs text-muted-foreground capitalize">{role}</p>
+                      <p className="text-xs text-sidebar-foreground/60 capitalize">{role}</p>
                     </div>
                   </div>
                 </div>
@@ -189,7 +189,7 @@ export function MobileSidebar({ activeItem, onItemClick, alertCount = 3 }: Mobil
                 </button>
                 <button 
                   onClick={handleSignOut}
-                  className="nav-link w-full touch-manipulation text-danger hover:bg-danger/10"
+                  className="nav-link w-full touch-manipulation !text-danger hover:bg-danger/10"
                 >
                   <LogOut className="w-5 h-5" />
                   <span className="font-medium">Sign Out</span>
@@ -216,8 +216,8 @@ export function MobileSidebar({ activeItem, onItemClick, alertCount = 3 }: Mobil
           <img src="/webwheels-logo.png" alt="SmartFleet AI" className="w-10 h-10 rounded-xl shrink-0" />
           {!isCollapsed && (
             <div>
-              <h1 className="font-bold text-lg text-foreground tracking-tight">SmartFleet AI</h1>
-              <p className="text-xs text-muted-foreground font-medium">Intelligent Tracking</p>
+              <h1 className="font-display font-semibold text-lg text-sidebar-foreground tracking-tight">SmartFleet AI</h1>
+              <p className="text-xs text-sidebar-foreground/60 font-medium">Intelligent Tracking</p>
             </div>
           )}
         </div>
@@ -294,7 +294,7 @@ export function MobileSidebar({ activeItem, onItemClick, alertCount = 3 }: Mobil
         <button 
           onClick={handleSignOut}
           className={cn(
-            "nav-link w-full text-danger hover:bg-danger/10",
+            "nav-link w-full !text-danger hover:bg-danger/10",
             isCollapsed && "justify-center px-2"
           )}
           title={isCollapsed ? "Sign Out" : undefined}

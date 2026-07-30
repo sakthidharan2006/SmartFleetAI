@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { MobileSidebar } from "./MobileSidebar";
 import { ResponsiveHeader } from "./ResponsiveHeader";
+import { Footer } from "./Footer";
 import { SidebarProvider, useSidebar } from "@/hooks/useSidebar";
 import { cn } from "@/lib/utils";
 
@@ -28,11 +29,7 @@ function DashboardLayoutContent({ children, activeItem, onNavigate }: DashboardL
         <main className="flex-1 p-4 md:p-6 overflow-x-hidden">
           {children}
         </main>
-        <footer className="py-4 px-4 md:px-6 border-t border-border mt-auto">
-          <p className="text-center text-sm text-muted-foreground">
-            Developed by Sakthi Tech Groups
-          </p>
-        </footer>
+        <Footer className="mt-auto" />
       </div>
     </div>
   );

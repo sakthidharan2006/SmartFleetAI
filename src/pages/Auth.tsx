@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { Footer } from "@/components/layout/Footer";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
@@ -285,6 +286,7 @@ export default function Auth() {
       <p className="mt-6 text-sm text-muted-foreground text-center max-w-md">
         By signing up, you agree to our Terms of Service and Privacy Policy.
       </p>
+      <Footer className="w-full mt-auto" />
     </div>
   );
 }

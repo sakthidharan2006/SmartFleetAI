@@ -14,7 +14,8 @@ import {
   Home,
   Package,
   Landmark,
-  FileCheck
+  FileCheck,
+  ShieldCheck
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 

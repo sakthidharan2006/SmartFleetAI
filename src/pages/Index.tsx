@@ -16,6 +16,7 @@ import { SettingsView } from "@/components/views/SettingsView";
 import { LoadHistoryView } from "@/components/views/LoadHistoryView";
 import { TollManagementView } from "@/components/views/TollManagementView";
 import { ComplianceView } from "@/components/views/ComplianceView";
+import { CargoDoorView } from "@/components/views/CargoDoorView";
 import { useSimulation } from "@/contexts/SimulationContext";
 import { useAlertNotifications } from "@/hooks/useAlertNotifications";
 import { useLoadSlipNotifications } from "@/hooks/useLoadSlipNotifications";

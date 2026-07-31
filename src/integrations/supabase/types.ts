@@ -52,6 +52,318 @@ export type Database = {
           },
         ]
       }
+      cargo_doors: {
+        Row: {
+          battery_level: number
+          created_at: string
+          device_id: string
+          door_state: string
+          firmware_version: string
+          id: string
+          last_heartbeat: string
+          lock_state: string
+          sensor_healthy: boolean
+          signal_strength: number
+          tamper_detected: boolean
+          unlock_expires_at: string | null
+          updated_at: string
+          vehicle_id: string
+        }
+        Insert: {
+          battery_level?: number
+          created_at?: string
+          device_id: string
+          door_state?: string
+          firmware_version?: string
+          id?: string
+          last_heartbeat?: string
+          lock_state?: string
+          sensor_healthy?: boolean
+          signal_strength?: number
+          tamper_detected?: boolean
+          unlock_expires_at?: string | null
+          updated_at?: string
+          vehicle_id: string
+        }
+        Update: {
+          battery_level?: number
+          created_at?: string
+          device_id?: string
+          door_state?: string
+          firmware_version?: string
+          id?: string
+          last_heartbeat?: string
+          lock_state?: string
+          sensor_healthy?: boolean
+          signal_strength?: number
+          tamper_detected?: boolean
+          unlock_expires_at?: string | null
+          updated_at?: string
+          vehicle_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cargo_doors_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: true
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      door_device_commands: {
+        Row: {
+          acked_at: string | null
+          cargo_door_id: string
+          command: string
+          created_at: string
+          error_message: string | null
+          id: string
+          payload: Json
+          qos: number
+          status: string
+          topic: string
+          unlock_request_id: string | null
+          vehicle_id: string
+        }
+        Insert: {
+          acked_at?: string | null
+          cargo_door_id: string
+          command: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          payload?: Json
+          qos?: number
+          status?: string
+          topic: string
+          unlock_request_id?: string | null
+          vehicle_id: string
+        }
+        Update: {
+          acked_at?: string | null
+          cargo_door_id?: string
+          command?: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          payload?: Json
+          qos?: number
+          status?: string
+          topic?: string
+          unlock_request_id?: string | null
+          vehicle_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "door_device_commands_cargo_door_id_fkey"
+            columns: ["cargo_door_id"]
+            isOneToOne: false
+            referencedRelation: "cargo_doors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "door_device_commands_unlock_request_id_fkey"
+            columns: ["unlock_request_id"]
+            isOneToOne: false
+            referencedRelation: "door_unlock_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "door_device_commands_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      door_security_events: {
+        Row: {
+          acknowledged: boolean
+          actor_id: string | null
+          actor_name: string | null
+          actor_role: string | null
+          cargo_description: string | null
+          cargo_door_id: string | null
+          created_at: string
+          driver_id: string | null
+          event_type: string
+          id: string
+          latitude: number | null
+          longitude: number | null
+          message: string
+          metadata: Json
+          severity: string
+          speed: number | null
+          trip_id: string | null
+          unlock_request_id: string | null
+          vehicle_id: string
+        }
+        Insert: {
+          acknowledged?: boolean
+          actor_id?: string | null
+          actor_name?: string | null
+          actor_role?: string | null
+          cargo_description?: string | null
+          cargo_door_id?: string | null
+          created_at?: string
+          driver_id?: string | null
+          event_type: string
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          message: string
+          metadata?: Json
+          severity?: string
+          speed?: number | null
+          trip_id?: string | null
+          unlock_request_id?: string | null
+          vehicle_id: string
+        }
+        Update: {
+          acknowledged?: boolean
+          actor_id?: string | null
+          actor_name?: string | null
+          actor_role?: string | null
+          cargo_description?: string | null
+          cargo_door_id?: string | null
+          created_at?: string
+          driver_id?: string | null
+          event_type?: string
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          message?: string
+          metadata?: Json
+          severity?: string
+          speed?: number | null
+          trip_id?: string | null
+          unlock_request_id?: string | null
+          vehicle_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "door_security_events_cargo_door_id_fkey"
+            columns: ["cargo_door_id"]
+            isOneToOne: false
+            referencedRelation: "cargo_doors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "door_security_events_trip_id_fkey"
+            columns: ["trip_id"]
+            isOneToOne: false
+            referencedRelation: "trips"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "door_security_events_unlock_request_id_fkey"
+            columns: ["unlock_request_id"]
+            isOneToOne: false
+            referencedRelation: "door_unlock_requests"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "door_security_events_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      door_unlock_requests: {
+        Row: {
+          auto_locked_at: string | null
+          cargo_description: string | null
+          cargo_door_id: string | null
+          created_at: string
+          decided_at: string | null
+          decision_note: string | null
+          driver_id: string
+          driver_name: string
+          id: string
+          latitude: number | null
+          location_name: string | null
+          longitude: number | null
+          owner_id: string | null
+          reason: string
+          status: string
+          trip_id: string | null
+          unlock_duration_seconds: number
+          unlock_expires_at: string | null
+          updated_at: string
+          vehicle_id: string
+        }
+        Insert: {
+          auto_locked_at?: string | null
+          cargo_description?: string | null
+          cargo_door_id?: string | null
+          created_at?: string
+          decided_at?: string | null
+          decision_note?: string | null
+          driver_id: string
+          driver_name?: string
+          id?: string
+          latitude?: number | null
+          location_name?: string | null
+          longitude?: number | null
+          owner_id?: string | null
+          reason: string
+          status?: string
+          trip_id?: string | null
+          unlock_duration_seconds?: number
+          unlock_expires_at?: string | null
+          updated_at?: string
+          vehicle_id: string
+        }
+        Update: {
+          auto_locked_at?: string | null
+          cargo_description?: string | null
+          cargo_door_id?: string | null
+          created_at?: string
+          decided_at?: string | null
+          decision_note?: string | null
+          driver_id?: string
+          driver_name?: string
+          id?: string
+          latitude?: number | null
+          location_name?: string | null
+          longitude?: number | null
+          owner_id?: string | null
+          reason?: string
+          status?: string
+          trip_id?: string | null
+          unlock_duration_seconds?: number
+          unlock_expires_at?: string | null
+          updated_at?: string
+          vehicle_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "door_unlock_requests_cargo_door_id_fkey"
+            columns: ["cargo_door_id"]
+            isOneToOne: false
+            referencedRelation: "cargo_doors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "door_unlock_requests_trip_id_fkey"
+            columns: ["trip_id"]
+            isOneToOne: false
+            referencedRelation: "trips"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "door_unlock_requests_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       fasttag_accounts: {
         Row: {
           balance: number

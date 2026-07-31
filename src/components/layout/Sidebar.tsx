@@ -14,7 +14,8 @@ import {
   Home,
   Package,
   Landmark,
-  FileCheck
+  FileCheck,
+  ShieldCheck
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -34,6 +35,7 @@ export const navItems: NavItem[] = [
   { id: "loadhistory", label: "Load History", icon: Package },
   { id: "tollmanagement", label: "Toll Management", icon: Landmark },
   { id: "compliance", label: "Compliance", icon: FileCheck },
+  { id: "cargodoor", label: "Cargo Door Security", icon: ShieldCheck },
   { id: "maintenance", label: "Maintenance", icon: Wrench },
   { id: "cctv", label: "CCTV Feeds", icon: Video },
   { id: "alerts", label: "Alerts", icon: AlertTriangle },

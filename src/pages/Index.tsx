@@ -53,6 +53,8 @@ const Index = () => {
         return <TollManagementView />;
       case "compliance":
         return <ComplianceView />;
+      case "cargodoor":
+        return <CargoDoorView />;
       case "maintenance":
         return <MaintenanceView />;
       case "cctv":

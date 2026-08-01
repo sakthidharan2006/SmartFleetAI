@@ -68,7 +68,7 @@ export function ResponsiveHeader({ onNavigate }: ResponsiveHeaderProps) {
   return (
     <>
       <header className={cn(
-        "sticky top-0 z-30 h-16 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex items-center px-4 md:px-6 gap-4 transition-all duration-300",
+        "sticky top-0 z-30 h-16 border-b border-border bg-background/85 backdrop-blur-md supports-[backdrop-filter]:bg-background/70 flex items-center px-4 md:px-8 gap-4 transition-all duration-300",
         isMobile ? "ml-0" : (isCollapsed ? "ml-20" : "ml-64")
       )}>
         {/* Toggle button for desktop */}

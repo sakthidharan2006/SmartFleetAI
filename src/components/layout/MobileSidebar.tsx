@@ -232,49 +232,58 @@ export function MobileSidebar({ activeItem, onItemClick, alertCount = 3 }: Mobil
       )}
     >
       {/* Logo */}
-      <div className="p-6 border-b border-sidebar-border">
-        <div className="flex items-center gap-3">
+      <div className={cn("border-b border-sidebar-border", isCollapsed ? "p-4" : "px-5 py-6")}>
+        <div className={cn("flex items-center gap-3", isCollapsed && "justify-center")}>
           <img src="/webwheels-logo.png" alt="SmartFleet AI" className="w-10 h-10 rounded-xl shrink-0" />
           {!isCollapsed && (
             <div>
-              <h1 className="font-display font-semibold text-lg text-sidebar-foreground tracking-tight">SmartFleet AI</h1>
-              <p className="text-xs text-sidebar-foreground/60 font-medium">Intelligent Tracking</p>
+              <h1 className="font-display font-bold text-lg text-sidebar-foreground tracking-tight">SmartFleet AI</h1>
+              <p className="text-[11px] uppercase tracking-[0.16em] text-sidebar-foreground/45 font-semibold">Fleet Console</p>
             </div>
           )}
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4 overflow-y-auto scrollbar-thin">
-        <div className="space-y-1">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => handleItemClick(item.id)}
-              className={cn(
-                "nav-link w-full",
-                isCollapsed && "justify-center px-2",
-                activeItem === item.id && "nav-link-active"
-              )}
-              title={isCollapsed ? item.label : undefined}
-            >
-              <item.icon className="w-5 h-5 shrink-0" />
-              {!isCollapsed && (
-                <>
-                  <span className="font-medium">{item.label}</span>
-                  {item.id === "alerts" && alertCount > 0 && (
-                    <span className="ml-auto bg-danger text-danger-foreground text-xs font-bold px-2 py-0.5 rounded-full">
-                      {alertCount}
-                    </span>
+      <nav className={cn("flex-1 overflow-y-auto scrollbar-thin pb-4", isCollapsed ? "px-2 pt-3" : "px-3")}>
+        {groupedNav.map((group) => (
+          <div key={group.label}>
+            {isCollapsed ? (
+              <div className="my-3 mx-2 h-px bg-sidebar-border" />
+            ) : (
+              <p className="nav-group-label">{group.label}</p>
+            )}
+            <div className="space-y-1">
+              {group.items.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => handleItemClick(item.id)}
+                  className={cn(
+                    "nav-link w-full",
+                    isCollapsed && "justify-center px-2",
+                    activeItem === item.id && "nav-link-active"
                   )}
-                </>
-              )}
-              {isCollapsed && item.id === "alerts" && alertCount > 0 && (
-                <span className="absolute top-1 right-1 w-2 h-2 bg-danger rounded-full" />
-              )}
-            </button>
-          ))}
-        </div>
+                  title={isCollapsed ? item.label : undefined}
+                >
+                  <item.icon className="w-[18px] h-[18px] shrink-0" />
+                  {!isCollapsed && (
+                    <>
+                      <span className="font-medium">{item.label}</span>
+                      {item.id === "alerts" && alertCount > 0 && (
+                        <span className="ml-auto bg-danger text-danger-foreground text-[11px] font-bold px-2 py-0.5 rounded-full">
+                          {alertCount}
+                        </span>
+                      )}
+                    </>
+                  )}
+                  {isCollapsed && item.id === "alerts" && alertCount > 0 && (
+                    <span className="absolute top-1 right-1 w-2 h-2 bg-danger rounded-full" />
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
       </nav>
 
       {/* Bottom Actions */}

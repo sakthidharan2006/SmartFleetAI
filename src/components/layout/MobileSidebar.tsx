@@ -50,6 +50,13 @@ export const allNavItems: NavItem[] = [
   { id: "reports", label: "Reports", icon: BarChart3 },
 ];
 
+export const NAV_GROUPS: { label: string; ids: string[] }[] = [
+  { label: "Operations", ids: ["dashboard", "fleet", "tracking", "routes"] },
+  { label: "Vehicle Health", ids: ["diagnostics", "fuel", "maintenance"] },
+  { label: "Cargo & Compliance", ids: ["loadhistory", "tollmanagement", "compliance", "cargodoor"] },
+  { label: "Security & People", ids: ["cctv", "alerts", "drivers", "reports"] },
+];
+
 // Driver-accessible views
 const DRIVER_NAV_IDS = ['dashboard', 'tracking', 'routes', 'diagnostics', 'fuel', 'loadhistory', 'tollmanagement', 'compliance', 'cargodoor', 'cctv', 'alerts', 'drivers'];
 

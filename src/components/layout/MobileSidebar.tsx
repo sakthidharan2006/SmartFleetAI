@@ -159,27 +159,32 @@ export function MobileSidebar({ activeItem, onItemClick, alertCount = 3 }: Mobil
               )}
 
               {/* Navigation */}
-              <nav className="flex-1 p-4 overflow-y-auto scrollbar-thin">
-                <div className="space-y-1">
-                  {navItems.map((item) => (
-                    <button
-                      key={item.id}
-                      onClick={() => handleItemClick(item.id)}
-                      className={cn(
-                        "nav-link w-full touch-manipulation",
-                        activeItem === item.id && "nav-link-active"
-                      )}
-                    >
-                      <item.icon className="w-5 h-5" />
-                      <span className="font-medium">{item.label}</span>
-                      {item.id === "alerts" && alertCount > 0 && (
-                        <span className="ml-auto bg-danger text-danger-foreground text-xs font-bold px-2 py-0.5 rounded-full">
-                          {alertCount}
-                        </span>
-                      )}
-                    </button>
-                  ))}
-                </div>
+              <nav className="flex-1 px-3 pb-4 overflow-y-auto scrollbar-thin">
+                {groupedNav.map((group) => (
+                  <div key={group.label}>
+                    <p className="nav-group-label">{group.label}</p>
+                    <div className="space-y-1">
+                      {group.items.map((item) => (
+                        <button
+                          key={item.id}
+                          onClick={() => handleItemClick(item.id)}
+                          className={cn(
+                            "nav-link w-full touch-manipulation",
+                            activeItem === item.id && "nav-link-active"
+                          )}
+                        >
+                          <item.icon className="w-[18px] h-[18px]" />
+                          <span className="font-medium">{item.label}</span>
+                          {item.id === "alerts" && alertCount > 0 && (
+                            <span className="ml-auto bg-danger text-danger-foreground text-[11px] font-bold px-2 py-0.5 rounded-full">
+                              {alertCount}
+                            </span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </nav>
 
               {/* Bottom Actions */}

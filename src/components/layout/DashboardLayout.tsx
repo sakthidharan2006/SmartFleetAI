@@ -26,8 +26,8 @@ function DashboardLayoutContent({ children, activeItem, onNavigate }: DashboardL
         isMobile ? "ml-0" : (isCollapsed ? "ml-20" : "ml-64")
       )}>
         <ResponsiveHeader onNavigate={onNavigate} />
-        <main className="flex-1 p-4 md:p-6 overflow-x-hidden">
-          {children}
+        <main className="flex-1 px-4 py-6 md:px-8 md:py-8 overflow-x-hidden">
+          <div className="page-column">{children}</div>
         </main>
         <Footer className="mt-auto" />
       </div>

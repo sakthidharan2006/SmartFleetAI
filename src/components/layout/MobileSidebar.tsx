@@ -74,6 +74,13 @@ export function MobileSidebar({ activeItem, onItemClick, alertCount = 3 }: Mobil
     ? allNavItems.filter(item => DRIVER_NAV_IDS.includes(item.id))
     : allNavItems;
 
+  const groupedNav = NAV_GROUPS.map((group) => ({
+    label: group.label,
+    items: group.ids
+      .map((id) => navItems.find((item) => item.id === id))
+      .filter((item): item is NavItem => Boolean(item)),
+  })).filter((group) => group.items.length > 0);
+
   const handleItemClick = (item: string) => {
     onItemClick(item);
     if (isMobile) {

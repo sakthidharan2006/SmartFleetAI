@@ -83,10 +83,11 @@ export function ResponsiveHeader({ onNavigate }: ResponsiveHeaderProps) {
         {/* Search trigger - desktop */}
         <button
           onClick={() => setSearchOpen(true)}
-          className="hidden sm:flex flex-1 max-w-xl items-center gap-2 h-10 px-3 rounded-md border border-transparent bg-secondary/50 text-muted-foreground text-sm hover:bg-secondary transition-colors"
+          className="hidden sm:flex flex-1 max-w-md items-center gap-2 h-9 px-3 rounded-lg border border-border bg-muted/40 text-muted-foreground text-sm hover:bg-muted hover:border-primary/40 transition-colors"
         >
           <Search className="w-4 h-4" />
-          <kbd className="ml-auto hidden md:inline-flex h-5 items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
+          <span className="text-[13px]">Search fleet, drivers, pages…</span>
+          <kbd className="ml-auto hidden md:inline-flex h-5 items-center gap-1 rounded border border-border bg-background px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
             ⌘K
           </kbd>
         </button>

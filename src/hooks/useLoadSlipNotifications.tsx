@@ -2,6 +2,7 @@ import { useEffect, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
+import { playMessageTone } from '@/lib/sounds';
 import { Package } from 'lucide-react';
 
 /**
@@ -42,22 +43,8 @@ export function useLoadSlipNotifications() {
       icon: <Package className="w-4 h-4 text-primary" />,
     });
 
-    // Play a gentle notification sound
-    try {
-      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.frequency.value = 520;
-      osc.type = 'sine';
-      gain.gain.setValueAtTime(0.2, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
-      osc.start(ctx.currentTime);
-      osc.stop(ctx.currentTime + 0.4);
-    } catch {
-      // Audio not supported
-    }
+    // Play a gentle notification tone (distinct from alert sirens)
+    playMessageTone();
 
     // Browser push notification
     if (permissionRef.current === 'granted') {

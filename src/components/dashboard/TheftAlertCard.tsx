@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { playSecurityAlert } from "@/lib/sounds";
 import { AlertTriangle, Camera, MapPin, Clock, Check, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -155,18 +156,7 @@ export function TheftAlertCard({ alert, index, onAcknowledge, compact = false }:
                 className="text-xs h-7"
                 onClick={() => {
                   setPlayingSound(!playingSound);
-                  // Simulate playing alert sound
-                  if (!playingSound) {
-                    try {
-                      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
-                      const oscillator = audioCtx.createOscillator();
-                      oscillator.type = "square";
-                      oscillator.frequency.setValueAtTime(800, audioCtx.currentTime);
-                      oscillator.connect(audioCtx.destination);
-                      oscillator.start();
-                      setTimeout(() => oscillator.stop(), 200);
-                    } catch {}
-                  }
+                  if (!playingSound) playSecurityAlert();
                 }}
               >
                 <Volume2 className="w-3 h-3 mr-1" />

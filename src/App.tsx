@@ -44,6 +44,7 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      <Route path="/index" element={<Navigate to="/" replace />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

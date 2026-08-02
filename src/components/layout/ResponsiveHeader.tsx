@@ -107,7 +107,7 @@ export function ResponsiveHeader({ onNavigate }: ResponsiveHeaderProps) {
             <span className="text-muted-foreground font-medium">Live</span>
           </div>
 
-          <ThemeToggle />
+          <ThemeToggle withLabel />
 
           {/* Notifications */}
           <Button

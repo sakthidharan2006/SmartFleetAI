@@ -352,3 +352,29 @@
   0%, 100% { opacity: 1; }
   50% { opacity: 0.85; }
 }
+
+@layer base {
+  /* Smooth, responsive cross-fade when switching light/dark */
+  html.theme-transition,
+  html.theme-transition *,
+  html.theme-transition *::before,
+  html.theme-transition *::after {
+    transition:
+      background-color 300ms ease,
+      border-color 300ms ease,
+      color 300ms ease,
+      fill 300ms ease,
+      stroke 300ms ease,
+      box-shadow 300ms ease !important;
+    transition-delay: 0ms !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html.theme-transition,
+    html.theme-transition *,
+    html.theme-transition *::before,
+    html.theme-transition *::after {
+      transition: none !important;
+    }
+  }
+}

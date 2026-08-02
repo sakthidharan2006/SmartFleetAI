@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { TheftAlert, generateTheftAlert } from "@/components/dashboard/TheftAlertCard";
 import { SimulatedVehicle } from "@/hooks/useRealtimeSimulation";
 import { toast } from "sonner";
+import { playSecurityAlert } from "@/lib/sounds";
 
 export function useTheftSimulation(vehicles: SimulatedVehicle[], enabled: boolean) {
   const [theftAlerts, setTheftAlerts] = useState<TheftAlert[]>([]);
@@ -33,17 +34,8 @@ export function useTheftSimulation(vehicles: SimulatedVehicle[], enabled: boolea
             duration: 8000,
           });
 
-          // Play alert sound
-          try {
-            const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
-            const osc = audioCtx.createOscillator();
-            osc.type = "square";
-            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-            osc.frequency.setValueAtTime(800, audioCtx.currentTime + 0.15);
-            osc.connect(audioCtx.destination);
-            osc.start();
-            setTimeout(() => osc.stop(), 300);
-          } catch {}
+          // Play the security alert siren
+          playSecurityAlert();
         }
       }
     }, 3000);

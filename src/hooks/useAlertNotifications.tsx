@@ -1,36 +1,13 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { toast } from 'sonner';
 import { SimulatedAlert } from '@/hooks/useRealtimeSimulation';
+import { playCriticalAlert, playWarningAlert, playNotificationTone } from '@/lib/sounds';
 import { AlertTriangle, Flame, Fuel, CircleAlert, Bell, Droplets, Wind, Gauge } from 'lucide-react';
 
-// Web Audio API beep generator — no external files needed
-function createBeepSound(frequency: number, duration: number, volume: number = 0.3): () => void {
-  return () => {
-    try {
-      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const oscillator = ctx.createOscillator();
-      const gainNode = ctx.createGain();
-
-      oscillator.connect(gainNode);
-      gainNode.connect(ctx.destination);
-
-      oscillator.frequency.value = frequency;
-      oscillator.type = 'sine';
-      gainNode.gain.setValueAtTime(volume, ctx.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
-
-      oscillator.start(ctx.currentTime);
-      oscillator.stop(ctx.currentTime + duration);
-    } catch {
-      // Audio not supported — silently skip
-    }
-  };
-}
-
 const SOUNDS = {
-  critical: createBeepSound(880, 0.4, 0.4),   // High pitch — urgent
-  warning: createBeepSound(660, 0.3, 0.3),     // Medium pitch
-  info: createBeepSound(440, 0.2, 0.2),        // Low pitch — gentle
+  critical: playCriticalAlert,   // urgent pulsing siren
+  warning: playWarningAlert,     // buzzy double beep
+  info: playNotificationTone,    // gentle rising chime
 };
 
 const ALERT_ICONS: Record<string, React.ReactNode> = {

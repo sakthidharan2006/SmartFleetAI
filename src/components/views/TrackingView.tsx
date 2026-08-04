@@ -1,11 +1,16 @@
 import { FleetMap } from "@/components/dashboard/FleetMap";
-import { MapPin, Navigation, Layers, Maximize2, Zap } from "lucide-react";
+import { MapPin, Navigation, Maximize2, Zap, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useSimulation } from "@/contexts/SimulationContext";
+import { useRef } from "react";
+import { downloadCsv, toggleFullscreen } from "@/lib/exportCsv";
+import { toast } from "sonner";
 
 export function TrackingView() {
   const { vehicleCards, vehicles, isSimulating, isDriver } = useSimulation();
+  const mapWrapperRef = useRef<HTMLDivElement>(null);
+
   const activeVehicles = vehicleCards.filter(v => v.status === "active");
 
   // Transform simulation vehicles to map markers

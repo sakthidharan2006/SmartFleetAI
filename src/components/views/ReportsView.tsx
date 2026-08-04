@@ -1,5 +1,14 @@
 import { BarChart3, Download, Calendar, TrendingUp, Fuel, DollarSign, Clock, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { downloadCsv } from "@/lib/exportCsv";
+import { toast } from "sonner";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip, BarChart, Bar, PieChart, Pie, Cell, LineChart, Line } from "recharts";
 
 const monthlyData = [
@@ -28,7 +37,16 @@ const efficiencyTrend = [
   { week: "W6", efficiency: 7.2 },
 ];
 
+const RANGES = ["Last 7 days", "Last 30 days", "Last 6 months", "Year to date"];
+
 export function ReportsView() {
+  const [range, setRange] = useState(RANGES[1]);
+
+  const handleExport = () => {
+    const ok = downloadCsv(`fleet-report-${new Date().toISOString().slice(0, 10)}`, monthlyData);
+    toast[ok ? "success" : "error"](ok ? `Report exported (${range})` : "Nothing to export");
+  };
+
   return (
     <div className="space-y-6 animate-fade-in-up">
       {/* Header */}
@@ -38,11 +56,22 @@ export function ReportsView() {
           <p className="text-muted-foreground">Comprehensive fleet performance insights</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="secondary" size="sm">
-            <Calendar className="w-4 h-4 mr-2" />
-            Date Range
-          </Button>
-          <Button size="sm">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="secondary" size="sm">
+                <Calendar className="w-4 h-4 mr-2" />
+                {range}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {RANGES.map((r) => (
+                <DropdownMenuItem key={r} onClick={() => { setRange(r); toast.info(`Showing ${r.toLowerCase()}`); }}>
+                  {r}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Button size="sm" onClick={handleExport}>
             <Download className="w-4 h-4 mr-2" />
             Export Report
           </Button>

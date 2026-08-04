@@ -58,8 +58,9 @@ const categoryIcons = {
   maintenance: AlertTriangle,
 };
 
-function AlertItem({ alert, index }: AlertItemProps) {
+function AlertItem({ alert, index, onDismiss }: AlertItemProps) {
   const config = typeConfig[alert.type];
+
   const Icon = categoryIcons[alert.category];
 
   return (

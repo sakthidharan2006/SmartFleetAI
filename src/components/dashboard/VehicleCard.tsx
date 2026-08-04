@@ -98,9 +98,50 @@ export function VehicleCard({ vehicle, index }: VehicleCardProps) {
                 <span className="text-xs font-medium text-danger">{vehicle.alerts}</span>
               </div>
             )}
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <MoreVertical className="w-4 h-4" />
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Vehicle actions">
+                  <MoreVertical className="w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem
+                  onClick={() =>
+                    toast.info(`${vehicle.name} • ${vehicle.plate}`, {
+                      description: `${vehicle.status} · ${vehicle.speed} km/h · Fuel ${vehicle.fuel}% · ${vehicle.location}`,
+                    })
+                  }
+                >
+                  View details
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() =>
+                    toast.success(`Locating ${vehicle.plate}`, { description: vehicle.location })
+                  }
+                >
+                  Locate vehicle
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    downloadCsv(`vehicle-${vehicle.plate}`, [
+                      {
+                        Vehicle: vehicle.name,
+                        Plate: vehicle.plate,
+                        Driver: vehicle.driver,
+                        Status: vehicle.status,
+                        Speed_kmph: vehicle.speed,
+                        Fuel_percent: vehicle.fuel,
+                        Location: vehicle.location,
+                      },
+                    ]);
+                    toast.success("Vehicle report downloaded");
+                  }}
+                >
+                  Export report
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
           </div>
         </div>
       </div>

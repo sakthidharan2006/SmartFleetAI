@@ -3,6 +3,15 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { useSimulation } from "@/contexts/SimulationContext";
+import { useState } from "react";
+import { toast } from "sonner";
+import { QuickFormDialog } from "@/components/common/QuickFormDialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const drivers = [
   {
@@ -105,11 +114,22 @@ export function DriversView() {
         </div>
         {!isDriver && (
           <div className="flex items-center gap-3">
-            <Button variant="secondary" size="sm">
-              <Filter className="w-4 h-4 mr-2" />
-              Filter
-            </Button>
-            <Button size="sm">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="secondary" size="sm">
+                  <Filter className="w-4 h-4 mr-2" />
+                  {driverFilter === "all" ? "Filter" : `Status: ${driverFilter}`}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {["all", "on-duty", "resting", "off-duty"].map((s) => (
+                  <DropdownMenuItem key={s} onClick={() => setDriverFilter(s)} className="capitalize">
+                    {s === "all" ? "All statuses" : s}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button size="sm" onClick={() => setAddDriverOpen(true)}>
               <Plus className="w-4 h-4 mr-2" />
               Add Driver
             </Button>
@@ -211,10 +231,29 @@ export function DriversView() {
 
                   {/* Actions */}
                   <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="icon" className="h-9 w-9">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-9 w-9"
+                      aria-label={`Call ${driver.name}`}
+                      onClick={() => {
+                        toast.info(`Calling ${driver.name}…`);
+                        window.location.href = `tel:${driver.phone ?? "+919000000000"}`;
+                      }}
+                    >
                       <Phone className="w-4 h-4" />
                     </Button>
-                    <Button variant="ghost" size="icon" className="h-9 w-9">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-9 w-9"
+                      aria-label={`Email ${driver.name}`}
+                      onClick={() => {
+                        const email = driver.email ?? `${driver.name.split(" ")[0].toLowerCase()}@truckpulse.demo`;
+                        toast.info(`Opening email to ${driver.name}`);
+                        window.location.href = `mailto:${email}`;
+                      }}
+                    >
                       <Mail className="w-4 h-4" />
                     </Button>
                   </div>

@@ -24,7 +24,9 @@ export interface Alert {
 interface AlertItemProps {
   alert: Alert;
   index: number;
+  onDismiss?: (id: string) => void;
 }
+
 
 const typeConfig = {
   critical: { 

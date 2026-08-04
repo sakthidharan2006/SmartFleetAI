@@ -96,9 +96,14 @@ const drivers = [
 
 export function DriversView() {
   const { isDriver } = useSimulation();
+  const [driverList, setDriverList] = useState(drivers);
+  const [driverFilter, setDriverFilter] = useState("all");
+  const [addDriverOpen, setAddDriverOpen] = useState(false);
 
   // Drivers only see their own profile
-  const displayDrivers = isDriver ? [drivers[0]] : drivers;
+  const displayDrivers = isDriver
+    ? [driverList[0]]
+    : driverList.filter((d) => driverFilter === "all" || d.status === driverFilter);
 
   return (
     <div className="space-y-6 animate-fade-in-up">
@@ -136,6 +141,34 @@ export function DriversView() {
           </div>
         )}
       </div>
+
+      <QuickFormDialog
+        open={addDriverOpen}
+        onOpenChange={setAddDriverOpen}
+        title="Add Driver"
+        submitLabel="Add Driver"
+        successMessage={(v) => `${v.name || "Driver"} added`}
+        onSubmit={(v) =>
+          setDriverList((prev) => [
+            {
+              ...prev[0],
+              id: Date.now(),
+              name: v.name || "New Driver",
+              vehicle: v.vehicle || "Unassigned",
+              vehicleName: v.vehicle || "Unassigned",
+              phone: v.phone || "+91 90000 00000",
+              status: "off-duty",
+            },
+            ...prev,
+          ])
+        }
+        fields={[
+          { name: "name", label: "Full Name", placeholder: "Suresh Kumar", required: true },
+          { name: "phone", label: "Phone", type: "tel", placeholder: "+91 98765 43210", required: true },
+          { name: "vehicle", label: "Assigned Vehicle", placeholder: "MH-12-AB-1234" },
+          { name: "license", label: "License No.", placeholder: "MH1220110012345" },
+        ]}
+      />
 
       {/* Stats */}
       {!isDriver && (
@@ -238,7 +271,7 @@ export function DriversView() {
                       aria-label={`Call ${driver.name}`}
                       onClick={() => {
                         toast.info(`Calling ${driver.name}…`);
-                        window.location.href = `tel:${driver.phone ?? "+919000000000"}`;
+                        window.location.href = `tel:${driver.phone.replace(/\s/g, "")}`;
                       }}
                     >
                       <Phone className="w-4 h-4" />
@@ -249,7 +282,7 @@ export function DriversView() {
                       className="h-9 w-9"
                       aria-label={`Email ${driver.name}`}
                       onClick={() => {
-                        const email = driver.email ?? `${driver.name.split(" ")[0].toLowerCase()}@truckpulse.demo`;
+                        const email = `${driver.name.split(" ")[0].toLowerCase()}@truckpulse.demo`;
                         toast.info(`Opening email to ${driver.name}`);
                         window.location.href = `mailto:${email}`;
                       }}

@@ -4,6 +4,9 @@ import { motion } from "framer-motion";
 import { Expand, Layers, Navigation, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { toggleFullscreen } from "@/lib/exportCsv";
+import { toast } from "sonner";
+
 
 interface VehicleMarker {
   id: string;
@@ -31,7 +34,9 @@ const statusColors = {
 export function FleetMap({ vehicles }: FleetMapProps) {
   const [MapComponent, setMapComponent] = useState<React.ComponentType<any> | null>(null);
   const vehiclesRef = useRef(vehicles);
+  const containerRef = useRef<HTMLDivElement>(null);
   vehiclesRef.current = vehicles;
+
 
   useEffect(() => {
     import("react-leaflet").then((mod) => {
@@ -51,6 +56,7 @@ export function FleetMap({ vehicles }: FleetMapProps) {
 
   return (
     <motion.div
+      ref={containerRef}
       initial={{ opacity: 0, scale: 0.98 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
@@ -58,13 +64,33 @@ export function FleetMap({ vehicles }: FleetMapProps) {
     >
       {/* Map Controls Overlay */}
       <div className="absolute top-16 right-4 z-[1000] flex flex-col gap-2">
-        <Button size="icon" variant="secondary" className="h-9 w-9 bg-card/90 backdrop-blur-sm border border-border">
+        <Button
+          size="icon"
+          variant="secondary"
+          aria-label="Toggle fullscreen map"
+          className="h-9 w-9 bg-card/90 backdrop-blur-sm border border-border"
+          onClick={() => toggleFullscreen(containerRef.current)}
+        >
           <Expand className="w-4 h-4" />
         </Button>
-        <Button size="icon" variant="secondary" className="h-9 w-9 bg-card/90 backdrop-blur-sm border border-border">
+        <Button
+          size="icon"
+          variant="secondary"
+          aria-label="Fleet summary"
+          className="h-9 w-9 bg-card/90 backdrop-blur-sm border border-border"
+          onClick={() => {
+            const moving = vehicles.filter(v => v.status === "active");
+            toast.info(`${moving.length} of ${vehicles.length} vehicles moving`, {
+              description: moving.length
+                ? moving.map(v => `${v.plate} · ${v.speed} km/h`).slice(0, 4).join("  |  ")
+                : "All vehicles are currently stationary",
+            });
+          }}
+        >
           <Navigation className="w-4 h-4" />
         </Button>
       </div>
+
 
 
       {/* Vehicle Count Badge */}

@@ -1,7 +1,16 @@
+import { useState } from "react";
 import { Wrench, Calendar, AlertTriangle, CheckCircle, Clock, Plus, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import { QuickFormDialog } from "@/components/common/QuickFormDialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 
 const maintenanceTasks = [
   {
@@ -65,26 +74,79 @@ const statusIcons = {
   completed: CheckCircle,
 };
 
+type MaintenanceTask = (typeof maintenanceTasks)[number];
+
 export function MaintenanceView() {
+  const [tasks, setTasks] = useState<MaintenanceTask[]>(maintenanceTasks);
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [addOpen, setAddOpen] = useState(false);
+  const [scheduleOpen, setScheduleOpen] = useState(false);
+
+  const visibleTasks = tasks.filter(t => statusFilter === "all" || t.status === statusFilter);
+
   return (
     <div className="space-y-6 animate-fade-in-up">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-display font-semibold tracking-tight text-foreground">Maintenance</h1>
           <p className="text-muted-foreground">Schedule and track vehicle maintenance</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="secondary" size="sm">
+          <Button variant="secondary" size="sm" onClick={() => setScheduleOpen(true)}>
             <Calendar className="w-4 h-4 mr-2" />
             Schedule
           </Button>
-          <Button size="sm">
+          <Button size="sm" onClick={() => setAddOpen(true)}>
             <Plus className="w-4 h-4 mr-2" />
             Add Task
           </Button>
         </div>
       </div>
+
+      <QuickFormDialog
+        open={addOpen}
+        onOpenChange={setAddOpen}
+        title="Add Maintenance Task"
+        submitLabel="Add Task"
+        successMessage={(v) => `${v.task || "Task"} added to the schedule`}
+        onSubmit={(v) =>
+          setTasks(prev => [
+            {
+              id: Date.now(),
+              vehicle: v.vehicle || "Unassigned",
+              task: v.task || "Maintenance task",
+              dueIn: v.dueIn || "—",
+              priority: v.priority?.toLowerCase() || "medium",
+              status: "scheduled",
+              lastService: "—",
+            },
+            ...prev,
+          ])
+        }
+        fields={[
+          { name: "task", label: "Task", placeholder: "Oil Change", required: true },
+          { name: "vehicle", label: "Vehicle", placeholder: "Tata Prima (MH-12-AB-1234)", required: true },
+          { name: "dueIn", label: "Due In", placeholder: "500 km" },
+          { name: "priority", label: "Priority", placeholder: "critical / high / medium / low" },
+        ]}
+      />
+
+      <QuickFormDialog
+        open={scheduleOpen}
+        onOpenChange={setScheduleOpen}
+        title="Schedule Service"
+        description="Book a workshop slot for a vehicle."
+        submitLabel="Schedule"
+        successMessage={(v) => `Service scheduled${v.date ? ` for ${v.date}` : ""}`}
+        fields={[
+          { name: "vehicle", label: "Vehicle", placeholder: "MH-12-AB-1234", required: true },
+          { name: "date", label: "Date", type: "date", required: true },
+          { name: "workshop", label: "Workshop", placeholder: "Tata Authorised Service, Pune" },
+          { name: "notes", label: "Notes", type: "textarea" },
+        ]}
+      />
+
 
       {/* Stats */}
       <div className="grid grid-cols-4 gap-4">
@@ -110,13 +172,28 @@ export function MaintenanceView() {
       <div className="glass-card overflow-hidden">
         <div className="p-4 border-b border-border flex items-center justify-between">
           <h3 className="font-semibold">Maintenance Schedule</h3>
-          <Button variant="ghost" size="sm">
-            <Filter className="w-4 h-4 mr-2" />
-            Filter
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm">
+                <Filter className="w-4 h-4 mr-2" />
+                {statusFilter === "all" ? "Filter" : `Status: ${statusFilter}`}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {["all", "due", "scheduled", "in-progress", "completed"].map((s) => (
+                <DropdownMenuItem key={s} onClick={() => setStatusFilter(s)} className="capitalize">
+                  {s === "all" ? "All statuses" : s}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
         <div className="divide-y divide-border">
-          {maintenanceTasks.map((task) => {
+          {visibleTasks.length === 0 && (
+            <p className="p-6 text-center text-sm text-muted-foreground">No tasks match this filter.</p>
+          )}
+          {visibleTasks.map((task) => {
+
             const StatusIcon = statusIcons[task.status as keyof typeof statusIcons];
             return (
               <div key={task.id} className="p-4 hover:bg-secondary/20 transition-colors">

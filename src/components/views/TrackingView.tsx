@@ -1,11 +1,16 @@
 import { FleetMap } from "@/components/dashboard/FleetMap";
-import { MapPin, Navigation, Layers, Maximize2, Zap } from "lucide-react";
+import { MapPin, Navigation, Maximize2, Zap, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useSimulation } from "@/contexts/SimulationContext";
+import { useRef } from "react";
+import { downloadCsv, toggleFullscreen } from "@/lib/exportCsv";
+import { toast } from "sonner";
 
 export function TrackingView() {
   const { vehicleCards, vehicles, isSimulating, isDriver } = useSimulation();
+  const mapWrapperRef = useRef<HTMLDivElement>(null);
+
   const activeVehicles = vehicleCards.filter(v => v.status === "active");
 
   // Transform simulation vehicles to map markers
@@ -42,11 +47,28 @@ export function TrackingView() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="secondary" size="sm">
-            <Layers className="w-4 h-4 mr-2" />
-            Map Layers
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => {
+              const ok = downloadCsv(
+                `gps-positions-${new Date().toISOString().slice(0, 10)}`,
+                mapMarkers.map(m => ({
+                  Vehicle: m.name,
+                  Plate: m.plate,
+                  Status: m.status,
+                  Latitude: m.position[0],
+                  Longitude: m.position[1],
+                  Speed_kmph: m.speed,
+                }))
+              );
+              toast[ok ? "success" : "info"](ok ? "GPS positions exported" : "No positions to export");
+            }}
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Export GPS
           </Button>
-          <Button variant="secondary" size="sm">
+          <Button variant="secondary" size="sm" onClick={() => toggleFullscreen(mapWrapperRef.current)}>
             <Maximize2 className="w-4 h-4 mr-2" />
             Fullscreen
           </Button>
@@ -54,9 +76,10 @@ export function TrackingView() {
       </div>
 
       {/* Live Map */}
-      <div className="h-[600px]">
+      <div className="h-[600px]" ref={mapWrapperRef}>
         <FleetMap vehicles={mapMarkers} />
       </div>
+
 
       {/* Vehicle List */}
       <div className="glass-card p-4">

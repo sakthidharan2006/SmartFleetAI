@@ -1,4 +1,7 @@
+import { useState } from "react";
+import { toast } from "sonner";
 import { AlertsPanel, Alert } from "@/components/dashboard/AlertsPanel";
+
 import { Bell, Filter, CheckCheck, Settings, AlertTriangle, AlertCircle, Info, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -53,11 +56,22 @@ const defaultAlerts: Alert[] = [
   },
 ];
 
-export function AlertsView() {
+interface AlertsViewProps {
+  onNavigate?: (view: string) => void;
+}
+
+export function AlertsView({ onNavigate }: AlertsViewProps) {
   const { alertPanelData, isSimulating, unreadAlertCount } = useSimulation();
-  
+  const [readAll, setReadAll] = useState(false);
+
   // Use simulation alerts if available, otherwise show defaults
   const allAlerts = alertPanelData.length > 0 ? alertPanelData : defaultAlerts;
+
+  const handleMarkAllRead = () => {
+    setReadAll(true);
+    toast.success("All alerts marked as read");
+  };
+
   
   const criticalCount = allAlerts.filter(a => a.type === "critical").length;
   const warningCount = allAlerts.filter(a => a.type === "warning").length;
@@ -76,7 +90,7 @@ export function AlertsView() {
                 <span className="text-xs font-medium text-success">Live</span>
               </div>
             )}
-            {unreadAlertCount > 0 && (
+            {!readAll && unreadAlertCount > 0 && (
               <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-primary text-primary-foreground">
                 {unreadAlertCount} new
               </span>
@@ -85,15 +99,16 @@ export function AlertsView() {
           <p className="text-muted-foreground">Manage and respond to fleet alerts</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="secondary" size="sm">
+          <Button variant="secondary" size="sm" onClick={handleMarkAllRead}>
             <CheckCheck className="w-4 h-4 mr-2" />
             Mark All Read
           </Button>
-          <Button variant="secondary" size="sm">
+          <Button variant="secondary" size="sm" onClick={() => onNavigate?.("settings")}>
             <Settings className="w-4 h-4 mr-2" />
             Alert Settings
           </Button>
         </div>
+
       </div>
 
       {/* Stats */}

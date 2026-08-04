@@ -1,4 +1,7 @@
+import { useState } from "react";
+import { toast } from "sonner";
 import { motion } from "framer-motion";
+
 import { 
   AlertTriangle, 
   Fuel, 
@@ -24,7 +27,9 @@ export interface Alert {
 interface AlertItemProps {
   alert: Alert;
   index: number;
+  onDismiss?: (id: string) => void;
 }
+
 
 const typeConfig = {
   critical: { 
@@ -56,8 +61,9 @@ const categoryIcons = {
   maintenance: AlertTriangle,
 };
 
-function AlertItem({ alert, index }: AlertItemProps) {
+function AlertItem({ alert, index, onDismiss }: AlertItemProps) {
   const config = typeConfig[alert.type];
+
   const Icon = categoryIcons[alert.category];
 
   return (
@@ -89,7 +95,13 @@ function AlertItem({ alert, index }: AlertItemProps) {
           <p className="text-xs text-muted-foreground">{alert.description}</p>
           <p className="text-xs text-muted-foreground mt-1 font-medium">{alert.vehicle}</p>
         </div>
-        <Button variant="ghost" size="icon" className="h-6 w-6 shrink-0">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-6 w-6 shrink-0"
+          aria-label="Dismiss alert"
+          onClick={() => onDismiss?.(alert.id)}
+        >
           <X className="w-3.5 h-3.5" />
         </Button>
       </div>
@@ -99,11 +111,19 @@ function AlertItem({ alert, index }: AlertItemProps) {
 
 interface AlertsPanelProps {
   alerts: Alert[];
+  onViewAll?: () => void;
 }
 
-export function AlertsPanel({ alerts }: AlertsPanelProps) {
-  const criticalCount = alerts.filter(a => a.type === "critical").length;
-  const warningCount = alerts.filter(a => a.type === "warning").length;
+export function AlertsPanel({ alerts, onViewAll }: AlertsPanelProps) {
+  const [dismissed, setDismissed] = useState<string[]>([]);
+  const visibleAlerts = alerts.filter(a => !dismissed.includes(a.id));
+  const criticalCount = visibleAlerts.filter(a => a.type === "critical").length;
+  const warningCount = visibleAlerts.filter(a => a.type === "warning").length;
+
+  const handleDismiss = (id: string) => {
+    setDismissed(prev => [...prev, id]);
+    toast.success("Alert dismissed");
+  };
 
   return (
     <div className="glass-card overflow-hidden h-full flex flex-col">
@@ -114,9 +134,11 @@ export function AlertsPanel({ alerts }: AlertsPanelProps) {
             <Bell className="w-5 h-5 text-primary" />
             <h2 className="font-semibold text-foreground">Live Alerts</h2>
           </div>
-          <Button variant="ghost" size="sm" className="text-xs">
-            View All
-          </Button>
+          {onViewAll && (
+            <Button variant="ghost" size="sm" className="text-xs" onClick={onViewAll}>
+              View All
+            </Button>
+          )}
         </div>
         <div className="flex gap-2">
           {criticalCount > 0 && (
@@ -134,10 +156,14 @@ export function AlertsPanel({ alerts }: AlertsPanelProps) {
 
       {/* Alert List */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-thin">
-        {alerts.map((alert, index) => (
-          <AlertItem key={alert.id} alert={alert} index={index} />
+        {visibleAlerts.map((alert, index) => (
+          <AlertItem key={alert.id} alert={alert} index={index} onDismiss={handleDismiss} />
         ))}
+        {visibleAlerts.length === 0 && (
+          <p className="text-center text-sm text-muted-foreground py-8">No active alerts</p>
+        )}
       </div>
     </div>
   );
 }
+

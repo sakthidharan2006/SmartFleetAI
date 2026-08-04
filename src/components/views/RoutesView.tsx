@@ -2,9 +2,13 @@ import { Route, Clock, MapPin, ChevronRight, Calendar, Play, CheckCircle } from 
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useSimulation } from "@/contexts/SimulationContext";
+import { useState } from "react";
+import { QuickFormDialog } from "@/components/common/QuickFormDialog";
 
 export function RoutesView() {
   const { vehicleCards, isDriver } = useSimulation();
+  const [scheduleOpen, setScheduleOpen] = useState(false);
+  const [tripOpen, setTripOpen] = useState(false);
 
   // Generate trips from simulation vehicles
   const indianRoutes = [
@@ -51,17 +55,46 @@ export function RoutesView() {
         </div>
         {!isDriver && (
           <div className="flex items-center gap-3">
-            <Button variant="secondary" size="sm">
+            <Button variant="secondary" size="sm" onClick={() => setScheduleOpen(true)}>
               <Calendar className="w-4 h-4 mr-2" />
               Schedule
             </Button>
-            <Button size="sm">
+            <Button size="sm" onClick={() => setTripOpen(true)}>
               <Route className="w-4 h-4 mr-2" />
               New Trip
             </Button>
           </div>
         )}
       </div>
+
+      <QuickFormDialog
+        open={scheduleOpen}
+        onOpenChange={setScheduleOpen}
+        title="Schedule Trip"
+        description="Plan a future trip for a vehicle."
+        submitLabel="Schedule Trip"
+        successMessage={(v) => `Trip scheduled${v.date ? ` for ${v.date}` : ""}`}
+        fields={[
+          { name: "vehicle", label: "Vehicle", placeholder: "MH-12-AB-1234", required: true },
+          { name: "date", label: "Date", type: "date", required: true },
+          { name: "origin", label: "Origin", placeholder: "Mumbai" },
+          { name: "destination", label: "Destination", placeholder: "Pune" },
+        ]}
+      />
+      <QuickFormDialog
+        open={tripOpen}
+        onOpenChange={setTripOpen}
+        title="New Trip"
+        submitLabel="Create Trip"
+        successMessage={(v) => `Trip created: ${v.origin || "?"} to ${v.destination || "?"}`}
+        fields={[
+          { name: "vehicle", label: "Vehicle", placeholder: "MH-12-AB-1234", required: true },
+          { name: "driver", label: "Driver", placeholder: "Suresh Kumar" },
+          { name: "origin", label: "Origin", placeholder: "Mumbai", required: true },
+          { name: "destination", label: "Destination", placeholder: "Pune", required: true },
+          { name: "cargo", label: "Cargo", placeholder: "Steel coils - 24 t" },
+        ]}
+      />
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

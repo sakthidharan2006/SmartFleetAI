@@ -90,7 +90,7 @@ export function AlertsView({ onNavigate }: AlertsViewProps) {
                 <span className="text-xs font-medium text-success">Live</span>
               </div>
             )}
-            {unreadAlertCount > 0 && (
+            {!readAll && unreadAlertCount > 0 && (
               <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-primary text-primary-foreground">
                 {unreadAlertCount} new
               </span>
@@ -99,15 +99,16 @@ export function AlertsView({ onNavigate }: AlertsViewProps) {
           <p className="text-muted-foreground">Manage and respond to fleet alerts</p>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="secondary" size="sm">
+          <Button variant="secondary" size="sm" onClick={handleMarkAllRead}>
             <CheckCheck className="w-4 h-4 mr-2" />
             Mark All Read
           </Button>
-          <Button variant="secondary" size="sm">
+          <Button variant="secondary" size="sm" onClick={() => onNavigate?.("settings")}>
             <Settings className="w-4 h-4 mr-2" />
             Alert Settings
           </Button>
         </div>
+
       </div>
 
       {/* Stats */}

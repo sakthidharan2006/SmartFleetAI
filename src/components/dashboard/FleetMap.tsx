@@ -34,7 +34,9 @@ const statusColors = {
 export function FleetMap({ vehicles }: FleetMapProps) {
   const [MapComponent, setMapComponent] = useState<React.ComponentType<any> | null>(null);
   const vehiclesRef = useRef(vehicles);
+  const containerRef = useRef<HTMLDivElement>(null);
   vehiclesRef.current = vehicles;
+
 
   useEffect(() => {
     import("react-leaflet").then((mod) => {

@@ -1,7 +1,16 @@
+import { useState } from "react";
 import { Wrench, Calendar, AlertTriangle, CheckCircle, Clock, Plus, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import { QuickFormDialog } from "@/components/common/QuickFormDialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 
 const maintenanceTasks = [
   {

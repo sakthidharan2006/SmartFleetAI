@@ -143,10 +143,24 @@ export function FleetView() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <Button variant="secondary" size="sm">
-          <Filter className="w-4 h-4 mr-2" />
-          Filter
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="secondary" size="sm">
+              <Filter className="w-4 h-4 mr-2" />
+              {statusFilter === "all" ? "Filter" : `Status: ${statusFilter}`}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            <DropdownMenuLabel>Status</DropdownMenuLabel>
+            <DropdownMenuRadioGroup value={statusFilter} onValueChange={setStatusFilter}>
+              <DropdownMenuRadioItem value="all">All</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="active">Active</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="idle">Idle</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="maintenance">Maintenance</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="offline">Offline</DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {/* Vehicle Grid */}
@@ -154,7 +168,11 @@ export function FleetView() {
         {filteredVehicles.map((vehicle, index) => (
           <VehicleCard key={vehicle.id} vehicle={vehicle} index={index} />
         ))}
+        {filteredVehicles.length === 0 && (
+          <p className="text-muted-foreground">No vehicles match your filters.</p>
+        )}
       </div>
+
     </div>
   );
 }

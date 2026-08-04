@@ -53,11 +53,22 @@ const defaultAlerts: Alert[] = [
   },
 ];
 
-export function AlertsView() {
+interface AlertsViewProps {
+  onNavigate?: (view: string) => void;
+}
+
+export function AlertsView({ onNavigate }: AlertsViewProps) {
   const { alertPanelData, isSimulating, unreadAlertCount } = useSimulation();
-  
+  const [readAll, setReadAll] = useState(false);
+
   // Use simulation alerts if available, otherwise show defaults
   const allAlerts = alertPanelData.length > 0 ? alertPanelData : defaultAlerts;
+
+  const handleMarkAllRead = () => {
+    setReadAll(true);
+    toast.success("All alerts marked as read");
+  };
+
   
   const criticalCount = allAlerts.filter(a => a.type === "critical").length;
   const warningCount = allAlerts.filter(a => a.type === "warning").length;

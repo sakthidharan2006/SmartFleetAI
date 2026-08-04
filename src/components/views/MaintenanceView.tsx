@@ -172,13 +172,28 @@ export function MaintenanceView() {
       <div className="glass-card overflow-hidden">
         <div className="p-4 border-b border-border flex items-center justify-between">
           <h3 className="font-semibold">Maintenance Schedule</h3>
-          <Button variant="ghost" size="sm">
-            <Filter className="w-4 h-4 mr-2" />
-            Filter
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm">
+                <Filter className="w-4 h-4 mr-2" />
+                {statusFilter === "all" ? "Filter" : `Status: ${statusFilter}`}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {["all", "due", "scheduled", "in-progress", "completed"].map((s) => (
+                <DropdownMenuItem key={s} onClick={() => setStatusFilter(s)} className="capitalize">
+                  {s === "all" ? "All statuses" : s}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
         <div className="divide-y divide-border">
-          {maintenanceTasks.map((task) => {
+          {visibleTasks.length === 0 && (
+            <p className="p-6 text-center text-sm text-muted-foreground">No tasks match this filter.</p>
+          )}
+          {visibleTasks.map((task) => {
+
             const StatusIcon = statusIcons[task.status as keyof typeof statusIcons];
             return (
               <div key={task.id} className="p-4 hover:bg-secondary/20 transition-colors">

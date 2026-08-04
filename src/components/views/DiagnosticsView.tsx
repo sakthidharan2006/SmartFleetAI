@@ -1,17 +1,40 @@
 import { TireDiagram } from "@/components/dashboard/TireDiagram";
 import { EngineHealth } from "@/components/dashboard/EngineHealth";
 import { BS6CompliancePanel } from "@/components/dashboard/BS6CompliancePanel";
-import { Gauge, AlertTriangle, CheckCircle, Activity, Scan } from "lucide-react";
+import { Gauge, AlertTriangle, CheckCircle, Activity, Scan, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useSimulation } from "@/contexts/SimulationContext";
+import { toast } from "sonner";
 
 export function DiagnosticsView() {
   const { vehicleCards, isDriver, vehicles } = useSimulation();
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [scanning, setScanning] = useState(false);
   const selectedVehicle = vehicleCards[selectedIndex] || vehicleCards[0];
   const selectedSimVehicle = vehicles[selectedIndex] || vehicles[0];
+
+  const runDiagnostic = () => {
+    if (scanning) return;
+    setScanning(true);
+    const toastId = toast.loading(`Running full OBD-II scan on ${selectedVehicle?.plate ?? "vehicle"}…`);
+    setTimeout(() => {
+      setScanning(false);
+      const faults = selectedVehicle?.alerts ?? 0;
+      if (faults > 0) {
+        toast.warning(`Scan complete — ${faults} fault code(s) found`, {
+          id: toastId,
+          description: "Review the engine, tyre and BS6 panels below for details.",
+        });
+      } else {
+        toast.success("Scan complete — no fault codes found", {
+          id: toastId,
+          description: "All monitored systems are within normal range.",
+        });
+      }
+    }, 2200);
+  };
 
   if (!selectedVehicle) {
     return <div className="text-muted-foreground p-8 text-center">No vehicles available.</div>;
@@ -20,18 +43,19 @@ export function DiagnosticsView() {
   return (
     <div className="space-y-6 animate-fade-in-up">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-display font-semibold tracking-tight text-foreground">Diagnostics</h1>
           <p className="text-muted-foreground">
             {isDriver ? 'Your vehicle health monitoring' : 'Real-time vehicle health monitoring and OBD-II data'}
           </p>
         </div>
-        <Button size="sm">
-          <Scan className="w-4 h-4 mr-2" />
-          Run Full Diagnostic
+        <Button size="sm" onClick={runDiagnostic} disabled={scanning}>
+          {scanning ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Scan className="w-4 h-4 mr-2" />}
+          {scanning ? "Scanning…" : "Run Full Diagnostic"}
         </Button>
       </div>
+
 
       {/* Vehicle Selector */}
       {!isDriver && (

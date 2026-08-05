@@ -501,8 +501,8 @@ export function LoadHistoryView() {
                     })}
                   </p>
 
-                  {/* Owner actions */}
-                  {!isDriver && slip.status === 'pending' && (
+                  {/* Approval actions */}
+                  {canApprove && slip.status === 'pending' && (
                     <div className="flex gap-2 pt-2 border-t border-border/50">
                       <Button
                         size="sm"
@@ -522,6 +522,44 @@ export function LoadHistoryView() {
                         <XCircle className="w-3.5 h-3.5 mr-1.5" />
                         Reject
                       </Button>
+                    </div>
+                  )}
+
+                  {/* Admin / owner management actions */}
+                  {(canEdit || canDelete) && (
+                    <div className="flex gap-2 pt-2 border-t border-border/50">
+                      {canEdit && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="flex-1"
+                          onClick={() => setEditSlip({ ...slip })}
+                        >
+                          <Pencil className="w-3.5 h-3.5 mr-1.5" />
+                          Edit
+                        </Button>
+                      )}
+                      {canApprove && slip.status !== 'pending' && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="flex-1"
+                          onClick={() => handleStatusUpdate(slip.id, 'pending')}
+                        >
+                          <RotateCcw className="w-3.5 h-3.5 mr-1.5" />
+                          Reset
+                        </Button>
+                      )}
+                      {canDelete && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-destructive hover:bg-destructive/10"
+                          onClick={() => setDeleteSlip(slip)}
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </Button>
+                      )}
                     </div>
                   )}
                 </CardContent>

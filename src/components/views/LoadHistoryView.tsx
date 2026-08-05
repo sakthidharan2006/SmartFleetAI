@@ -568,6 +568,125 @@ export function LoadHistoryView() {
           })}
         </div>
       )}
+
+      {/* Edit dialog (admin / owner) */}
+      <Dialog open={!!editSlip} onOpenChange={(o) => !o && setEditSlip(null)}>
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Pencil className="w-5 h-5 text-primary" />
+              Edit Load Slip
+            </DialogTitle>
+          </DialogHeader>
+          {editSlip && (
+            <div className="space-y-4 mt-2">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <Label>Origin</Label>
+                  <Input
+                    value={editSlip.origin}
+                    onChange={e => setEditSlip(s => s && { ...s, origin: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Destination</Label>
+                  <Input
+                    value={editSlip.destination}
+                    onChange={e => setEditSlip(s => s && { ...s, destination: e.target.value })}
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Load Description</Label>
+                <Textarea
+                  value={editSlip.load_description}
+                  onChange={e => setEditSlip(s => s && { ...s, load_description: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Vehicle</Label>
+                <Input
+                  value={editSlip.vehicle_name}
+                  onChange={e => setEditSlip(s => s && { ...s, vehicle_name: e.target.value })}
+                />
+              </div>
+              <div className="grid grid-cols-3 gap-3">
+                <div className="space-y-2">
+                  <Label>Weight (kg)</Label>
+                  <Input
+                    type="number"
+                    value={editSlip.weight_kg ?? ''}
+                    onChange={e => setEditSlip(s => s && { ...s, weight_kg: e.target.value ? parseFloat(e.target.value) : null })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Slip No.</Label>
+                  <Input
+                    value={editSlip.slip_number ?? ''}
+                    onChange={e => setEditSlip(s => s && { ...s, slip_number: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Amount (₹)</Label>
+                  <Input
+                    type="number"
+                    value={editSlip.amount ?? ''}
+                    onChange={e => setEditSlip(s => s && { ...s, amount: e.target.value ? parseFloat(e.target.value) : null })}
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Status</Label>
+                <Select
+                  value={editSlip.status}
+                  onValueChange={(v) => setEditSlip(s => s && { ...s, status: v })}
+                >
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="approved">Approved</SelectItem>
+                    <SelectItem value="rejected">Rejected</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Notes</Label>
+                <Input
+                  value={editSlip.notes ?? ''}
+                  onChange={e => setEditSlip(s => s && { ...s, notes: e.target.value })}
+                />
+              </div>
+              <Button onClick={handleSaveEdit} className="w-full" disabled={savingEdit}>
+                {savingEdit ? (
+                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Saving...</>
+                ) : 'Save Changes'}
+              </Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete confirmation (admin) */}
+      <AlertDialog open={!!deleteSlip} onOpenChange={(o) => !o && setDeleteSlip(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this load slip?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {deleteSlip?.load_description} — {deleteSlip?.origin} → {deleteSlip?.destination}.
+              This permanently removes the record from load history.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

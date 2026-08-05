@@ -15,6 +15,8 @@ import {
   IndianRupee,
   Truck,
   Plus,
+  Pencil,
+  Trash2,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -42,6 +44,17 @@ import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
+import { usePermissions } from "@/hooks/usePermissions";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface VehicleDocument {
   id: string;
@@ -96,17 +109,104 @@ const DRIVER_VEHICLE_MAP: Record<string, string> = {
   'driver6@truckpulse.demo': '6',
 };
 
+const EMPTY_DOC_FORM = {
+  vehicle_id: "",
+  vehicle_name: "",
+  document_type: "FC",
+  document_number: "",
+  issuing_authority: "",
+  issue_date: "",
+  expiry_date: "",
+  renewal_cost: "",
+  notes: "",
+};
+
 export function ComplianceView() {
   const { user, role } = useAuth();
+  const { canEdit, canDelete, isAdmin } = usePermissions();
   const [documents, setDocuments] = useState<VehicleDocument[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
   const [selectedVehicle, setSelectedVehicle] = useState("all");
+  const [formOpen, setFormOpen] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [docForm, setDocForm] = useState({ ...EMPTY_DOC_FORM });
+  const [saving, setSaving] = useState(false);
+  const [deleteDoc, setDeleteDoc] = useState<VehicleDocument | null>(null);
 
   const isDriver = role === 'driver';
   const assignedVehicleId = isDriver && user ? DRIVER_VEHICLE_MAP[user.email || ''] : null;
+
+  const openAddDialog = () => {
+    setEditingId(null);
+    setDocForm({ ...EMPTY_DOC_FORM });
+    setFormOpen(true);
+  };
+
+  const openEditDialog = (doc: VehicleDocument) => {
+    setEditingId(doc.id);
+    setDocForm({
+      vehicle_id: doc.vehicle_id,
+      vehicle_name: doc.vehicle_name,
+      document_type: doc.document_type,
+      document_number: doc.document_number || "",
+      issuing_authority: doc.issuing_authority || "",
+      issue_date: doc.issue_date || "",
+      expiry_date: doc.expiry_date?.slice(0, 10) || "",
+      renewal_cost: doc.renewal_cost != null ? String(doc.renewal_cost) : "",
+      notes: doc.notes || "",
+    });
+    setFormOpen(true);
+  };
+
+  const handleSaveDoc = async () => {
+    if (!docForm.vehicle_name.trim() || !docForm.expiry_date) {
+      toast.error("Vehicle name and expiry date are required");
+      return;
+    }
+    setSaving(true);
+    const payload = {
+      vehicle_id: docForm.vehicle_id.trim() || docForm.vehicle_name.trim(),
+      vehicle_name: docForm.vehicle_name.trim(),
+      document_type: docForm.document_type,
+      document_number: docForm.document_number.trim() || null,
+      issuing_authority: docForm.issuing_authority.trim() || null,
+      issue_date: docForm.issue_date || null,
+      expiry_date: docForm.expiry_date,
+      renewal_cost: docForm.renewal_cost ? parseFloat(docForm.renewal_cost) : null,
+      notes: docForm.notes.trim() || null,
+      status: computeStatus(docForm.expiry_date),
+    };
+
+    const { error } = editingId
+      ? await supabase.from("vehicle_documents").update(payload).eq("id", editingId)
+      : await supabase.from("vehicle_documents").insert(payload);
+
+    setSaving(false);
+    if (error) {
+      toast.error("Failed to save document: " + error.message);
+    } else {
+      toast.success(editingId ? "Document updated" : "Document added");
+      setFormOpen(false);
+      setEditingId(null);
+      fetchDocuments();
+    }
+  };
+
+  const handleDeleteDoc = async () => {
+    if (!deleteDoc) return;
+    const { error } = await supabase.from("vehicle_documents").delete().eq("id", deleteDoc.id);
+    if (error) {
+      toast.error("Failed to delete document: " + error.message);
+    } else {
+      toast.success("Document deleted");
+      setDeleteDoc(null);
+      fetchDocuments();
+    }
+  };
+
 
   const fetchDocuments = async () => {
     setLoading(true);
@@ -198,10 +298,18 @@ export function ComplianceView() {
             Track FC, RC, Insurance, Permit & Tax renewals for all vehicles
           </p>
         </div>
+        <div className="flex items-center gap-2">
+        {canEdit && (
+          <Button size="sm" onClick={openAddDialog}>
+            <Plus className="w-4 h-4 mr-2" />
+            Add Document
+          </Button>
+        )}
         <Button variant="outline" size="sm" onClick={fetchDocuments} disabled={loading}>
           <RefreshCw className={cn("w-4 h-4 mr-2", loading && "animate-spin")} />
           Refresh
         </Button>
+        </div>
       </div>
 
       {/* Stats Cards */}
@@ -298,7 +406,7 @@ export function ComplianceView() {
             <div className="text-center py-12 text-muted-foreground">No documents found</div>
           ) : (
             Array.from(groupedByVehicle.entries()).map(([vehicleName, docs], i) => (
-              <VehicleDocumentCard key={vehicleName} vehicleName={vehicleName} documents={docs} index={i} />
+              <VehicleDocumentCard key={vehicleName} vehicleName={vehicleName} documents={docs} index={i} onEdit={canEdit ? openEditDialog : undefined} onDelete={canDelete ? setDeleteDoc : undefined} />
             ))
           )}
         </TabsContent>
@@ -313,6 +421,96 @@ export function ComplianceView() {
           })}
         </TabsContent>
       </Tabs>
+
+      {/* Add / Edit document dialog */}
+      <Dialog open={formOpen} onOpenChange={setFormOpen}>
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <FileText className="w-5 h-5 text-primary" />
+              {editingId ? "Edit Document" : "Add Document"}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 mt-2">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label>Vehicle Name</Label>
+                <Input
+                  placeholder="e.g. TN-38-AX-1234"
+                  value={docForm.vehicle_name}
+                  onChange={(e) => setDocForm((f) => ({ ...f, vehicle_name: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Document Type</Label>
+                <Select value={docForm.document_type} onValueChange={(v) => setDocForm((f) => ({ ...f, document_type: v }))}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {Object.keys(DOC_TYPE_CONFIG).map((k) => (
+                      <SelectItem key={k} value={k}>{k}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label>Document Number</Label>
+                <Input
+                  value={docForm.document_number}
+                  onChange={(e) => setDocForm((f) => ({ ...f, document_number: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Issuing Authority</Label>
+                <Input
+                  value={docForm.issuing_authority}
+                  onChange={(e) => setDocForm((f) => ({ ...f, issuing_authority: e.target.value }))}
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              <div className="space-y-2">
+                <Label>Issue Date</Label>
+                <Input type="date" value={docForm.issue_date} onChange={(e) => setDocForm((f) => ({ ...f, issue_date: e.target.value }))} />
+              </div>
+              <div className="space-y-2">
+                <Label>Expiry Date</Label>
+                <Input type="date" value={docForm.expiry_date} onChange={(e) => setDocForm((f) => ({ ...f, expiry_date: e.target.value }))} />
+              </div>
+              <div className="space-y-2">
+                <Label>Renewal Cost (₹)</Label>
+                <Input type="number" value={docForm.renewal_cost} onChange={(e) => setDocForm((f) => ({ ...f, renewal_cost: e.target.value }))} />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Notes</Label>
+              <Textarea value={docForm.notes} onChange={(e) => setDocForm((f) => ({ ...f, notes: e.target.value }))} />
+            </div>
+            <Button className="w-full" onClick={handleSaveDoc} disabled={saving}>
+              {saving ? "Saving..." : editingId ? "Save Changes" : "Add Document"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete confirmation */}
+      <AlertDialog open={!!deleteDoc} onOpenChange={(o) => !o && setDeleteDoc(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this document?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {deleteDoc?.document_type} for {deleteDoc?.vehicle_name} will be permanently removed.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteDoc} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
@@ -333,7 +531,7 @@ function StatCard({ icon: Icon, label, value, color }: { icon: React.ElementType
   );
 }
 
-function VehicleDocumentCard({ vehicleName, documents, index }: { vehicleName: string; documents: VehicleDocument[]; index: number }) {
+function VehicleDocumentCard({ vehicleName, documents, index, onEdit, onDelete }: { vehicleName: string; documents: VehicleDocument[]; index: number; onEdit?: (doc: VehicleDocument) => void; onDelete?: (doc: VehicleDocument) => void }) {
   const [expanded, setExpanded] = useState(true);
   const hasIssues = documents.some((d) => d.status !== "valid");
   const expiredCount = documents.filter((d) => d.status === "expired").length;
@@ -386,7 +584,7 @@ function VehicleDocumentCard({ vehicleName, documents, index }: { vehicleName: s
           <CardContent className="pt-0 pb-4">
             <div className="grid gap-3">
               {documents.map((doc) => (
-                <DocumentRow key={doc.id} doc={doc} />
+                <DocumentRow key={doc.id} doc={doc} onEdit={onEdit} onDelete={onDelete} />
               ))}
             </div>
           </CardContent>
@@ -396,7 +594,7 @@ function VehicleDocumentCard({ vehicleName, documents, index }: { vehicleName: s
   );
 }
 
-function DocumentRow({ doc }: { doc: VehicleDocument }) {
+function DocumentRow({ doc, onEdit, onDelete }: { doc: VehicleDocument; onEdit?: (doc: VehicleDocument) => void; onDelete?: (doc: VehicleDocument) => void }) {
   const statusCfg = STATUS_CONFIG[doc.status] || STATUS_CONFIG.valid;
   const StatusIcon = statusCfg.icon;
   const daysLeft = getDaysUntilExpiry(doc.expiry_date);
@@ -445,8 +643,22 @@ function DocumentRow({ doc }: { doc: VehicleDocument }) {
           <StatusIcon className="w-3.5 h-3.5" />
           {statusCfg.label}
         </div>
-        {doc.renewal_cost && doc.status !== "valid" && (
+        {!!doc.renewal_cost && doc.status !== "valid" && (
           <span className="text-xs font-mono text-warning">₹{doc.renewal_cost.toLocaleString()}</span>
+        )}
+        {(onEdit || onDelete) && (
+          <div className="flex items-center gap-1">
+            {onEdit && (
+              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEdit(doc)} aria-label="Edit document">
+                <Pencil className="w-3.5 h-3.5" />
+              </Button>
+            )}
+            {onDelete && (
+              <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:bg-destructive/10" onClick={() => onDelete(doc)} aria-label="Delete document">
+                <Trash2 className="w-3.5 h-3.5" />
+              </Button>
+            )}
+          </div>
         )}
       </div>
     </div>

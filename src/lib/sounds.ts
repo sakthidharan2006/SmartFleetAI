@@ -88,31 +88,34 @@ export function playSuccessTone() {
 }
 
 /* ------------------------------------------------------------------ */
-/* Alert sounds — urgent, buzzy, pulsing                               */
+/* Alert sounds — vintage electromechanical / retro alarm style        */
 /* ------------------------------------------------------------------ */
 
-/** Warning: single descending buzz. */
+/** Old mechanical factory buzzer — low, raspy, intermittent. */
 export function playWarningAlert() {
   playSequence([
-    { freq: 620, slideTo: 480, start: 0, duration: 0.22, volume: 0.22, type: 'sawtooth' },
-    { freq: 620, slideTo: 480, start: 0.3, duration: 0.22, volume: 0.18, type: 'sawtooth' },
+    { freq: 180, start: 0, duration: 0.18, volume: 0.24, type: 'sawtooth' },
+    { freq: 180, start: 0.22, duration: 0.18, volume: 0.24, type: 'sawtooth' },
+    { freq: 180, start: 0.44, duration: 0.18, volume: 0.24, type: 'sawtooth' },
   ]);
 }
 
-/** Critical: fast three-pulse high siren. */
+/** Old fire bell / clanging alarm — low, urgent, electromechanical ring. */
 export function playCriticalAlert() {
   playSequence([
-    { freq: 980, slideTo: 1240, start: 0, duration: 0.18, volume: 0.3, type: 'square' },
-    { freq: 980, slideTo: 1240, start: 0.22, duration: 0.18, volume: 0.3, type: 'square' },
-    { freq: 980, slideTo: 1240, start: 0.44, duration: 0.24, volume: 0.3, type: 'square' },
+    { freq: 520, start: 0, duration: 0.18, volume: 0.32, type: 'square' },
+    { freq: 420, start: 0.2, duration: 0.18, volume: 0.32, type: 'square' },
+    { freq: 520, start: 0.4, duration: 0.18, volume: 0.32, type: 'square' },
+    { freq: 420, start: 0.6, duration: 0.22, volume: 0.32, type: 'square' },
   ]);
 }
 
-/** Security / theft / tamper: slow wailing two-tone siren. */
+/** Retro car alarm / burglar siren — slow, warbling two-tone. */
 export function playSecurityAlert() {
   playSequence([
-    { freq: 720, slideTo: 1080, start: 0, duration: 0.34, volume: 0.28, type: 'square' },
-    { freq: 1080, slideTo: 720, start: 0.36, duration: 0.34, volume: 0.28, type: 'square' },
-    { freq: 720, slideTo: 1080, start: 0.72, duration: 0.34, volume: 0.28, type: 'square' },
+    { freq: 330, start: 0, duration: 0.36, volume: 0.3, type: 'square' },
+    { freq: 440, start: 0.38, duration: 0.36, volume: 0.3, type: 'square' },
+    { freq: 330, start: 0.76, duration: 0.36, volume: 0.3, type: 'square' },
+    { freq: 440, start: 1.14, duration: 0.36, volume: 0.3, type: 'square' },
   ]);
 }

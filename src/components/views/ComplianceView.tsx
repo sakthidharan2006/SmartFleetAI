@@ -643,7 +643,7 @@ function DocumentRow({ doc, onEdit, onDelete }: { doc: VehicleDocument; onEdit?:
           <StatusIcon className="w-3.5 h-3.5" />
           {statusCfg.label}
         </div>
-        {doc.renewal_cost && doc.status !== "valid" && (
+        {!!doc.renewal_cost && doc.status !== "valid" && (
           <span className="text-xs font-mono text-warning">₹{doc.renewal_cost.toLocaleString()}</span>
         )}
         {(onEdit || onDelete) && (

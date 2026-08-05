@@ -209,21 +209,63 @@ export function LoadHistoryView() {
     }
   };
 
+  const handleSaveEdit = async () => {
+    if (!editSlip) return;
+    setSavingEdit(true);
+    const { error } = await supabase
+      .from('load_slips')
+      .update({
+        origin: editSlip.origin,
+        destination: editSlip.destination,
+        load_description: editSlip.load_description,
+        vehicle_name: editSlip.vehicle_name,
+        slip_number: editSlip.slip_number || null,
+        weight_kg: editSlip.weight_kg,
+        amount: editSlip.amount,
+        notes: editSlip.notes,
+        status: editSlip.status,
+      })
+      .eq('id', editSlip.id);
+    setSavingEdit(false);
+
+    if (error) {
+      toast.error('Failed to save changes: ' + error.message);
+    } else {
+      toast.success('Load slip updated');
+      setEditSlip(null);
+      fetchLoadSlips();
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!deleteSlip) return;
+    const { error } = await supabase.from('load_slips').delete().eq('id', deleteSlip.id);
+    if (error) {
+      toast.error('Failed to delete load slip: ' + error.message);
+    } else {
+      toast.success('Load slip deleted');
+      setDeleteSlip(null);
+      fetchLoadSlips();
+    }
+  };
+
   return (
     <div className="space-y-6 animate-fade-in-up">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-display font-semibold tracking-tight text-foreground">
-            {isDriver ? 'My Load History' : 'Load History — All Drivers'}
+            {isDriver ? 'My Load History' : isAdmin ? 'Load History — Full Admin Access' : 'Load History — All Drivers'}
           </h1>
           <p className="text-muted-foreground">
             {isDriver
               ? 'Upload bills and track your load deliveries'
-              : 'Review and approve load slips submitted by drivers'}
+              : isAdmin
+                ? 'Create, edit, approve and delete any load slip in the fleet'
+                : 'Review and approve load slips submitted by drivers'}
           </p>
         </div>
-        {isDriver && (
+        {(isDriver || isAdmin) && (
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
               <Button>

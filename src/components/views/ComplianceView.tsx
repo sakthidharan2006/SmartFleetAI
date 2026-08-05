@@ -96,17 +96,104 @@ const DRIVER_VEHICLE_MAP: Record<string, string> = {
   'driver6@truckpulse.demo': '6',
 };
 
+const EMPTY_DOC_FORM = {
+  vehicle_id: "",
+  vehicle_name: "",
+  document_type: "FC",
+  document_number: "",
+  issuing_authority: "",
+  issue_date: "",
+  expiry_date: "",
+  renewal_cost: "",
+  notes: "",
+};
+
 export function ComplianceView() {
   const { user, role } = useAuth();
+  const { canEdit, canDelete, isAdmin } = usePermissions();
   const [documents, setDocuments] = useState<VehicleDocument[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterType, setFilterType] = useState("all");
   const [filterStatus, setFilterStatus] = useState("all");
   const [selectedVehicle, setSelectedVehicle] = useState("all");
+  const [formOpen, setFormOpen] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [docForm, setDocForm] = useState({ ...EMPTY_DOC_FORM });
+  const [saving, setSaving] = useState(false);
+  const [deleteDoc, setDeleteDoc] = useState<VehicleDocument | null>(null);
 
   const isDriver = role === 'driver';
   const assignedVehicleId = isDriver && user ? DRIVER_VEHICLE_MAP[user.email || ''] : null;
+
+  const openAddDialog = () => {
+    setEditingId(null);
+    setDocForm({ ...EMPTY_DOC_FORM });
+    setFormOpen(true);
+  };
+
+  const openEditDialog = (doc: VehicleDocument) => {
+    setEditingId(doc.id);
+    setDocForm({
+      vehicle_id: doc.vehicle_id,
+      vehicle_name: doc.vehicle_name,
+      document_type: doc.document_type,
+      document_number: doc.document_number || "",
+      issuing_authority: doc.issuing_authority || "",
+      issue_date: doc.issue_date || "",
+      expiry_date: doc.expiry_date?.slice(0, 10) || "",
+      renewal_cost: doc.renewal_cost != null ? String(doc.renewal_cost) : "",
+      notes: doc.notes || "",
+    });
+    setFormOpen(true);
+  };
+
+  const handleSaveDoc = async () => {
+    if (!docForm.vehicle_name.trim() || !docForm.expiry_date) {
+      toast.error("Vehicle name and expiry date are required");
+      return;
+    }
+    setSaving(true);
+    const payload = {
+      vehicle_id: docForm.vehicle_id.trim() || docForm.vehicle_name.trim(),
+      vehicle_name: docForm.vehicle_name.trim(),
+      document_type: docForm.document_type,
+      document_number: docForm.document_number.trim() || null,
+      issuing_authority: docForm.issuing_authority.trim() || null,
+      issue_date: docForm.issue_date || null,
+      expiry_date: docForm.expiry_date,
+      renewal_cost: docForm.renewal_cost ? parseFloat(docForm.renewal_cost) : null,
+      notes: docForm.notes.trim() || null,
+      status: computeStatus(docForm.expiry_date),
+    };
+
+    const { error } = editingId
+      ? await supabase.from("vehicle_documents").update(payload).eq("id", editingId)
+      : await supabase.from("vehicle_documents").insert(payload);
+
+    setSaving(false);
+    if (error) {
+      toast.error("Failed to save document: " + error.message);
+    } else {
+      toast.success(editingId ? "Document updated" : "Document added");
+      setFormOpen(false);
+      setEditingId(null);
+      fetchDocuments();
+    }
+  };
+
+  const handleDeleteDoc = async () => {
+    if (!deleteDoc) return;
+    const { error } = await supabase.from("vehicle_documents").delete().eq("id", deleteDoc.id);
+    if (error) {
+      toast.error("Failed to delete document: " + error.message);
+    } else {
+      toast.success("Document deleted");
+      setDeleteDoc(null);
+      fetchDocuments();
+    }
+  };
+
 
   const fetchDocuments = async () => {
     setLoading(true);

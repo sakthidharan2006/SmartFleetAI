@@ -81,11 +81,15 @@ const STATUS_CONFIG: Record<string, { label: string; icon: React.ElementType; co
 export function LoadHistoryView() {
   const { user } = useAuth();
   const { isDriver, vehicleCards } = useSimulation();
+  const { canEdit, canDelete, canApprove, isAdmin } = usePermissions();
   const [loadSlips, setLoadSlips] = useState<LoadSlip[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [editSlip, setEditSlip] = useState<LoadSlip | null>(null);
+  const [savingEdit, setSavingEdit] = useState(false);
+  const [deleteSlip, setDeleteSlip] = useState<LoadSlip | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Form state

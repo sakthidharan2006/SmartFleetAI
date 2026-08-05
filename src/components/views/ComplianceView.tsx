@@ -298,10 +298,18 @@ export function ComplianceView() {
             Track FC, RC, Insurance, Permit & Tax renewals for all vehicles
           </p>
         </div>
+        <div className="flex items-center gap-2">
+        {canEdit && (
+          <Button size="sm" onClick={openAddDialog}>
+            <Plus className="w-4 h-4 mr-2" />
+            Add Document
+          </Button>
+        )}
         <Button variant="outline" size="sm" onClick={fetchDocuments} disabled={loading}>
           <RefreshCw className={cn("w-4 h-4 mr-2", loading && "animate-spin")} />
           Refresh
         </Button>
+        </div>
       </div>
 
       {/* Stats Cards */}
@@ -398,7 +406,7 @@ export function ComplianceView() {
             <div className="text-center py-12 text-muted-foreground">No documents found</div>
           ) : (
             Array.from(groupedByVehicle.entries()).map(([vehicleName, docs], i) => (
-              <VehicleDocumentCard key={vehicleName} vehicleName={vehicleName} documents={docs} index={i} />
+              <VehicleDocumentCard key={vehicleName} vehicleName={vehicleName} documents={docs} index={i} onEdit={canEdit ? openEditDialog : undefined} onDelete={canDelete ? setDeleteDoc : undefined} />
             ))
           )}
         </TabsContent>
@@ -413,6 +421,96 @@ export function ComplianceView() {
           })}
         </TabsContent>
       </Tabs>
+
+      {/* Add / Edit document dialog */}
+      <Dialog open={formOpen} onOpenChange={setFormOpen}>
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <FileText className="w-5 h-5 text-primary" />
+              {editingId ? "Edit Document" : "Add Document"}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 mt-2">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label>Vehicle Name</Label>
+                <Input
+                  placeholder="e.g. TN-38-AX-1234"
+                  value={docForm.vehicle_name}
+                  onChange={(e) => setDocForm((f) => ({ ...f, vehicle_name: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Document Type</Label>
+                <Select value={docForm.document_type} onValueChange={(v) => setDocForm((f) => ({ ...f, document_type: v }))}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {Object.keys(DOC_TYPE_CONFIG).map((k) => (
+                      <SelectItem key={k} value={k}>{k}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label>Document Number</Label>
+                <Input
+                  value={docForm.document_number}
+                  onChange={(e) => setDocForm((f) => ({ ...f, document_number: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Issuing Authority</Label>
+                <Input
+                  value={docForm.issuing_authority}
+                  onChange={(e) => setDocForm((f) => ({ ...f, issuing_authority: e.target.value }))}
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              <div className="space-y-2">
+                <Label>Issue Date</Label>
+                <Input type="date" value={docForm.issue_date} onChange={(e) => setDocForm((f) => ({ ...f, issue_date: e.target.value }))} />
+              </div>
+              <div className="space-y-2">
+                <Label>Expiry Date</Label>
+                <Input type="date" value={docForm.expiry_date} onChange={(e) => setDocForm((f) => ({ ...f, expiry_date: e.target.value }))} />
+              </div>
+              <div className="space-y-2">
+                <Label>Renewal Cost (₹)</Label>
+                <Input type="number" value={docForm.renewal_cost} onChange={(e) => setDocForm((f) => ({ ...f, renewal_cost: e.target.value }))} />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Notes</Label>
+              <Textarea value={docForm.notes} onChange={(e) => setDocForm((f) => ({ ...f, notes: e.target.value }))} />
+            </div>
+            <Button className="w-full" onClick={handleSaveDoc} disabled={saving}>
+              {saving ? "Saving..." : editingId ? "Save Changes" : "Add Document"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete confirmation */}
+      <AlertDialog open={!!deleteDoc} onOpenChange={(o) => !o && setDeleteDoc(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this document?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {deleteDoc?.document_type} for {deleteDoc?.vehicle_name} will be permanently removed.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteDoc} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
@@ -433,7 +531,7 @@ function StatCard({ icon: Icon, label, value, color }: { icon: React.ElementType
   );
 }
 
-function VehicleDocumentCard({ vehicleName, documents, index }: { vehicleName: string; documents: VehicleDocument[]; index: number }) {
+function VehicleDocumentCard({ vehicleName, documents, index, onEdit, onDelete }: { vehicleName: string; documents: VehicleDocument[]; index: number; onEdit?: (doc: VehicleDocument) => void; onDelete?: (doc: VehicleDocument) => void }) {
   const [expanded, setExpanded] = useState(true);
   const hasIssues = documents.some((d) => d.status !== "valid");
   const expiredCount = documents.filter((d) => d.status === "expired").length;
@@ -486,7 +584,7 @@ function VehicleDocumentCard({ vehicleName, documents, index }: { vehicleName: s
           <CardContent className="pt-0 pb-4">
             <div className="grid gap-3">
               {documents.map((doc) => (
-                <DocumentRow key={doc.id} doc={doc} />
+                <DocumentRow key={doc.id} doc={doc} onEdit={onEdit} onDelete={onDelete} />
               ))}
             </div>
           </CardContent>
@@ -496,7 +594,7 @@ function VehicleDocumentCard({ vehicleName, documents, index }: { vehicleName: s
   );
 }
 
-function DocumentRow({ doc }: { doc: VehicleDocument }) {
+function DocumentRow({ doc, onEdit, onDelete }: { doc: VehicleDocument; onEdit?: (doc: VehicleDocument) => void; onDelete?: (doc: VehicleDocument) => void }) {
   const statusCfg = STATUS_CONFIG[doc.status] || STATUS_CONFIG.valid;
   const StatusIcon = statusCfg.icon;
   const daysLeft = getDaysUntilExpiry(doc.expiry_date);
@@ -547,6 +645,20 @@ function DocumentRow({ doc }: { doc: VehicleDocument }) {
         </div>
         {doc.renewal_cost && doc.status !== "valid" && (
           <span className="text-xs font-mono text-warning">₹{doc.renewal_cost.toLocaleString()}</span>
+        )}
+        {(onEdit || onDelete) && (
+          <div className="flex items-center gap-1">
+            {onEdit && (
+              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEdit(doc)} aria-label="Edit document">
+                <Pencil className="w-3.5 h-3.5" />
+              </Button>
+            )}
+            {onDelete && (
+              <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:bg-destructive/10" onClick={() => onDelete(doc)} aria-label="Delete document">
+                <Trash2 className="w-3.5 h-3.5" />
+              </Button>
+            )}
+          </div>
         )}
       </div>
     </div>

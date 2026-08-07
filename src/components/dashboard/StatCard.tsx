@@ -56,7 +56,7 @@ export function StatCard({
         <div className="min-w-0 flex-1">
           <p className="metric-label truncate">{title}</p>
           <div className="flex items-baseline gap-2">
-            <p className="text-xl font-semibold font-mono tabular-nums tracking-tight text-foreground truncate">
+            <p className="text-lg sm:text-xl font-semibold font-mono tabular-nums tracking-tight text-foreground leading-tight">
               {value}
             </p>
             {trend && (

@@ -39,8 +39,43 @@ export function StatCard({
   icon: Icon, 
   trend, 
   variant = "default",
-  delay = 0 
+  delay = 0,
+  compact = false,
 }: StatCardProps) {
+  if (compact) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay }}
+        className="glass-card px-3.5 py-3 flex items-center gap-3 min-w-0"
+      >
+        <div className={cn("shrink-0 p-2 rounded-lg", iconStyles[variant])}>
+          <Icon className="w-4 h-4" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="metric-label truncate">{title}</p>
+          <div className="flex items-baseline gap-2">
+            <p className="text-xl font-semibold font-mono tabular-nums tracking-tight text-foreground truncate">
+              {value}
+            </p>
+            {trend && (
+              <span className={cn(
+                "text-[11px] font-semibold",
+                trend.isPositive ? "text-success" : "text-danger"
+              )}>
+                {trend.isPositive ? "↑" : "↓"}{Math.abs(trend.value)}%
+              </span>
+            )}
+          </div>
+          {subtitle && (
+            <p className="text-[11px] text-muted-foreground truncate">{subtitle}</p>
+          )}
+        </div>
+      </motion.div>
+    );
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -73,5 +108,6 @@ export function StatCard({
         )}
       </div>
     </motion.div>
+
   );
 }

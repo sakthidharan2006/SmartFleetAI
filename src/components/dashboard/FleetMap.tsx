@@ -60,10 +60,10 @@ export function FleetMap({ vehicles }: FleetMapProps) {
       initial={{ opacity: 0, scale: 0.98 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
-      className="glass-card overflow-hidden h-full relative"
+      className="glass-card overflow-hidden h-full relative isolate"
     >
       {/* Map Controls Overlay */}
-      <div className="absolute top-16 right-4 z-[1000] flex flex-col gap-2">
+      <div className="absolute top-16 right-4 z-20 flex flex-col gap-2">
         <Button
           size="icon"
           variant="secondary"
@@ -94,7 +94,7 @@ export function FleetMap({ vehicles }: FleetMapProps) {
 
 
       {/* Vehicle Count Badge */}
-      <div className="absolute top-4 left-4 z-[1000] bg-card/90 backdrop-blur-sm border border-border rounded-lg px-3 py-2">
+      <div className="absolute top-4 left-4 z-20 bg-card/90 backdrop-blur-sm border border-border rounded-lg px-3 py-2">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-success" />
@@ -219,7 +219,7 @@ function MapWithLeaflet({
   return (
     <>
       {/* Satellite toggle */}
-      <div className="absolute top-4 right-4 z-[1000]">
+      <div className="absolute top-4 right-4 z-20">
         <button
           onClick={() => setSatellite(s => !s)}
           className={cn(

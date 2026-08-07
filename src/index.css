@@ -185,8 +185,9 @@
 
   /* Focused content column — one calm workspace per task */
   .page-column {
-    @apply w-full mx-auto max-w-[1180px] space-y-6;
+    @apply w-full mx-auto max-w-[1480px] space-y-5;
   }
+
 
   .page-header {
     @apply flex flex-col gap-3 pb-5 mb-1 border-b border-border sm:flex-row sm:items-end sm:justify-between;

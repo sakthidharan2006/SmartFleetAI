@@ -13,7 +13,10 @@ interface StatCardProps {
   };
   variant?: "default" | "success" | "warning" | "danger";
   delay?: number;
+  /** Dense single-row presentation for command-center layouts */
+  compact?: boolean;
 }
+
 
 const variantStyles = {
   default: "from-primary/20 to-primary/5 border-primary/20",

@@ -379,3 +379,15 @@
     }
   }
 }
+
+/* Keep Leaflet maps below app chrome (sidebar, header, dialogs) */
+.leaflet-container {
+  isolation: isolate;
+  z-index: 0;
+}
+.leaflet-pane,
+.leaflet-top,
+.leaflet-bottom,
+.leaflet-control {
+  z-index: 1 !important;
+}

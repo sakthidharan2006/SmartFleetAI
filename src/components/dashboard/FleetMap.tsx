@@ -297,14 +297,14 @@ function MapWithLeaflet({
 
       <style>{`
         .leaflet-popup-content-wrapper {
-          background: hsl(222 47% 10%);
-          border: 1px solid hsl(217 33% 20%);
+          background: hsl(219 52% 10%);
+          border: 1px solid hsl(219 34% 22%);
           border-radius: 12px;
           color: white;
         }
         .leaflet-popup-tip {
-          background: hsl(222 47% 10%);
-          border: 1px solid hsl(217 33% 20%);
+          background: hsl(219 52% 10%);
+          border: 1px solid hsl(219 34% 22%);
         }
         .leaflet-container {
           font-family: 'Inter', sans-serif;

@@ -88,34 +88,33 @@ export function playSuccessTone() {
 }
 
 /* ------------------------------------------------------------------ */
-/* Alert sounds — vintage electromechanical / retro alarm style        */
+/* Alert sounds — modern, clean digital chirps (distinct, urgent)      */
 /* ------------------------------------------------------------------ */
 
-/** Old mechanical factory buzzer — low, raspy, intermittent. */
+/** Modern warning alert: crisp double chirp, medium-low urgency. */
 export function playWarningAlert() {
   playSequence([
-    { freq: 180, start: 0, duration: 0.18, volume: 0.24, type: 'sawtooth' },
-    { freq: 180, start: 0.22, duration: 0.18, volume: 0.24, type: 'sawtooth' },
-    { freq: 180, start: 0.44, duration: 0.18, volume: 0.24, type: 'sawtooth' },
+    { freq: 880, start: 0, duration: 0.12, volume: 0.22, type: 'sine' },
+    { freq: 660, start: 0.16, duration: 0.18, volume: 0.22, type: 'sine' },
+    { freq: 880, start: 0.42, duration: 0.14, volume: 0.2, type: 'sine' },
   ]);
 }
 
-/** Old fire bell / clanging alarm — low, urgent, electromechanical ring. */
+/** Critical alert: urgent three-pulse descending tone. */
 export function playCriticalAlert() {
   playSequence([
-    { freq: 520, start: 0, duration: 0.18, volume: 0.32, type: 'square' },
-    { freq: 420, start: 0.2, duration: 0.18, volume: 0.32, type: 'square' },
-    { freq: 520, start: 0.4, duration: 0.18, volume: 0.32, type: 'square' },
-    { freq: 420, start: 0.6, duration: 0.22, volume: 0.32, type: 'square' },
+    { freq: 1046, start: 0, duration: 0.14, volume: 0.26, type: 'triangle' },
+    { freq: 880, start: 0.18, duration: 0.14, volume: 0.26, type: 'triangle' },
+    { freq: 740, start: 0.36, duration: 0.18, volume: 0.26, type: 'triangle' },
   ]);
 }
 
-/** Retro car alarm / burglar siren — slow, warbling two-tone. */
+/** Security alert: fast alternating digital warble (clearly distinct). */
 export function playSecurityAlert() {
   playSequence([
-    { freq: 330, start: 0, duration: 0.36, volume: 0.3, type: 'square' },
-    { freq: 440, start: 0.38, duration: 0.36, volume: 0.3, type: 'square' },
-    { freq: 330, start: 0.76, duration: 0.36, volume: 0.3, type: 'square' },
-    { freq: 440, start: 1.14, duration: 0.36, volume: 0.3, type: 'square' },
+    { freq: 784, start: 0, duration: 0.1, volume: 0.24, type: 'sine' },
+    { freq: 523, start: 0.12, duration: 0.1, volume: 0.24, type: 'sine' },
+    { freq: 784, start: 0.24, duration: 0.1, volume: 0.24, type: 'sine' },
+    { freq: 523, start: 0.36, duration: 0.1, volume: 0.24, type: 'sine' },
   ]);
 }

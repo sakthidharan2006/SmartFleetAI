@@ -43,7 +43,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
     // Keep the browser UI (mobile address bar) in sync with the theme
     const meta = document.querySelector('meta[name="theme-color"]');
-    const color = theme === "dark" ? "#0b0d1a" : "#f6f7fb";
+    const color = theme === "dark" ? "#060d1a" : "#f5f7fb";
     if (meta) {
       meta.setAttribute("content", color);
     } else {

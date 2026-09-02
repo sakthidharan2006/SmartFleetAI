@@ -111,6 +111,45 @@ export type Database = {
           },
         ]
       }
+      compliance_reports: {
+        Row: {
+          content: string
+          created_at: string
+          generated_by: string | null
+          id: string
+          metrics: Json
+          period_end: string | null
+          period_start: string | null
+          report_type: string
+          summary: string
+          title: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          generated_by?: string | null
+          id?: string
+          metrics?: Json
+          period_end?: string | null
+          period_start?: string | null
+          report_type?: string
+          summary?: string
+          title: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          generated_by?: string | null
+          id?: string
+          metrics?: Json
+          period_end?: string | null
+          period_start?: string | null
+          report_type?: string
+          summary?: string
+          title?: string
+        }
+        Relationships: []
+      }
       door_device_commands: {
         Row: {
           acked_at: string | null
@@ -450,6 +489,54 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      fleet_ai_insights: {
+        Row: {
+          agent: string
+          created_at: string
+          created_by: string | null
+          id: string
+          payload: Json
+          recommendations: Json
+          risk_score: number
+          severity: string
+          status: string
+          summary: string
+          title: string
+          vehicle_id: string | null
+          vehicle_name: string | null
+        }
+        Insert: {
+          agent: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          payload?: Json
+          recommendations?: Json
+          risk_score?: number
+          severity?: string
+          status?: string
+          summary: string
+          title: string
+          vehicle_id?: string | null
+          vehicle_name?: string | null
+        }
+        Update: {
+          agent?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          payload?: Json
+          recommendations?: Json
+          risk_score?: number
+          severity?: string
+          status?: string
+          summary?: string
+          title?: string
+          vehicle_id?: string | null
+          vehicle_name?: string | null
+        }
+        Relationships: []
       }
       load_slips: {
         Row: {

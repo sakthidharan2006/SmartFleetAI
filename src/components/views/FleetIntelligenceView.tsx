@@ -69,7 +69,7 @@ export function FleetIntelligenceView() {
   const fleetHealth = predictions.length
     ? Math.round(100 - predictions.reduce((a, p) => a + p.riskScore, 0) / predictions.length)
     : 100;
-  const openIncidents = theftAlerts.filter((t) => t.status !== "resolved").length;
+  const openIncidents = theftAlerts.filter((t) => !t.isAcknowledged).length;
 
   const signals = useMemo(
     () => ({

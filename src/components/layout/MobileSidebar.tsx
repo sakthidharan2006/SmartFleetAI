@@ -18,7 +18,8 @@ import {
   ShieldCheck,
   X,
   Menu,
-  LogOut
+  LogOut,
+  Brain
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -34,6 +35,7 @@ export type NavItem = {
 
 export const allNavItems: NavItem[] = [
   { id: "dashboard", label: "Dashboard", icon: Home },
+  { id: "fleetai", label: "Fleet Intelligence AI", icon: Brain },
   { id: "fleet", label: "Fleet Overview", icon: Truck },
   { id: "tracking", label: "Live Tracking", icon: MapPin },
   { id: "routes", label: "Routes & Trips", icon: Route },
@@ -51,14 +53,14 @@ export const allNavItems: NavItem[] = [
 ];
 
 export const NAV_GROUPS: { label: string; ids: string[] }[] = [
-  { label: "Operations", ids: ["dashboard", "fleet", "tracking", "routes"] },
+  { label: "Operations", ids: ["dashboard", "fleetai", "fleet", "tracking", "routes"] },
   { label: "Vehicle Health", ids: ["diagnostics", "fuel", "maintenance"] },
   { label: "Cargo & Compliance", ids: ["loadhistory", "tollmanagement", "compliance", "cargodoor"] },
   { label: "Security & People", ids: ["cctv", "alerts", "drivers", "reports"] },
 ];
 
 // Driver-accessible views
-const DRIVER_NAV_IDS = ['dashboard', 'tracking', 'routes', 'diagnostics', 'fuel', 'loadhistory', 'tollmanagement', 'compliance', 'cargodoor', 'cctv', 'alerts', 'drivers'];
+const DRIVER_NAV_IDS = ['dashboard', 'fleetai', 'tracking', 'routes', 'diagnostics', 'fuel', 'loadhistory', 'tollmanagement', 'compliance', 'cargodoor', 'cctv', 'alerts', 'drivers'];
 
 interface MobileSidebarProps {
   activeItem: string;

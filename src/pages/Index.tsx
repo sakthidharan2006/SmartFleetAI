@@ -16,6 +16,7 @@ import { SettingsView } from "@/components/views/SettingsView";
 import { LoadHistoryView } from "@/components/views/LoadHistoryView";
 import { TollManagementView } from "@/components/views/TollManagementView";
 import { ComplianceView } from "@/components/views/ComplianceView";
+import { FleetIntelligenceView } from "@/components/views/FleetIntelligenceView";
 import { CargoDoorView } from "@/components/views/CargoDoorView";
 import { useSimulation } from "@/contexts/SimulationContext";
 import { useAlertNotifications } from "@/hooks/useAlertNotifications";
@@ -37,6 +38,8 @@ const Index = () => {
     switch (activeView) {
       case "dashboard":
         return <DashboardView />;
+      case "fleetai":
+        return <FleetIntelligenceView />;
       case "fleet":
         return <FleetView />;
       case "tracking":

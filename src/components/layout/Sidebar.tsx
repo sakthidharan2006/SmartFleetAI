@@ -1,4 +1,5 @@
-import { 
+import {
+  Brain, 
   Truck, 
   Gauge, 
   Fuel, 
@@ -27,6 +28,7 @@ export type NavItem = {
 
 export const navItems: NavItem[] = [
   { id: "dashboard", label: "Dashboard", icon: Home },
+  { id: "fleetai", label: "Fleet Intelligence AI", icon: Brain },
   { id: "fleet", label: "Fleet Overview", icon: Truck },
   { id: "tracking", label: "Live Tracking", icon: MapPin },
   { id: "routes", label: "Routes & Trips", icon: Route },
